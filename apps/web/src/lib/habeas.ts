@@ -1,5 +1,5 @@
 import "server-only";
-import { nativeToScVal, type xdr } from "@stellar/stellar-sdk";
+import { Address, nativeToScVal, type xdr } from "@stellar/stellar-sdk";
 import { ReadError, SimulationError, simulateRead } from "./network";
 import deployment from "@/config/testnet.json";
 import type { Case, EndedBy, Reason, Status } from "./types";
@@ -59,6 +59,12 @@ export async function getCase(id: number): Promise<Case> {
     endedBy: c.ended_by[0],
     taken: formatAmount(c.taken as bigint),
   };
+}
+
+/** The holder's open case, if any. */
+export async function activeCaseFor(holder: string): Promise<number | null> {
+  const id = await read("active_case", [new Address(holder).toScVal()]);
+  return id === undefined || id === null ? null : Number(id);
 }
 
 export async function caseCount(): Promise<number> {

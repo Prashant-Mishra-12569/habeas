@@ -23,7 +23,14 @@ Updated after every milestone. Newest first.
 - Mainnet RPC: `mainnet.sorobanrpc.com`, falling back to `rpc.lightsail.network` (both free, listed in Stellar's docs).
 - Web CI on GitHub: lint, typecheck, real-network tests, build. Green.
 
+- Redesign approved direction: Paper (default, light) and Carbon (dark: the page becomes the carbon sheet), English default with Spanish by cookie, status as ballpoint tick boxes, perforated tear strips, a pen circle on missing fields. Home, /check, /check/[asset], /evidence, /case/[id] and /try read Stellar live. Checked at 375 px (no sideways scroll) in both languages.
+- Free answer, server side proven end to end (`scripts/test-free-answer.mjs`): the site opens a demo case, a script signs only the auth preimage exactly like Freighter, the relayer submits and pays (tx e3db6daf, case 7 Answered). The relayer only builds `appeal` calls itself, and only relays a DEMOUSD trustline from the browser.
+- Wallet: `@stellar/freighter-api` 6.0.1 directly. The multi-wallet kit pulled Trezor/Ledger/WalletConnect and took 10+ minutes to install; Freighter is the target, and the kit can come back later if needed.
+
 ### Waiting on Prashant
+
+- Freighter test: open http://localhost:3000/try in Chrome with Freighter on Testnet and go through the three steps.
+- Vercel: add `HABEAS_ISSUER_SECRET` and `RELAYER_SECRET` as environment variables so /try works on the live site (values are in apps/web/.env.local, testnet-only).
 
 - Approve the styleguide, or say what to change. Pick heading face A (Public Sans) or B (Schibsted Grotesk).
 
