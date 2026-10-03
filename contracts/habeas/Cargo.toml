@@ -1,0 +1,18 @@
+[package]
+name = "habeas"
+version = "0.1.0"
+edition = "2021"
+description = "A fair process before a Stellar token issuer freezes or takes back tokens"
+license = "MIT"
+repository = "https://github.com/Prashant-Mishra-12569/habeas"
+publish = false
+
+[lib]
+crate-type = ["cdylib", "lib"]
+doctest = false
+
+[dependencies]
+soroban-sdk = { workspace = true }
+
+[dev-dependencies]
+soroban-sdk = { workspace = true, features = ["testutils"] }
