@@ -22,7 +22,7 @@ Issuer `GDABKPZMAIULVJVJJQM7L3VIG5A2IS5V4KP2P3YNP6YWRUBJNBGFGG6E` has `AUTH_REQU
 | Wasm built by | [GitHub Actions release](https://github.com/Prashant-Mishra-12569/habeas/releases/tag/v0.1.0_habeas_cli27.0.0) (SEP-55 build attestation) |
 | Asset | `DEMOUSD:GAHOUYYJZNCK4NP4PCHWXUJDJ6LP6CT5MPFDIKHW3EJH5GFXYAFVOP7G` |
 | Asset contract (SAC), admin = Habeas | [`CCCPJACXIDRPM2RUANRRAQYJUIMMSJW7WF5BGIJSG4VXWK6SQNLLW6VQ`](https://stellar.expert/explorer/testnet/contract/CCCPJACXIDRPM2RUANRRAQYJUIMMSJW7WF5BGIJSG4VXWK6SQNLLW6VQ) |
-| Asset issuer account (locked: reviewer is a required co-signer) | [`GAHOUYYJZNCK4NP4PCHWXUJDJ6LP6CT5MPFDIKHW3EJH5GFXYAFVOP7G`](https://stellar.expert/explorer/testnet/account/GAHOUYYJZNCK4NP4PCHWXUJDJ6LP6CT5MPFDIKHW3EJH5GFXYAFVOP7G) |
+| Asset issuer account (key switched off, home domain `habeas-stellar.vercel.app`) | [`GAHOUYYJZNCK4NP4PCHWXUJDJ6LP6CT5MPFDIKHW3EJH5GFXYAFVOP7G`](https://stellar.expert/explorer/testnet/account/GAHOUYYJZNCK4NP4PCHWXUJDJ6LP6CT5MPFDIKHW3EJH5GFXYAFVOP7G) |
 | Issuer key | [`GCCLIEJ33LQ3Y7KJI55EZODLE5BOCIAWAGWA3OJGM5KEIQNM4QVIDM23`](https://stellar.expert/explorer/testnet/account/GCCLIEJ33LQ3Y7KJI55EZODLE5BOCIAWAGWA3OJGM5KEIQNM4QVIDM23) |
 | Reviewer | [`GAS6L6UQUB4PMX2XZTHPM33ITBBQKQEUNOUSNCPMOFJBQHOC4R7G4N2R`](https://stellar.expert/explorer/testnet/account/GAS6L6UQUB4PMX2XZTHPM33ITBBQKQEUNOUSNCPMOFJBQHOC4R7G4N2R) |
 | Relayer (pays fees for free appeals and settles) | [`GAXJZQQE6XWVP5HVJ6LPVS5IC37CYGQ2J5LTUYLKT5KZE6YJFIJ7LRE5`](https://stellar.expert/explorer/testnet/account/GAXJZQQE6XWVP5HVJ6LPVS5IC37CYGQ2J5LTUYLKT5KZE6YJFIJ7LRE5) |
@@ -95,6 +95,20 @@ gh attestation verify habeas.wasm --repo Prashant-Mishra-12569/habeas --signer-r
 ```
 
 StellarExpert shows no source badge: its build workflow only reports to its mainnet service, which has been dropping submissions since August ([stellar-expert/soroban-build-workflow#9](https://github.com/stellar-expert/soroban-build-workflow/issues/9)). The checks above don't depend on it.
+
+## The issuer key is switched off
+
+After its classic setup was finished, the demo asset issuer's key was set to weight 0 with no other signers. Nobody can sign for that account again; DEMOUSD can only be frozen, taken back or minted through Habeas. (A real bank would more likely keep its key and add the reviewer as a required co-signer, which we tested in S4.)
+
+| Step | tx |
+| --- | --- |
+| Spare XLM moved to the relayer, which pays for free answers | [a7908140](https://stellar.expert/explorer/testnet/tx/a7908140caa75f6456ada0ae666370811920f5e12fc1a95b5fc49ab768f68447) |
+| Home domain set, so wallets find stellar.toml | [e34213fb](https://stellar.expert/explorer/testnet/tx/e34213fb7b76b58a58ae75c3639e7fad5c9b15967350ef5158de4b7018e65397) |
+| Data entry "habeas" on the issuer account points to the Habeas contract | [5c49e740](https://stellar.expert/explorer/testnet/tx/5c49e7400a6d80b7cc84aed70246e4b61a201eec36dabdd660641c428dc51585) |
+| Key switched off: master weight 0, reviewer removed as signer | [d420b31f](https://stellar.expert/explorer/testnet/tx/d420b31f87ec3591a7e3ea70ea03ec73c47393c8f09343567be6e545e36316d4) |
+| Minting through Habeas still works after the lock | [dae53574](https://stellar.expert/explorer/testnet/tx/dae5357460129dfa1668871a4888a262da8c2851771918fcc2f9b4d7ee2a4542) |
+
+Classic clawback signed by the issuer refused with TxBadAuth; the account has total signer weight 0.
 
 ## Back door check
 

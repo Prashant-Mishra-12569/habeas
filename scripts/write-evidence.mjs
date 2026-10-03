@@ -8,6 +8,7 @@ const root = new URL("../", import.meta.url);
 const json = (p) => JSON.parse(readFileSync(new URL(p, root), "utf8"));
 const dep = json("deployments/testnet.json");
 const run = json("deployments/testnet-run.json");
+const lock = json("deployments/testnet-lock.json");
 
 const labUrl =
   "https://lab.stellar.org/smart-contracts/contract-explorer?$=network$id=testnet&label=Testnet&horizonUrl=https:////horizon-testnet.stellar.org&rpcUrl=https:////soroban-testnet.stellar.org&passphrase=Test%20SDF%20Network%20/;%20September%202015;&smartContracts$explorer$contractId=" +
@@ -17,6 +18,7 @@ const tx = (h) => `[${h.slice(0, 8)}](https://stellar.expert/explorer/testnet/tx
 const contract = (c) => `[\`${c}\`](https://stellar.expert/explorer/testnet/contract/${c})`;
 const account = (a) => `[\`${a}\`](https://stellar.expert/explorer/testnet/account/${a})`;
 
+const lockRows = lock.steps.map((s) => `| ${s.label} | ${tx(s.hash)} |`).join("\n");
 const rows = run.steps.map((s, i) => `| ${i + 1} | ${s.label} | ${tx(s.hash)} |`).join("\n");
 const refusals = run.refusals.map((r) => `| ${r.label} | \`${r.error}\` |`).join("\n");
 const cases = Object.entries(run.cases)
@@ -47,7 +49,7 @@ Issuer \`GDABKPZMAIULVJVJJQM7L3VIG5A2IS5V4KP2P3YNP6YWRUBJNBGFGG6E\` has \`AUTH_R
 | Wasm built by | ${dep.wasm_source?.startsWith("http") ? `[GitHub Actions release](${dep.wasm_source}) (SEP-55 build attestation)` : dep.wasm_source ?? "local build"} |
 | Asset | \`${dep.asset}\` |
 | Asset contract (SAC), admin = Habeas | ${contract(dep.sac)} |
-| Asset issuer account (locked: reviewer is a required co-signer) | ${account(dep.asset_issuer)} |
+| Asset issuer account (key switched off, home domain \`${lock.home_domain}\`) | ${account(dep.asset_issuer)} |
 | Issuer key | ${account(dep.issuer)} |
 | Reviewer | ${account(dep.reviewer)} |
 | Relayer (pays fees for free appeals and settles) | ${account(dep.relayer)} |
@@ -93,6 +95,16 @@ gh attestation verify habeas.wasm --repo Prashant-Mishra-12569/habeas --signer-r
 \`\`\`
 
 StellarExpert shows no source badge: its build workflow only reports to its mainnet service, which has been dropping submissions since August ([stellar-expert/soroban-build-workflow#9](https://github.com/stellar-expert/soroban-build-workflow/issues/9)). The checks above don't depend on it.
+
+## The issuer key is switched off
+
+After its classic setup was finished, the demo asset issuer's key was set to weight 0 with no other signers. Nobody can sign for that account again; DEMOUSD can only be frozen, taken back or minted through Habeas. (A real bank would more likely keep its key and add the reviewer as a required co-signer, which we tested in S4.)
+
+| Step | tx |
+| --- | --- |
+${lockRows}
+
+${lock.after}
 
 ## Back door check
 

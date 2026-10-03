@@ -6,6 +6,11 @@ Updated after every milestone. Newest first.
 
 ### Done
 
+- Site live on Vercel: https://habeas-stellar.vercel.app (Prashant connected the repo). It serves `/.well-known/stellar.toml` (SEP-1, CORS open) for DEMOUSD.
+- Demo asset issuer locked for good, as Prashant decided (`scripts/lock-issuer.sh`): spare XLM moved to the relayer, home domain set, an on-chain data entry `habeas` pointing to the contract, then master weight 0 and the reviewer removed as signer. Afterwards a classic clawback is refused and minting through Habeas still works. Tx links in `docs/EVIDENCE.md` and `deployments/testnet-lock.json`. If DEMOUSD ever needs a redo, use a fresh asset issuer.
+- 2-of-3 reviewer panel proven in the contract tests with real ed25519 signatures (54 tests). README explains co-sign (what a bank would choose) vs key switched off (the demo), and lists the panel on the roadmap.
+- Stellar Lab "Verified Build": its exact steps pass for our contract (`scripts/verify-build.mjs`); the in-app browser couldn't render Lab's badge because it blocks Lab's GitHub API calls. Link added to EVIDENCE.md.
+
 - Studied Local402, AgentAllowance, AegisOS and stellar.org: `docs/DESIGN-NOTES.md`. Key point: AegisOS already uses a legal "case file" look (exhibits, round stamp), so Habeas stays on carbon-copy forms and avoids stamps, exhibits and mono all-caps labels. AgentAllowance's Render site stayed blank for 15+ s twice: the site goes on Vercel.
 - `apps/web`: Next.js 16.3.8, React 19.3.0, Tailwind 4, TypeScript 5.9.3 (create-next-app 16.3.8 installs `typescript ^5`, so we don't use TS 7), motion 14, @stellar/stellar-sdk 17.2.1. Fonts via `next/font`: Public Sans, Schibsted Grotesk (alternative heading), IBM Plex Mono.
 - Palette checked for WCAG AA in light and dark. Added: muted text, a darker field line for inputs (3:1 on every copy), and lighter dark-mode blue/green/red (the plan's values fail on the dark page).

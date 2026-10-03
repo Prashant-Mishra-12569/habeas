@@ -59,6 +59,8 @@ describe("checkAsset on testnet", () => {
     const r = await checkAsset("testnet", code, issuer);
     expect(r.admin).toMatchObject({ kind: "habeas", address: deployment.habeas, wasmHash: deployment.wasm_sha256 });
     expect(r.habeas?.backDoor.closed).toBe(true);
+    // The demo issuer's key is switched off for good (deployments/testnet-lock.json).
+    expect(r.habeas?.backDoor.how).toMatch(/can no longer sign/);
     expect(r.habeas?.reviewer).toBe(deployment.reviewer);
     expect(r.habeas?.caseCount).toBeGreaterThanOrEqual(6);
     expect(r.habeas?.takenBackCount).toBeGreaterThanOrEqual(3);
