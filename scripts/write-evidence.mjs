@@ -9,6 +9,7 @@ const json = (p) => JSON.parse(readFileSync(new URL(p, root), "utf8"));
 const dep = json("deployments/testnet.json");
 const run = json("deployments/testnet-run.json");
 const lock = json("deployments/testnet-lock.json");
+const wallet = json("deployments/testnet-freighter.json");
 
 const labUrl =
   "https://lab.stellar.org/smart-contracts/contract-explorer?$=network$id=testnet&label=Testnet&horizonUrl=https:////horizon-testnet.stellar.org&rpcUrl=https:////soroban-testnet.stellar.org&passphrase=Test%20SDF%20Network%20/;%20September%202015;&smartContracts$explorer$contractId=" +
@@ -18,6 +19,7 @@ const tx = (h) => `[${h.slice(0, 8)}](https://stellar.expert/explorer/testnet/tx
 const contract = (c) => `[\`${c}\`](https://stellar.expert/explorer/testnet/contract/${c})`;
 const account = (a) => `[\`${a}\`](https://stellar.expert/explorer/testnet/account/${a})`;
 
+const walletRows = wallet.steps.map((s) => `| ${s.label} | ${tx(s.hash)} |`).join("\n");
 const lockRows = lock.steps.map((s) => `| ${s.label} | ${tx(s.hash)} |`).join("\n");
 const rows = run.steps.map((s, i) => `| ${i + 1} | ${s.label} | ${tx(s.hash)} |`).join("\n");
 const refusals = run.refusals.map((r) => `| ${r.label} | \`${r.error}\` |`).join("\n");
@@ -95,6 +97,16 @@ gh attestation verify habeas.wasm --repo Prashant-Mishra-12569/habeas --signer-r
 \`\`\`
 
 StellarExpert shows no source badge: its build workflow only reports to its mainnet service, which has been dropping submissions since August ([stellar-expert/soroban-build-workflow#9](https://github.com/stellar-expert/soroban-build-workflow/issues/9)). The checks above don't depend on it.
+
+## Free answer with a real wallet
+
+Tested on the live site with ${wallet.wallet}, case ${wallet.case_id}, holder \`${wallet.holder}\`.
+
+| Step | tx |
+| --- | --- |
+${walletRows}
+
+${wallet.note}
 
 ## The issuer key is switched off
 

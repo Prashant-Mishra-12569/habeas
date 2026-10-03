@@ -1,0 +1,14 @@
+{
+  "tested_at": "2026-10-03T14:22:00Z",
+  "wallet": "Freighter (Chrome extension), Testnet",
+  "site": "https://habeas-stellar.vercel.app/try",
+  "holder": "GDFTUXEFF2ARQN75KCHH2M7SUL2LNEFH37X2WRTAFMS6TICFFTXGKGN6",
+  "case_id": 8,
+  "steps": [
+    { "label": "Holder adds DEMOUSD in Freighter (the only fee the holder pays)", "hash": "522f07f99f62d5d84218f424a8d390a4e64e4904b6030be8b32bf9b070859559" },
+    { "label": "Demo issuer mints 1,000 DEMOUSD to the holder", "hash": "063cf2f84d9cfd56d4a4558f51120bc565a400db13a3beec664858fc16ecc2d5" },
+    { "label": "Demo issuer opens case 8: the holder is frozen", "hash": "18564b2f4ef70309812b5262d7485e5dbff5b747d7631216b0a1f9eb3fc5e818" },
+    { "label": "Holder answers: Freighter signs only the authorization, the relayer submits and pays", "hash": "8d2c8c9372c126a6e6bec26190115e228f0a1b33cb10d743bb2221a7056ca859" }
+  ],
+  "note": "Freighter showed \"Confirm Authorizations: appeal\" and signed the CAP-71 address-bound preimage (credentials addressV2) as is; no fallback was needed."
+}

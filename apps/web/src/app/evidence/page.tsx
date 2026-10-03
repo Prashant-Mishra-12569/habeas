@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import deployment from "@/config/testnet.json";
+import wallet from "@/config/testnet-freighter.json";
 import lock from "@/config/testnet-lock.json";
 import run from "@/config/testnet-run.json";
 import { accountUrl, contractUrl, formatDuration, formatUtc, shortAddress, shortHash, txUrl } from "@/lib/format";
@@ -122,6 +123,17 @@ export default async function EvidencePage() {
             </Row>
           ))}
         </dl>
+      </Block>
+
+      <Block title={e.walletTitle} lead={e.walletLead}>
+        <ol>
+          {wallet.steps.map((s) => (
+            <li key={s.hash} className="flex justify-between gap-4 border-b border-rule px-4 py-3 text-sm last:border-b-0 sm:px-5">
+              <span>{s.label}</span>
+              <Ext href={txUrl(s.hash)}>{shortHash(s.hash, 4)}</Ext>
+            </li>
+          ))}
+        </ol>
       </Block>
 
       <Block title={e.lockTitle} lead={e.lockLead}>

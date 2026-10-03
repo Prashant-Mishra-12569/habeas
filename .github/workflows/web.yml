@@ -15,8 +15,8 @@ jobs:
   check:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
         with:
           node-version: 24
           cache: npm
@@ -28,3 +28,7 @@ jobs:
       # Reads real Stellar mainnet and testnet; no mocks.
       - run: npm test
       - run: npm run build
+      # Every page at phone, tablet and desktop sizes: no sideways scroll,
+      # no console errors, tappable header controls.
+      - run: npx playwright install --with-deps chromium
+      - run: npm run e2e

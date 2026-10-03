@@ -17,12 +17,15 @@ Built for the [Find Your Way Hackathon](https://demo.stellarpassport.xyz/hackath
 
 ## Status
 
-Work in progress. Running on Stellar **testnet**.
+Work in progress, running on Stellar **testnet**. Live site: **https://habeas-stellar.vercel.app** (English and Spanish, light "Paper" and dark "Carbon").
 
-- Contract: [`contracts/habeas`](contracts/habeas), 54 tests against the real Stellar Asset Contract, deployed from a [verified GitHub build](docs/EVIDENCE.md#check-the-build-yourself).
-- Every case ending has been run on testnet, with transaction links: [`docs/EVIDENCE.md`](docs/EVIDENCE.md).
+- **Contract:** [`contracts/habeas`](contracts/habeas), 54 tests against the real Stellar Asset Contract, deployed from a [verified GitHub build](docs/EVIDENCE.md#check-the-build-yourself).
+- **Every case ending** has been run on testnet, with transaction links: [`docs/EVIDENCE.md`](docs/EVIDENCE.md) and [/evidence](https://habeas-stellar.vercel.app/evidence).
+- **Free answer, proven with a real wallet:** in Freighter the holder signs only the authorization and Habeas pays the network fee ([case 8](https://habeas-stellar.vercel.app/case/8)).
+- **Token check on real mainnet data:** [USBDCP](https://habeas-stellar.vercel.app/check/USBDCP-GDABKPZMAIULVJVJJQM7L3VIG5A2IS5V4KP2P3YNP6YWRUBJNBGFGG6E), USDC, PYUSD and BENJI, plus the protected demo token.
+- **Works on phones:** every page is tested at 320, 390, 768 and 1440 px in CI (Playwright).
 - How cases work, functions, errors and events: [`docs/SPEC-cases.md`](docs/SPEC-cases.md).
-- Coming next: a token check that reads real mainnet data, case pages, and "Try it live".
+- Coming next: Try it live without a wallet (for phones), case pages for the issuer and the reviewer, a paid machine check (x402) and Telegram alerts.
 
 ## Closing the back door
 
@@ -50,6 +53,12 @@ bash scripts/deploy-testnet.sh
 ```bash
 cd scripts && npm install && cd .. && node scripts/run-demo-cases.mjs
 ```
+
+```bash
+cd apps/web && cp .env.example .env.local && npm install && npm run dev
+```
+
+The site needs two testnet keys in `apps/web/.env.local` for Try it live (see `.env.example`); every other page only reads public Stellar data.
 
 The deploy script creates fresh testnet accounts with Friendbot, issues a demo asset, deploys Habeas, locks the issuer account and checks the lock. The second script runs every kind of case and writes the transaction hashes to `deployments/testnet-run.json`.
 

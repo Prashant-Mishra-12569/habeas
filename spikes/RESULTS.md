@@ -64,7 +64,7 @@ Take-back works on a frozen balance, which the contract needs: `open_case` freez
 2. Relayer builds `appeal(holder)` with itself as the transaction source and simulates it. The holder signs only the one Soroban auth entry. The relayer re-simulates, signs the envelope and submits.
 3. Results: [a1729181](https://stellar.expert/explorer/testnet/tx/a17291818ac358d5b95ab5088a51fb0785bdc169f90bfdcda7cae3251f453b7c) and [73788e68](https://stellar.expert/explorer/testnet/tx/73788e68a858b6be93853568c1979ad6669d51b2838f1bee15f589b5e5164493). Holder XLM 1.5000000 before and after. Relayer paid 0.0016313 XLM.
 
-Not tested yet: Freighter's `signAuthEntry` in a browser. It signs the same preimage that `authorizeEntry` signs here; we confirm it when we build the case pages.
+**Confirmed in a real wallet (Oct 3, 2026):** on the live site (`/try`), Freighter in Chrome showed "Confirm Authorizations: appeal", signed only the authorization, and the relayer submitted and paid: [8d2c8c93](https://stellar.expert/explorer/testnet/tx/8d2c8c9372c126a6e6bec26190115e228f0a1b33cb10d743bb2221a7056ca859) (case 8, holder `GDFTUXEF…GKGN6`). The network now hands out CAP-71 `addressV2` credentials, whose preimage type is new; Freighter signed it as is, so the planned fallbacks (legacy credentials, fee bump) weren't needed. Full steps in `deployments/testnet-freighter.json`.
 
 ## S4: the classic back door
 

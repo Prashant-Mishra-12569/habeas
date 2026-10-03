@@ -20,3 +20,13 @@ Looked at for structure and clarity, not looks.
 4. **Raw errors on the page.** Local402's calculator showed "Failed to fetch" while I looked. Every network call of ours gets a sentence that says what happened and a Retry button.
 5. **Hosting that sleeps.** AgentAllowance's console on Render's free tier stayed blank for 15+ seconds, twice. A judge leaves in less. The site goes on Vercel; the Telegram worker is the only thing allowed on a sleeping host, and the site must not depend on it.
 6. **Dark terminal look.** Local402 is dark with terminal panes, like most agent projects. Our light form-white page will stand out next to them; keep it.
+
+## Decisions after the styleguide was approved (Oct 3, 2026)
+
+- Heading face: Public Sans 800 (option A).
+- Default: Paper (light) and English. Visitors can switch to Carbon (dark) and Spanish; both are remembered by cookie and rendered on the server, so nothing flashes.
+- Carbon, not a generic dark mode: the page becomes the carbon sheet itself (blue-black `#0F1120`, pale transfer text, periwinkle ink `#AFBCFF`). Every text pair passes AA.
+- Form-native details instead of badges: status as ballpoint tick boxes (Frozen, Answered, Decided, Closed), perforated tear strips, a pen circle around the fields the USBDC take back left empty. Pen marks are revealed by a moving clip, so motion stays transform/opacity only.
+- Phones are designed for, not shrunk to: the theme switch becomes one 44 px button, headings scale with the screen (`clamp`), "today vs with Habeas" is one sheet with both answers per row, forms choose one or two columns from their own width (container queries), long addresses are shortened.
+- Reduced motion uses a server-safe hook (`src/lib/use-reduce-motion.ts`): motion's own hook made hydration fail for visitors with "Reduce motion" on.
+- Every page is checked at 320, 390, 768 and 1440 px in CI (`apps/web/e2e/layout.spec.ts`); `apps/web/e2e/screens.mjs` makes screenshots of every page on seven sizes for review by eye.

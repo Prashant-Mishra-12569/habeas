@@ -3,7 +3,7 @@
 // deployments/ folder into the app.
 import { copyFileSync, existsSync } from "node:fs";
 
-for (const name of ["testnet.json", "testnet-run.json", "testnet-lock.json"]) {
+for (const name of ["testnet.json", "testnet-run.json", "testnet-lock.json", "testnet-freighter.json"]) {
   const from = new URL(`../../../deployments/${name}`, import.meta.url);
   const to = new URL(`../src/config/${name}`, import.meta.url);
   if (!existsSync(from)) {

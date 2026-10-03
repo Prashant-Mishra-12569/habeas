@@ -96,6 +96,19 @@ gh attestation verify habeas.wasm --repo Prashant-Mishra-12569/habeas --signer-r
 
 StellarExpert shows no source badge: its build workflow only reports to its mainnet service, which has been dropping submissions since August ([stellar-expert/soroban-build-workflow#9](https://github.com/stellar-expert/soroban-build-workflow/issues/9)). The checks above don't depend on it.
 
+## Free answer with a real wallet
+
+Tested on the live site with Freighter (Chrome extension), Testnet, case 8, holder `GDFTUXEFF2ARQN75KCHH2M7SUL2LNEFH37X2WRTAFMS6TICFFTXGKGN6`.
+
+| Step | tx |
+| --- | --- |
+| Holder adds DEMOUSD in Freighter (the only fee the holder pays) | [522f07f9](https://stellar.expert/explorer/testnet/tx/522f07f99f62d5d84218f424a8d390a4e64e4904b6030be8b32bf9b070859559) |
+| Demo issuer mints 1,000 DEMOUSD to the holder | [063cf2f8](https://stellar.expert/explorer/testnet/tx/063cf2f84d9cfd56d4a4558f51120bc565a400db13a3beec664858fc16ecc2d5) |
+| Demo issuer opens case 8: the holder is frozen | [18564b2f](https://stellar.expert/explorer/testnet/tx/18564b2f4ef70309812b5262d7485e5dbff5b747d7631216b0a1f9eb3fc5e818) |
+| Holder answers: Freighter signs only the authorization, the relayer submits and pays | [8d2c8c93](https://stellar.expert/explorer/testnet/tx/8d2c8c9372c126a6e6bec26190115e228f0a1b33cb10d743bb2221a7056ca859) |
+
+Freighter showed "Confirm Authorizations: appeal" and signed the CAP-71 address-bound preimage (credentials addressV2) as is; no fallback was needed.
+
 ## The issuer key is switched off
 
 After its classic setup was finished, the demo asset issuer's key was set to weight 0 with no other signers. Nobody can sign for that account again; DEMOUSD can only be frozen, taken back or minted through Habeas. (A real bank would more likely keep its key and add the reviewer as a required co-signer, which we tested in S4.)
