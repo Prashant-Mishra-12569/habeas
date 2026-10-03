@@ -1,6 +1,7 @@
-// Words and formats shared by every page. Keep wording in line with the
-// "Words on screen" list in CLAUDE.md.
-import type { EndedBy, Reason, Status } from "./types";
+// Formats shared by every page. Words live in src/i18n/dict.ts.
+import type { Lang } from "@/i18n/dict";
+
+const LOCALE: Record<Lang, string> = { en: "en-US", es: "es-CL" };
 
 /** GABC…WXYZ, for places where the full address doesn't fit. */
 export function shortAddress(a: string, keep = 4): string {
@@ -11,81 +12,65 @@ export function shortHash(h: string, keep = 6): string {
   return h.length > keep * 2 + 1 ? `${h.slice(0, keep)}…${h.slice(-keep)}` : h;
 }
 
-/** Group thousands, keep up to 7 decimals as given: "24000.0000000" -> "24,000". */
-export function formatTokens(amount: string): string {
+/** Thousands grouped for the language, decimals kept as given: "24000.0000000" -> "24,000". */
+export function formatTokens(amount: string, lang: Lang = "en"): string {
   const [whole, frac = ""] = amount.split(".");
-  const grouped = Number(whole).toLocaleString("en-US");
   const trimmed = frac.replace(/0+$/, "");
-  return trimmed ? `${grouped}.${trimmed}` : grouped;
+  const grouped = Number(whole).toLocaleString(LOCALE[lang]);
+  const sep = lang === "es" ? "," : ".";
+  return trimmed ? `${grouped}${sep}${trimmed}` : grouped;
 }
 
-const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+export function formatCount(n: number, lang: Lang = "en"): string {
+  return n.toLocaleString(LOCALE[lang]);
+}
 
-/** "Sep 19, 2026, 03:08 UTC". UTC on purpose: the same on server and client. */
-export function formatUtc(input: number | string): string {
-  const d = typeof input === "number" ? new Date(input * 1000) : new Date(input);
-  const hh = String(d.getUTCHours()).padStart(2, "0");
-  const mm = String(d.getUTCMinutes()).padStart(2, "0");
-  return `${MONTHS[d.getUTCMonth()]} ${d.getUTCDate()}, ${d.getUTCFullYear()}, ${hh}:${mm} UTC`;
+const MONTHS: Record<Lang, string[]> = {
+  en: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+  es: ["ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sept", "oct", "nov", "dic"],
+};
+
+const toDate = (input: number | string) => (typeof input === "number" ? new Date(input * 1000) : new Date(input));
+const pad = (n: number) => String(n).padStart(2, "0");
+
+/** "Sep 19, 2026" / "19 sept 2026". UTC, so server and client agree. */
+export function formatDay(input: number | string, lang: Lang = "en"): string {
+  const d = toDate(input);
+  const m = MONTHS[lang][d.getUTCMonth()];
+  return lang === "es" ? `${d.getUTCDate()} ${m} ${d.getUTCFullYear()}` : `${m} ${d.getUTCDate()}, ${d.getUTCFullYear()}`;
+}
+
+/** "Sep 19, 2026, 03:08 UTC". */
+export function formatUtc(input: number | string, lang: Lang = "en"): string {
+  const d = toDate(input);
+  return `${formatDay(input, lang)}, ${pad(d.getUTCHours())}:${pad(d.getUTCMinutes())} UTC`;
 }
 
 /** "14:02:09 UTC", for steps that happen minutes apart. */
 export function formatUtcTime(unixSecs: number): string {
   const d = new Date(unixSecs * 1000);
-  const p = (n: number) => String(n).padStart(2, "0");
-  return `${p(d.getUTCHours())}:${p(d.getUTCMinutes())}:${p(d.getUTCSeconds())} UTC`;
+  return `${pad(d.getUTCHours())}:${pad(d.getUTCMinutes())}:${pad(d.getUTCSeconds())} UTC`;
 }
 
-/** "15 minutes 30 seconds". */
-export function formatDuration(totalSecs: number): string {
-  const m = Math.floor(totalSecs / 60);
-  const s = Math.round(totalSecs % 60);
-  const parts = [];
-  if (m) parts.push(`${m} minute${m === 1 ? "" : "s"}`);
-  if (s) parts.push(`${s} second${s === 1 ? "" : "s"}`);
-  return parts.join(" ") || "0 seconds";
+const UNITS: Record<Lang, Record<"d" | "h" | "m" | "s", [string, string]>> = {
+  en: { d: ["day", "days"], h: ["hour", "hours"], m: ["minute", "minutes"], s: ["second", "seconds"] },
+  es: { d: ["día", "días"], h: ["hora", "horas"], m: ["minuto", "minutos"], s: ["segundo", "segundos"] },
+};
+
+/** "15 minutes 30 seconds", "3 days". At most two units. */
+export function formatDuration(totalSecs: number, lang: Lang = "en"): string {
+  const parts: string[] = [];
+  let rest = Math.round(totalSecs);
+  for (const [unit, size] of [["d", 86_400], ["h", 3_600], ["m", 60], ["s", 1]] as const) {
+    const n = Math.floor(rest / size);
+    rest -= n * size;
+    if (n && parts.length < 2) parts.push(`${n} ${UNITS[lang][unit][n === 1 ? 0 : 1]}`);
+  }
+  return parts.join(" ") || `0 ${UNITS[lang].s[1]}`;
 }
 
-export const REASON_LABEL: Record<Reason, string> = {
-  Fraud: "Suspected fraud",
-  SanctionsOrder: "Sanctions order",
-  SentByMistake: "Sent by mistake",
-  CourtOrder: "Court order",
-  Other: "Other",
-};
-
-/** What a status means for the holder, in one line. */
-export const STATUS_LINE: Record<Status, string> = {
-  Open: "Waiting for the holder's answer. Their tokens can't move until the case closes.",
-  Answered: "Still frozen. Waiting for the reviewer to decide.",
-  Upheld: "The reviewer sided with the issuer. Anyone can settle now.",
-  Rejected: "The reviewer sided with the holder. Anyone can settle now.",
-  Cleared: "The holder keeps the tokens and is unfrozen.",
-  TakenBack: "The case amount was taken back. The rest of the balance is unfrozen.",
-};
-
-export const STATUS_SHORT: Record<Status, string> = {
-  Open: "Frozen",
-  Answered: "Answered",
-  Upheld: "Upheld",
-  Rejected: "Rejected",
-  Cleared: "Cleared",
-  TakenBack: "Taken back",
-};
-
-export const ENDED_BY_LINE: Record<EndedBy, string | null> = {
-  NotEnded: null,
-  Withdrawn: "The issuer withdrew the case.",
-  NoAnswer: "No answer came before the deadline.",
-  ReviewerUpheld: "The reviewer sided with the issuer.",
-  ReviewerRejected: "The reviewer sided with the holder.",
-  ReviewerSilent: "The reviewer didn't decide in time, so the holder wins by default.",
-  Emergency: "Issuer and reviewer acted together in an emergency.",
-};
-
-export const txUrl = (hash: string, network: "testnet" | "public" = "testnet") =>
-  `https://stellar.expert/explorer/${network}/tx/${hash}`;
-export const accountUrl = (a: string, network: "testnet" | "public" = "testnet") =>
-  `https://stellar.expert/explorer/${network}/account/${a}`;
-export const contractUrl = (c: string, network: "testnet" | "public" = "testnet") =>
-  `https://stellar.expert/explorer/${network}/contract/${c}`;
+export type Explorer = "testnet" | "public";
+export const txUrl = (hash: string, network: Explorer = "testnet") => `https://stellar.expert/explorer/${network}/tx/${hash}`;
+export const accountUrl = (a: string, network: Explorer = "testnet") => `https://stellar.expert/explorer/${network}/account/${a}`;
+export const contractUrl = (c: string, network: Explorer = "testnet") => `https://stellar.expert/explorer/${network}/contract/${c}`;
+export const explorerFor = (network: "mainnet" | "testnet"): Explorer => (network === "mainnet" ? "public" : "testnet");

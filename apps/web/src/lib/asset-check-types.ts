@@ -45,7 +45,7 @@ export type AssetCheck = {
     activeCount: number;
     takenBackCount: number;
     casesRead: number;
-    backDoor: { closed: boolean; how: string };
+    backDoor: { closed: boolean; mode: "key-off" | "cosigned" | "open"; how: string };
   } | null;
   history: {
     takeBacks: ScanOp[];

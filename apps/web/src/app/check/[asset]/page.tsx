@@ -1,0 +1,45 @@
+import type { Metadata } from "next";
+import { AnswerSheet } from "@/components/AnswerSheet";
+import { CheckForm } from "@/components/CheckForm";
+import { ReadErrorNotice } from "@/components/ReadErrorNotice";
+import { checkAsset, parseAsset } from "@/lib/asset-check";
+import { ReadError } from "@/lib/network";
+import { getDict } from "@/i18n/server";
+
+// Read from Stellar on every request; nothing is cached or stored.
+export const dynamic = "force-dynamic";
+
+export async function generateMetadata({ params }: PageProps<"/check/[asset]">): Promise<Metadata> {
+  const { asset } = await params;
+  const code = decodeURIComponent(asset).split(/[-:]/)[0];
+  return { title: `${code} · Habeas` };
+}
+
+export default async function CheckResultPage({ params, searchParams }: PageProps<"/check/[asset]">) {
+  const { t } = await getDict();
+  const { asset } = await params;
+  const { network: net } = await searchParams;
+  const network = net === "testnet" ? "testnet" : "mainnet";
+  const raw = decodeURIComponent(asset);
+
+  let result: Awaited<ReturnType<typeof checkAsset>> | null = null;
+  let error = "";
+  try {
+    const { code, issuer } = parseAsset(raw);
+    result = await checkAsset(network, code, issuer);
+  } catch (e) {
+    error = e instanceof ReadError ? e.message : `Unexpected error: ${(e as Error).message}`;
+  }
+
+  return (
+    <main className="mx-auto w-full max-w-4xl px-4 pt-14 sm:px-8">
+      {result ? <AnswerSheet r={result} /> : <ReadErrorNotice what={raw} message={error} />}
+      <section className="mt-20">
+        <h2 className="text-xl">{t.check.another}</h2>
+        <div className="mt-6">
+          <CheckForm initialNetwork={network} />
+        </div>
+      </section>
+    </main>
+  );
+}

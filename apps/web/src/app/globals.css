@@ -1,57 +1,49 @@
 @import "tailwindcss";
 
-/* Habeas design tokens: the carbon-copy form set. Copies stay pale; strong
-   colour only marks state (blue = action, green = cleared, red = taken back).
-   Every text pair below passes WCAG AA; see docs/DESIGN-NOTES.md. */
+/* Habeas design tokens. Two themes, both on-theme for a carbon-copy form set:
+   "Paper" (default): the white original, ballpoint blue ink, canary and pink copies.
+   "Carbon": the page becomes the carbon sheet itself, a deep blue-black with
+   pale transfer text and periwinkle ink.
+   Copies stay pale; strong colour only marks state (ink = action, green =
+   cleared, red = taken back). Every text pair passes WCAG AA on every surface;
+   see docs/DESIGN-NOTES.md. */
 :root {
-  --paper: #f7f8f4; /* form white */
+  --paper: #f7f8f4; /* page */
+  --sheet: #fdfdfb; /* the form itself, a touch brighter than the page */
   --ink: #1f2229; /* graphite */
   --muted: #50555e;
   --rule: #d6d9d0; /* decorative form lines */
   --field: #6a6f64; /* input lines, 3:1 on every copy */
   --pen: #1f3a8f; /* ballpoint blue */
-  --pen-ink: #f7f8f4; /* text on a blue button */
+  --pen-ink: #f7f8f4; /* text on a pen-coloured button */
   --canary: #f1e8b8;
   --pink: #ebcfd3;
   --cleared: #2f6e4e;
   --taken: #9e2b33;
-  --focus: #1f3a8f;
+  --grain-opacity: 0.035;
+  color-scheme: light;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --paper: #17191e;
-    --ink: #f7f8f4;
-    --muted: #a9adb5;
-    --rule: #3a3e46;
-    --field: #7a7f88;
-    --pen: #9db0ee;
-    --pen-ink: #17191e;
-    --canary: #2a2817;
-    --pink: #2c1f22;
-    --cleared: #7dc09c;
-    --taken: #ee9aa1;
-    --focus: #9db0ee;
-  }
-}
-
-:root[data-theme="dark"] {
-  --paper: #17191e;
-  --ink: #f7f8f4;
-  --muted: #a9adb5;
-  --rule: #3a3e46;
-  --field: #7a7f88;
-  --pen: #9db0ee;
-  --pen-ink: #17191e;
-  --canary: #2a2817;
-  --pink: #2c1f22;
-  --cleared: #7dc09c;
-  --taken: #ee9aa1;
-  --focus: #9db0ee;
+:root[data-theme="carbon"] {
+  --paper: #0f1120;
+  --sheet: #181b2e;
+  --ink: #e8eaf4;
+  --muted: #a4a9c0;
+  --rule: #2b2f47;
+  --field: #80869f;
+  --pen: #afbcff;
+  --pen-ink: #0f1120;
+  --canary: #2e2812;
+  --pink: #331f29;
+  --cleared: #8fd6b0;
+  --taken: #f4a3aa;
+  --grain-opacity: 0.06;
+  color-scheme: dark;
 }
 
 @theme inline {
   --color-paper: var(--paper);
+  --color-sheet: var(--sheet);
   --color-ink: var(--ink);
   --color-muted: var(--muted);
   --color-rule: var(--rule);
@@ -64,7 +56,6 @@
   --color-taken: var(--taken);
 
   --font-sans: var(--font-public-sans), ui-sans-serif, system-ui, sans-serif;
-  --font-alt: var(--font-schibsted), var(--font-public-sans), ui-sans-serif, sans-serif;
   --font-mono: var(--font-plex-mono), ui-monospace, monospace;
 
   /* 1.25 type scale from a 17px body */
@@ -76,6 +67,7 @@
   --text-2xl: 2.075rem;
   --text-3xl: 2.594rem;
   --text-4xl: 3.242rem;
+  --text-5xl: 4.053rem;
 
   --ease-ink: cubic-bezier(0.22, 1, 0.36, 1);
 }
@@ -83,7 +75,6 @@
 html {
   background: var(--paper);
   color: var(--ink);
-  color-scheme: light dark;
 }
 
 body {
@@ -92,23 +83,44 @@ body {
   font-size: var(--text-base);
   line-height: 1.55;
   -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Paper grain: a fixed, static noise layer. Not a gradient, not animated. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: var(--grain-opacity);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
 h1,
 h2,
 h3 {
-  font-weight: 750;
-  letter-spacing: -0.015em;
-  line-height: 1.15;
+  font-weight: 800;
+  letter-spacing: -0.022em;
+  line-height: 1.08;
   text-wrap: balance;
+}
+
+h3 {
+  font-weight: 700;
+  letter-spacing: -0.012em;
 }
 
 p {
   text-wrap: pretty;
 }
 
+a {
+  text-underline-offset: 0.2em;
+}
+
 :focus-visible {
-  outline: 3px solid var(--focus);
+  outline: 3px solid var(--pen);
   outline-offset: 3px;
   border-radius: 2px;
 }
@@ -116,6 +128,24 @@ p {
 ::selection {
   background: var(--canary);
   color: var(--ink);
+}
+
+/* Perforated tear line, like the edge between two copies of a form. */
+.perforation {
+  height: 6px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='6'%3E%3Ccircle cx='6' cy='3' r='1.6' fill='%23000'/%3E%3C/svg%3E");
+  background-repeat: repeat-x;
+  opacity: 0.22;
+}
+
+:root[data-theme="carbon"] .perforation {
+  filter: invert(1);
+  opacity: 0.28;
+}
+
+/* Figures line up in tables and amounts. */
+.tabular {
+  font-variant-numeric: tabular-nums;
 }
 
 @media (prefers-reduced-motion: reduce) {

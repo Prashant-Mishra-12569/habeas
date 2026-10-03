@@ -1,0 +1,148 @@
+{
+  "habeas": "CD5XGBA4QHMK3SSSVOVAG6WUVH6XQVUS3DRCIYHUTGRXFCYPWBIVEZUU",
+  "ran_at": "2026-10-03T12:11:22.735Z",
+  "steps": [
+    {
+      "label": "Issuer mints 1,000 DEMOUSD to holder A",
+      "hash": "16a0ca32b598f99f511957ae333fd0c8b9f2e65db5e632326322314fcee9b54c"
+    },
+    {
+      "label": "Issuer mints 1,000 DEMOUSD to holder B",
+      "hash": "2628c49c43e79dde5f9861aadfdee71edb256ee08a7853f2894044ad7fddb1fc"
+    },
+    {
+      "label": "Issuer mints 1,000 DEMOUSD to holder C",
+      "hash": "d6fdec270bf2aeba55081e2e5088530186d1938ca56ba05400528cb8b2152c6a"
+    },
+    {
+      "label": "Issuer mints 1,000 DEMOUSD to holder D",
+      "hash": "ae267512ae318f9f8a6a5e2ee96252d1317a9bca6d88413e9047efad75aabce9"
+    },
+    {
+      "label": "Case B opened: sent by mistake, 250 DEMOUSD (holder B will not answer)",
+      "hash": "1d2a9d6a24c5251b9af1d60939948f3309eeab7488747e491c65f896b0f6a56f"
+    },
+    {
+      "label": "Case C opened: suspected fraud, 300 DEMOUSD",
+      "hash": "bf405c1a9bde25d94a1e28fa9fd90e57055df83919a8013e61bfc6475ea49dd2"
+    },
+    {
+      "label": "Case C: holder C answers for free (relayer pays); the reviewer will stay silent",
+      "hash": "86f19db51b2384c32e788623b0bbacef5a88ff6887cd680b53d477dd93d47fc9"
+    },
+    {
+      "label": "Case A opened: suspected fraud, 400 DEMOUSD",
+      "hash": "87dd144703131e5237d9c3d74b773e428bf4aee961af9096650f7c587fb04ef4"
+    },
+    {
+      "label": "Holder A tries to send 1 DEMOUSD while frozen: fails on-chain",
+      "hash": "f96b6ef5af8259eb62ae395d51f5315da0ae02c91df2924684073ae4ad089d45"
+    },
+    {
+      "label": "Case A: holder A answers for free (relayer pays)",
+      "hash": "ab701a03faf2c55bd8756a16d1d0dd0bc0088c43515335cc8183180c84649f57"
+    },
+    {
+      "label": "Case A: reviewer rejects the issuer's claim",
+      "hash": "07d8889e7e5634843792a45dfa08f658ec0ca3ec43a38db49f2310997ffe0461"
+    },
+    {
+      "label": "Case A settled by the relayer: Cleared, holder A unfrozen",
+      "hash": "e29776099962454d54ff246828a4eadb1c1412821c9869cfd570615e4c5c9c77"
+    },
+    {
+      "label": "Case D opened: suspected fraud, 500 DEMOUSD",
+      "hash": "073332e0a64119d5af543fe3ba469ff4b8fa6d51a739926efba6fd1249eb47d5"
+    },
+    {
+      "label": "Case D: holder D answers for free (relayer pays)",
+      "hash": "d2c840c04ada25f7afd5cff36dc627175d800b5c42666a9482fca2a87048b15e"
+    },
+    {
+      "label": "Case D: reviewer upholds the issuer's claim",
+      "hash": "8877d270d8d4b6fceeb07943ab2e17b214db50e9449341e7197de35591722b56"
+    },
+    {
+      "label": "Case D settled by the relayer: Taken back, 500 DEMOUSD",
+      "hash": "0b23c9cda629317045c031fcf52bfd72224d66f449fb0795e8ea59c1abf624dd"
+    },
+    {
+      "label": "Case E opened against holder A: other, 100 DEMOUSD",
+      "hash": "0fcece7781979e998991032f50d0d76563cb4728033e224a186f97887484fbe5"
+    },
+    {
+      "label": "Case E withdrawn by the issuer: holder A unfrozen",
+      "hash": "fb4ae637b15dc24296e06de2261087400473cf78d6282d07fbdbb1115372b7e2"
+    },
+    {
+      "label": "Emergency take back from holder D: court order, 50 DEMOUSD (issuer and reviewer both sign)",
+      "hash": "9ea444ed54b7b10b80fd489c16b9618b5d7b14ef5d31acda5884868d10f676ed"
+    },
+    {
+      "label": "Case B settled by the relayer: no answer, Taken back 250 DEMOUSD",
+      "hash": "89482af9bd7134c9b39086aac10e893ec56ad2361c52f47d4ec39a74a6bb0820"
+    },
+    {
+      "label": "Case C settled by the relayer: reviewer silent, Cleared (holder wins by default)",
+      "hash": "a2a2e7351372963fecbc71db5fa0ffffa4ea84e6df3bb8ca2cb393d4739e7304"
+    }
+  ],
+  "refusals": [
+    {
+      "label": "Reviewer tries to decide case A before holder A answers",
+      "error": "NotAnswered"
+    },
+    {
+      "label": "Anyone tries to settle case A while holder A can still answer",
+      "error": "TooEarlyToSettle"
+    },
+    {
+      "label": "Issuer tries to open a second case against holder A",
+      "error": "AlreadyActiveCase"
+    }
+  ],
+  "cases": {
+    "A": {
+      "id": 3,
+      "status": "Cleared",
+      "ended_by": "ReviewerRejected",
+      "taken": "0"
+    },
+    "B": {
+      "id": 1,
+      "status": "TakenBack",
+      "ended_by": "NoAnswer",
+      "taken": "250"
+    },
+    "C": {
+      "id": 2,
+      "status": "Cleared",
+      "ended_by": "ReviewerSilent",
+      "taken": "0"
+    },
+    "D": {
+      "id": 4,
+      "status": "TakenBack",
+      "ended_by": "ReviewerUpheld",
+      "taken": "500"
+    },
+    "E": {
+      "id": 5,
+      "status": "Cleared",
+      "ended_by": "Withdrawn",
+      "taken": "0"
+    },
+    "emergency": {
+      "id": 6,
+      "status": "TakenBack",
+      "ended_by": "Emergency",
+      "taken": "50"
+    }
+  },
+  "balances": {
+    "a": "1000",
+    "b": "750",
+    "c": "1000",
+    "d": "450"
+  }
+}

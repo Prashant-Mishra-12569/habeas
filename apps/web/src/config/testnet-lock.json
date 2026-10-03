@@ -1,0 +1,13 @@
+{
+  "asset_issuer": "GAHOUYYJZNCK4NP4PCHWXUJDJ6LP6CT5MPFDIKHW3EJH5GFXYAFVOP7G",
+  "locked_at": "2026-10-03T13:15:00Z",
+  "home_domain": "habeas-stellar.vercel.app",
+  "steps": [
+    { "label": "Spare XLM moved to the relayer, which pays for free answers", "hash": "a7908140caa75f6456ada0ae666370811920f5e12fc1a95b5fc49ab768f68447" },
+    { "label": "Home domain set, so wallets find stellar.toml", "hash": "e34213fb7b76b58a58ae75c3639e7fad5c9b15967350ef5158de4b7018e65397" },
+    { "label": "Data entry \"habeas\" on the issuer account points to the Habeas contract", "hash": "5c49e7400a6d80b7cc84aed70246e4b61a201eec36dabdd660641c428dc51585" },
+    { "label": "Key switched off: master weight 0, reviewer removed as signer", "hash": "d420b31f87ec3591a7e3ea70ea03ec73c47393c8f09343567be6e545e36316d4" },
+    { "label": "Minting through Habeas still works after the lock", "hash": "dae5357460129dfa1668871a4888a262da8c2851771918fcc2f9b4d7ee2a4542" }
+  ],
+  "after": "Classic clawback signed by the issuer refused with TxBadAuth; the account has total signer weight 0."
+}

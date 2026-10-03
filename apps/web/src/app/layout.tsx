@@ -1,15 +1,12 @@
 import type { Metadata } from "next";
-import { IBM_Plex_Mono, Public_Sans, Schibsted_Grotesk } from "next/font/google";
+import { IBM_Plex_Mono, Public_Sans } from "next/font/google";
+import { SiteFooter, SiteHeader } from "@/components/SiteFrame";
+import { LangProvider } from "@/i18n/client";
+import { getDict, getTheme } from "@/i18n/server";
 import "./globals.css";
 
 const publicSans = Public_Sans({
   variable: "--font-public-sans",
-  subsets: ["latin", "latin-ext"],
-});
-
-// Offered on /styleguide as an alternative heading face.
-const schibsted = Schibsted_Grotesk({
-  variable: "--font-schibsted",
   subsets: ["latin", "latin-ext"],
 });
 
@@ -19,19 +16,22 @@ const plexMono = IBM_Plex_Mono({
   weight: ["400", "500"],
 });
 
-export const metadata: Metadata = {
-  title: "Habeas: a fair process before anyone takes your tokens",
-  description:
-    "Freezes and take-backs on Stellar with a public reason, a deadline to answer and a neutral reviewer.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const { t } = await getDict();
+  return { title: t.meta.title, description: t.meta.description };
+}
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default async function RootLayout({ children }: LayoutProps<"/">) {
+  const [{ lang, t }, theme] = await Promise.all([getDict(), getTheme()]);
   return (
-    <html
-      lang="en"
-      className={`${publicSans.variable} ${schibsted.variable} ${plexMono.variable} h-full`}
-    >
-      <body className="min-h-full flex flex-col">{children}</body>
+    <html lang={lang} data-theme={theme} className={`${publicSans.variable} ${plexMono.variable} h-full`}>
+      <body className="flex min-h-full flex-col">
+        <LangProvider lang={lang}>
+          <SiteHeader t={t} theme={theme} />
+          <div className="flex-1">{children}</div>
+          <SiteFooter t={t} />
+        </LangProvider>
+      </body>
     </html>
   );
 }

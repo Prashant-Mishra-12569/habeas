@@ -122,6 +122,7 @@ function backDoor(account: HorizonAccount, reviewer: string) {
   if (others < needed) {
     return {
       closed: true,
+      mode: reviewerSigns ? ("cosigned" as const) : ("key-off" as const),
       how: reviewerSigns
         ? "The issuer account can't freeze or take back without the reviewer's signature."
         : "The issuer account can no longer sign anything.",
@@ -129,6 +130,7 @@ function backDoor(account: HorizonAccount, reviewer: string) {
   }
   return {
     closed: false,
+    mode: "open" as const,
     how: "The issuer account can still freeze or take back directly, skipping Habeas.",
   };
 }
