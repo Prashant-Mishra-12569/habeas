@@ -2,6 +2,33 @@
 
 Updated after every milestone. Newest first.
 
+## Phase 2: the contract (Oct 3, 2026)
+
+### Done
+
+- `contracts/habeas`: open, appeal, decide, settle, withdraw, emergency take back / close, mint, approve holder, reviewer change (needs issuer + old + new reviewer), admin handover (issuer + reviewer, 7-day public delay, blocked while any case is active), reads, `bump`. Typed errors, events with `case_id` and `holder` as topics, TTL extended on every touch, state written before SAC calls. Reference: `docs/SPEC-cases.md`.
+- Decisions made while building (not spelled out in the plan):
+  - Each case stores a short public statement (max 280 bytes) as well as the reason code; issuer and reviewer must give one, the holder's is optional. "Did it give a public reason?" then has a real answer on-chain.
+  - `emergency_close(case_id, ...)` added next to `emergency_take_back`, so an emergency can end a case that's already open.
+  - Every closing path unfreezes the holder; take-back paths take back `min(amount, balance)` first.
+  - Enums are stored by name (`["Cleared"]`), not numbers, so explorers are readable.
+- 50 tests against the real SAC from the SDK (plan asked for 25+). Mutation check: removing the holder's signature, flipping "reviewer silent" to take back, or dropping the reviewer from emergencies each makes tests fail. `cargo clippy -- -D warnings` clean.
+- CI on GitHub: fmt, clippy, tests, wasm build. Green.
+- Verified build: tag `v0.1.0` → GitHub Actions release with a SEP-55 build attestation (verified with `gh attestation verify`). The testnet instance is deployed from that exact wasm (`e822b7f1…`), and the on-chain wasm carries `source_repo` metadata. StellarExpert still showed "unverified" right after deploy; check again later.
+- Testnet: `scripts/deploy-testnet.sh` issues DEMOUSD from scratch, deploys Habeas, hands it the SAC admin role, locks the issuer account, and checks a classic clawback is refused. `scripts/run-demo-cases.mjs` runs all six endings (cleared after appeal, taken back after appeal, no answer, reviewer silent, withdrawn, emergency) plus three refusals. Every hash checked on Horizon. `docs/EVIDENCE.md` is generated from the results.
+- The first deployment (local build) is kept in `deployments/archive/local-build/`.
+- Error parsing in `scripts/lib/stellar.mjs` tells Habeas errors apart from the asset contract's own numbered errors (they overlap, e.g. #13).
+- README and MIT license added.
+
+### Open questions for Prashant
+
+- Final lock for the demo asset issuer: reviewer as co-signer (current, reversible) or master weight 0 (permanent)?
+- Plan says the demo reviewer is a 2-of-3 panel. The contract supports it as-is (the reviewer is any address, so a multisig account works), but signing a Soroban auth entry with several keys needs custom code. Proposed: single reviewer key for the demo, panel listed as roadmap, unless you want it.
+
+### Next
+
+- Phase 3: web app skeleton and `/styleguide` for approval, design notes from the reference sites, asset check on real mainnet + testnet data.
+
 ## Phase 1: tools, repo, spikes (Oct 3, 2026)
 
 ### Done
@@ -22,7 +49,5 @@ Updated after every milestone. Newest first.
   - S4: after `set_admin` the issuer account can still clawback/freeze directly (back door open). Locking it with the reviewer as co-signer closes it; the contract path keeps working.
 - Design change from S4: the contract's `issuer` role is a separate operator key, not the asset's classic issuer account, which gets locked.
 
-### Next
-
-- Create the public `habeas` repo on GitHub and push (waiting on `gh auth login`).
-- Phase 2: the Habeas contract in `contracts/habeas/`.
+- Verified the two U.S. Bank operations on mainnet Horizon (payment and clawback of 24,000 USBDCP, Sep 19 02:53:03 and 03:08:33 UTC). Recorded in `docs/EVIDENCE.md`.
+- Public repo created: https://github.com/Prashant-Mishra-12569/habeas. Commits use the GitHub no-reply email.

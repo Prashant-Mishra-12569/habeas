@@ -11,6 +11,12 @@
 # deployments/testnet.json.
 #
 # Usage: scripts/deploy-testnet.sh [answer_window_secs] [review_window_secs]
+# Env:   WASM=path/to/habeas.wasm      deploy this wasm (e.g. the verified
+#                                      GitHub release) instead of building
+#        ASSET_ISSUER=key-name         asset issuer key (default
+#                                      habeas-asset-issuer); use a new one for
+#                                      a fresh asset, since an asset's admin
+#                                      can only leave Habeas after a 7-day delay
 set -euo pipefail
 
 STELLAR="${STELLAR:-stellar}"
@@ -42,11 +48,12 @@ key() {
 }
 
 step "Accounts"
-for k in habeas-asset-issuer habeas-issuer habeas-reviewer habeas-holder-a habeas-holder-b habeas-holder-c habeas-holder-d hb-relayer; do key "$k"; done
-ASSET="DEMOUSD:$(addr habeas-asset-issuer)"
+ISSUER_KEY="${ASSET_ISSUER:-habeas-asset-issuer}"
+for k in "$ISSUER_KEY" habeas-issuer habeas-reviewer habeas-holder-a habeas-holder-b habeas-holder-c habeas-holder-d hb-relayer; do key "$k"; done
+ASSET="DEMOUSD:$(addr "$ISSUER_KEY")"
 
 step "Issuer flags: revocable + clawback enabled (before any trustline)"
-tx tx new set-options --source habeas-asset-issuer --set-revocable --set-clawback-enabled
+tx tx new set-options --source "$ISSUER_KEY" --set-revocable --set-clawback-enabled
 
 step "Holders open trustlines"
 for h in a b c d; do tx tx new change-trust --source "habeas-holder-$h" --line "$ASSET"; done
@@ -56,13 +63,15 @@ SAC="$("$STELLAR" contract id asset --asset "$ASSET")"
 if "$STELLAR" contract invoke --id "$SAC" --source habeas-issuer --send=no -- name >/dev/null 2>&1; then
   echo "   already deployed"
 else
-  tx contract asset deploy --source habeas-asset-issuer --asset "$ASSET"
+  tx contract asset deploy --source "$ISSUER_KEY" --asset "$ASSET"
 fi
 echo "   SAC $SAC"
 
 step "Build and deploy Habeas (answer ${ANSWER}s, review ${REVIEW}s)"
-(cd "$ROOT" && "$STELLAR" contract build --package habeas >/dev/null 2>&1)
-WASM="$ROOT/target/wasm32v1-none/release/habeas.wasm"
+if [ -z "${WASM:-}" ]; then
+  (cd "$ROOT" && "$STELLAR" contract build --package habeas >/dev/null 2>&1)
+  WASM="$ROOT/target/wasm32v1-none/release/habeas.wasm"
+fi
 WASM_HASH="$(sha256sum "$WASM" | cut -d' ' -f1)"
 tx contract deploy --source habeas-issuer --wasm "$WASM" --alias habeas-demousd -- \
   --sac "$SAC" --issuer "$(addr habeas-issuer)" --reviewer "$(addr habeas-reviewer)" \
@@ -72,19 +81,19 @@ echo "   Habeas $HABEAS (wasm sha256 $WASM_HASH)"
 
 step "Hand the SAC admin role to Habeas"
 CURRENT_ADMIN="$("$STELLAR" contract invoke --id "$SAC" --source habeas-issuer --send=no -- admin 2>/dev/null | tr -d '"')"
-if [ "$CURRENT_ADMIN" != "$(addr habeas-asset-issuer)" ]; then
+if [ "$CURRENT_ADMIN" != "$(addr "$ISSUER_KEY")" ]; then
   echo "   SAC admin is already $CURRENT_ADMIN, not the asset issuer. Use a fresh asset issuer." >&2
   exit 1
 fi
-tx contract invoke --source habeas-asset-issuer --id "$SAC" -- set_admin --new_admin "$HABEAS"
+tx contract invoke --source "$ISSUER_KEY" --id "$SAC" -- set_admin --new_admin "$HABEAS"
 echo "   admin now: $("$STELLAR" contract invoke --id "$SAC" --source habeas-issuer --send=no -- admin 2>/dev/null)"
 
 step "Lock the classic issuer account (reviewer becomes a required co-signer)"
-tx tx new set-options --source habeas-asset-issuer --signer "$(addr habeas-reviewer)" --signer-weight 1 \
+tx tx new set-options --source "$ISSUER_KEY" --signer "$(addr habeas-reviewer)" --signer-weight 1 \
   --master-weight 1 --low-threshold 2 --med-threshold 2 --high-threshold 2
 
 step "Check the back door is closed: classic clawback signed by the issuer alone"
-if "$STELLAR" tx new clawback --source habeas-asset-issuer --from "$(addr habeas-holder-a)" \
+if "$STELLAR" tx new clawback --source "$ISSUER_KEY" --from "$(addr habeas-holder-a)" \
   --asset "$ASSET" --amount 1 >/dev/null 2>"$LOG"; then
   echo "   BACK DOOR OPEN: classic clawback succeeded" >&2
   exit 1
@@ -98,10 +107,11 @@ cat >"$ROOT/deployments/testnet.json" <<JSON
   "network": "testnet",
   "deployed_at": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
   "asset": "$ASSET",
-  "asset_issuer": "$(addr habeas-asset-issuer)",
+  "asset_issuer": "$(addr "$ISSUER_KEY")",
   "sac": "$SAC",
   "habeas": "$HABEAS",
   "wasm_sha256": "$WASM_HASH",
+  "wasm_source": "${WASM_SOURCE:-local build}",
   "issuer": "$(addr habeas-issuer)",
   "reviewer": "$(addr habeas-reviewer)",
   "answer_window_secs": $ANSWER,

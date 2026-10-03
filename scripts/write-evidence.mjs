@@ -40,6 +40,7 @@ Issuer \`GDABKPZMAIULVJVJJQM7L3VIG5A2IS5V4KP2P3YNP6YWRUBJNBGFGG6E\` has \`AUTH_R
 | --- | --- |
 | Habeas contract | ${contract(dep.habeas)} |
 | Wasm SHA-256 | \`${dep.wasm_sha256}\` |
+| Wasm built by | ${dep.wasm_source?.startsWith("http") ? `[GitHub Actions release](${dep.wasm_source}) (SEP-55 build attestation)` : dep.wasm_source ?? "local build"} |
 | Asset | \`${dep.asset}\` |
 | Asset contract (SAC), admin = Habeas | ${contract(dep.sac)} |
 | Asset issuer account (locked: reviewer is a required co-signer) | ${account(dep.asset_issuer)} |
@@ -72,6 +73,16 @@ ${refusals}
 ${cases}
 
 Holder balances after all cases (DEMOUSD, each started with 1,000): A ${run.balances.a}, B ${run.balances.b}, C ${run.balances.c}, D ${run.balances.d}.
+
+## Check the build yourself
+
+The deployed wasm was built by GitHub Actions from this repository and signed with a build attestation. To check it:
+
+\`\`\`bash
+stellar contract fetch --id ${dep.habeas} --network testnet -o habeas.wasm
+sha256sum habeas.wasm   # ${dep.wasm_sha256}
+gh attestation verify habeas.wasm --repo Prashant-Mishra-12569/habeas --signer-repo stellar-expert/soroban-build-workflow
+\`\`\`
 
 ## Back door check
 

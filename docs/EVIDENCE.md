@@ -17,42 +17,43 @@ Issuer `GDABKPZMAIULVJVJJQM7L3VIG5A2IS5V4KP2P3YNP6YWRUBJNBGFGG6E` has `AUTH_REQU
 
 | What | Value |
 | --- | --- |
-| Habeas contract | [`CD63RIFBMVZR7DYQB33MEPBXD4UQVJXBKV7RGTCOELQEZ55BV3LK6LQN`](https://stellar.expert/explorer/testnet/contract/CD63RIFBMVZR7DYQB33MEPBXD4UQVJXBKV7RGTCOELQEZ55BV3LK6LQN) |
-| Wasm SHA-256 | `3f25f2c24897925d07f82c959d87546fcf296d1f5e7007d75055c3379ffc17eb` |
-| Asset | `DEMOUSD:GB5PGGVSMLPYEMDKI7PIT4H2EOLCELWJJOMPQ4JHMSUMMI5VRZJMNETU` |
-| Asset contract (SAC), admin = Habeas | [`CA6IP47KNZ5ZB4R33HJR7HKDQG4FHR2OOWSOSCZN64QAZ5QEDKWXM6WA`](https://stellar.expert/explorer/testnet/contract/CA6IP47KNZ5ZB4R33HJR7HKDQG4FHR2OOWSOSCZN64QAZ5QEDKWXM6WA) |
-| Asset issuer account (locked: reviewer is a required co-signer) | [`GB5PGGVSMLPYEMDKI7PIT4H2EOLCELWJJOMPQ4JHMSUMMI5VRZJMNETU`](https://stellar.expert/explorer/testnet/account/GB5PGGVSMLPYEMDKI7PIT4H2EOLCELWJJOMPQ4JHMSUMMI5VRZJMNETU) |
+| Habeas contract | [`CD5XGBA4QHMK3SSSVOVAG6WUVH6XQVUS3DRCIYHUTGRXFCYPWBIVEZUU`](https://stellar.expert/explorer/testnet/contract/CD5XGBA4QHMK3SSSVOVAG6WUVH6XQVUS3DRCIYHUTGRXFCYPWBIVEZUU) |
+| Wasm SHA-256 | `e822b7f162c873286a73019eb5ea915b29a287eaab02e626090d48ef19e26825` |
+| Wasm built by | [GitHub Actions release](https://github.com/Prashant-Mishra-12569/habeas/releases/tag/v0.1.0_habeas_cli27.0.0) (SEP-55 build attestation) |
+| Asset | `DEMOUSD:GAHOUYYJZNCK4NP4PCHWXUJDJ6LP6CT5MPFDIKHW3EJH5GFXYAFVOP7G` |
+| Asset contract (SAC), admin = Habeas | [`CCCPJACXIDRPM2RUANRRAQYJUIMMSJW7WF5BGIJSG4VXWK6SQNLLW6VQ`](https://stellar.expert/explorer/testnet/contract/CCCPJACXIDRPM2RUANRRAQYJUIMMSJW7WF5BGIJSG4VXWK6SQNLLW6VQ) |
+| Asset issuer account (locked: reviewer is a required co-signer) | [`GAHOUYYJZNCK4NP4PCHWXUJDJ6LP6CT5MPFDIKHW3EJH5GFXYAFVOP7G`](https://stellar.expert/explorer/testnet/account/GAHOUYYJZNCK4NP4PCHWXUJDJ6LP6CT5MPFDIKHW3EJH5GFXYAFVOP7G) |
 | Issuer key | [`GCCLIEJ33LQ3Y7KJI55EZODLE5BOCIAWAGWA3OJGM5KEIQNM4QVIDM23`](https://stellar.expert/explorer/testnet/account/GCCLIEJ33LQ3Y7KJI55EZODLE5BOCIAWAGWA3OJGM5KEIQNM4QVIDM23) |
 | Reviewer | [`GAS6L6UQUB4PMX2XZTHPM33ITBBQKQEUNOUSNCPMOFJBQHOC4R7G4N2R`](https://stellar.expert/explorer/testnet/account/GAS6L6UQUB4PMX2XZTHPM33ITBBQKQEUNOUSNCPMOFJBQHOC4R7G4N2R) |
 | Relayer (pays fees for free appeals and settles) | [`GAXJZQQE6XWVP5HVJ6LPVS5IC37CYGQ2J5LTUYLKT5KZE6YJFIJ7LRE5`](https://stellar.expert/explorer/testnet/account/GAXJZQQE6XWVP5HVJ6LPVS5IC37CYGQ2J5LTUYLKT5KZE6YJFIJ7LRE5) |
 | Answer window / review window | 180 s / 120 s (short, for the demo) |
-| Deployed | 2026-10-03T11:46:09Z |
+| Deployed | 2026-10-03T12:07:15Z |
 
-### Every ending, run for real (2026-10-03T11:55:48.330Z)
+### Every ending, run for real (2026-10-03T12:11:22.735Z)
 
 | # | Step | tx |
 | --- | --- | --- |
-| 1 | Issuer mints 1,000 DEMOUSD to holder A | [6f4365a7](https://stellar.expert/explorer/testnet/tx/6f4365a72bc557f1423297126c7c63e329c2dae616b8a7fd43a61cb9d6c063fb) |
-| 2 | Issuer mints 1,000 DEMOUSD to holder B | [2168e29f](https://stellar.expert/explorer/testnet/tx/2168e29f8db7e5dc32e18a465fbb90a1bdd4b12603a0e5bef9295ccef6e43d44) |
-| 3 | Issuer mints 1,000 DEMOUSD to holder C | [4841ae0a](https://stellar.expert/explorer/testnet/tx/4841ae0a4db5fd3ed189863a0ffe75f96f497b30a0af776eb9be5b72a2515b39) |
-| 4 | Issuer mints 1,000 DEMOUSD to holder D | [ada69c7c](https://stellar.expert/explorer/testnet/tx/ada69c7c9aab23f77a02a5def9a2950cb17c7aeb9c9430689565985edb5ded63) |
-| 5 | Case B opened: sent by mistake, 250 DEMOUSD (holder B will not answer) | [6c2d55a4](https://stellar.expert/explorer/testnet/tx/6c2d55a41d9b2a20e0b34ba5a4d58f578cc0a91111f3d43a6bbdc137d78ed889) |
-| 6 | Case C opened: suspected fraud, 300 DEMOUSD | [30744d31](https://stellar.expert/explorer/testnet/tx/30744d31db30b746cf8d7d5b6affddcdbba5807b29d7a6d5c9da809605cf7fa6) |
-| 7 | Case C: holder C answers for free (relayer pays); the reviewer will stay silent | [366d06bc](https://stellar.expert/explorer/testnet/tx/366d06bc44c1a5c31b39c600d2f2a481d28778e477e1622c7aace369234f0a22) |
-| 8 | Case A opened: suspected fraud, 400 DEMOUSD | [7ec4118a](https://stellar.expert/explorer/testnet/tx/7ec4118ae8f935df4ed4686d9471f540b51a6074b9b79b53592da99567028415) |
-| 9 | Holder A tries to send 1 DEMOUSD while frozen: fails on-chain | [b84071c3](https://stellar.expert/explorer/testnet/tx/b84071c34fabefd2fece969490c3b5c5d375c7b13bba4f40087be8c70c6aefe9) |
-| 10 | Case A: holder A answers for free (relayer pays) | [439c58d6](https://stellar.expert/explorer/testnet/tx/439c58d60fedec690a5f753fbc6fa56a4f7409c2218fa1fc55ab66cb929da377) |
-| 11 | Case A: reviewer rejects the issuer's claim | [b555052c](https://stellar.expert/explorer/testnet/tx/b555052ce6151b26ef5e5dea448d9b864bb4b982e58c25a7248768a90d48f0bd) |
-| 12 | Case A settled by the relayer: Cleared, holder A unfrozen | [6dcd5eb9](https://stellar.expert/explorer/testnet/tx/6dcd5eb9b759f35b61fdf2af446a74d3689ddeb185958ee17747b1533170986e) |
-| 13 | Case D opened: suspected fraud, 500 DEMOUSD | [02ae0014](https://stellar.expert/explorer/testnet/tx/02ae0014c4ae8e6b3d9a3a76f7b2e448a9525b77dd87d72e45692dc42a8c19b6) |
-| 14 | Case D: holder D answers for free (relayer pays) | [080669d7](https://stellar.expert/explorer/testnet/tx/080669d7c775293342776f5707cc32da57ca727a0467bf647f8ffde48be1200e) |
-| 15 | Case D: reviewer upholds the issuer's claim | [b43b81c1](https://stellar.expert/explorer/testnet/tx/b43b81c1a4204ab01676a92098565366c8ec3e0a5bad354fb5a38cd76b9c4d9c) |
-| 16 | Case D settled by the relayer: Taken back, 500 DEMOUSD | [a413fbeb](https://stellar.expert/explorer/testnet/tx/a413fbebc8f8dc3936d02ebeace819dcca1558dd893ce0e8bb2cb0c60f87c42d) |
-| 17 | Case E opened against holder A: other, 100 DEMOUSD | [b2c30872](https://stellar.expert/explorer/testnet/tx/b2c308727bc38361a0d1c1064ffe1a2ad960803836d905164e2df167a6cf84ee) |
-| 18 | Case E withdrawn by the issuer: holder A unfrozen | [e8090ef8](https://stellar.expert/explorer/testnet/tx/e8090ef83d9841fa9f62c668efc81f04cd7d09940957019a97958465f8e4f229) |
-| 19 | Emergency take back from holder D: court order, 50 DEMOUSD (issuer and reviewer both sign) | [e8ef4e18](https://stellar.expert/explorer/testnet/tx/e8ef4e18c16527b933f138e1abe87010cbb4fec7c7889466b9cd6b117b75b5ac) |
-| 20 | Case B settled by the relayer: no answer, Taken back 250 DEMOUSD | [9aad78bb](https://stellar.expert/explorer/testnet/tx/9aad78bbce090cad54eddc879ba7cc5b72952d58e713f46666bf03522ed4ea30) |
-| 21 | Case C settled by the relayer: reviewer silent, Cleared (holder wins by default) | [72ca42eb](https://stellar.expert/explorer/testnet/tx/72ca42ebb162977ac0351dce4061221ae026f537f1e284480cf4a0b9998da997) |
+| 1 | Issuer mints 1,000 DEMOUSD to holder A | [16a0ca32](https://stellar.expert/explorer/testnet/tx/16a0ca32b598f99f511957ae333fd0c8b9f2e65db5e632326322314fcee9b54c) |
+| 2 | Issuer mints 1,000 DEMOUSD to holder B | [2628c49c](https://stellar.expert/explorer/testnet/tx/2628c49c43e79dde5f9861aadfdee71edb256ee08a7853f2894044ad7fddb1fc) |
+| 3 | Issuer mints 1,000 DEMOUSD to holder C | [d6fdec27](https://stellar.expert/explorer/testnet/tx/d6fdec270bf2aeba55081e2e5088530186d1938ca56ba05400528cb8b2152c6a) |
+| 4 | Issuer mints 1,000 DEMOUSD to holder D | [ae267512](https://stellar.expert/explorer/testnet/tx/ae267512ae318f9f8a6a5e2ee96252d1317a9bca6d88413e9047efad75aabce9) |
+| 5 | Case B opened: sent by mistake, 250 DEMOUSD (holder B will not answer) | [1d2a9d6a](https://stellar.expert/explorer/testnet/tx/1d2a9d6a24c5251b9af1d60939948f3309eeab7488747e491c65f896b0f6a56f) |
+| 6 | Case C opened: suspected fraud, 300 DEMOUSD | [bf405c1a](https://stellar.expert/explorer/testnet/tx/bf405c1a9bde25d94a1e28fa9fd90e57055df83919a8013e61bfc6475ea49dd2) |
+| 7 | Case C: holder C answers for free (relayer pays); the reviewer will stay silent | [86f19db5](https://stellar.expert/explorer/testnet/tx/86f19db51b2384c32e788623b0bbacef5a88ff6887cd680b53d477dd93d47fc9) |
+| 8 | Case A opened: suspected fraud, 400 DEMOUSD | [87dd1447](https://stellar.expert/explorer/testnet/tx/87dd144703131e5237d9c3d74b773e428bf4aee961af9096650f7c587fb04ef4) |
+| 9 | Holder A tries to send 1 DEMOUSD while frozen: fails on-chain | [f96b6ef5](https://stellar.expert/explorer/testnet/tx/f96b6ef5af8259eb62ae395d51f5315da0ae02c91df2924684073ae4ad089d45) |
+| 10 | Case A: holder A answers for free (relayer pays) | [ab701a03](https://stellar.expert/explorer/testnet/tx/ab701a03faf2c55bd8756a16d1d0dd0bc0088c43515335cc8183180c84649f57) |
+| 11 | Case A: reviewer rejects the issuer's claim | [07d8889e](https://stellar.expert/explorer/testnet/tx/07d8889e7e5634843792a45dfa08f658ec0ca3ec43a38db49f2310997ffe0461) |
+| 12 | Case A settled by the relayer: Cleared, holder A unfrozen | [e2977609](https://stellar.expert/explorer/testnet/tx/e29776099962454d54ff246828a4eadb1c1412821c9869cfd570615e4c5c9c77) |
+| 13 | Case D opened: suspected fraud, 500 DEMOUSD | [073332e0](https://stellar.expert/explorer/testnet/tx/073332e0a64119d5af543fe3ba469ff4b8fa6d51a739926efba6fd1249eb47d5) |
+| 14 | Case D: holder D answers for free (relayer pays) | [d2c840c0](https://stellar.expert/explorer/testnet/tx/d2c840c04ada25f7afd5cff36dc627175d800b5c42666a9482fca2a87048b15e) |
+| 15 | Case D: reviewer upholds the issuer's claim | [8877d270](https://stellar.expert/explorer/testnet/tx/8877d270d8d4b6fceeb07943ab2e17b214db50e9449341e7197de35591722b56) |
+| 16 | Case D settled by the relayer: Taken back, 500 DEMOUSD | [0b23c9cd](https://stellar.expert/explorer/testnet/tx/0b23c9cda629317045c031fcf52bfd72224d66f449fb0795e8ea59c1abf624dd) |
+| 17 | Case E opened against holder A: other, 100 DEMOUSD | [0fcece77](https://stellar.expert/explorer/testnet/tx/0fcece7781979e998991032f50d0d76563cb4728033e224a186f97887484fbe5) |
+| 18 | Case E withdrawn by the issuer: holder A unfrozen | [fb4ae637](https://stellar.expert/explorer/testnet/tx/fb4ae637b15dc24296e06de2261087400473cf78d6282d07fbdbb1115372b7e2) |
+| 19 | Emergency take back from holder D: court order, 50 DEMOUSD (issuer and reviewer both sign) | [9ea444ed](https://stellar.expert/explorer/testnet/tx/9ea444ed54b7b10b80fd489c16b9618b5d7b14ef5d31acda5884868d10f676ed) |
+| 20 | Case B settled by the relayer: no answer, Taken back 250 DEMOUSD | [89482af9](https://stellar.expert/explorer/testnet/tx/89482af9bd7134c9b39086aac10e893ec56ad2361c52f47d4ec39a74a6bb0820) |
+| 21 | Case C settled by the relayer: reviewer silent, Cleared (holder wins by default) | [a2a2e735](https://stellar.expert/explorer/testnet/tx/a2a2e7351372963fecbc71db5fa0ffffa4ea84e6df3bb8ca2cb393d4739e7304) |
 
 Step "Holder A tries to send 1 DEMOUSD while frozen" is meant to fail; it fails on-chain with `src_not_authorized`.
 
@@ -78,6 +79,16 @@ Simulated with the real contract; the contract refused each one with the error s
 | emergency | #6 | TakenBack | Emergency | 50 |
 
 Holder balances after all cases (DEMOUSD, each started with 1,000): A 1000, B 750, C 1000, D 450.
+
+## Check the build yourself
+
+The deployed wasm was built by GitHub Actions from this repository and signed with a build attestation. To check it:
+
+```bash
+stellar contract fetch --id CD5XGBA4QHMK3SSSVOVAG6WUVH6XQVUS3DRCIYHUTGRXFCYPWBIVEZUU --network testnet -o habeas.wasm
+sha256sum habeas.wasm   # e822b7f162c873286a73019eb5ea915b29a287eaab02e626090d48ef19e26825
+gh attestation verify habeas.wasm --repo Prashant-Mishra-12569/habeas --signer-repo stellar-expert/soroban-build-workflow
+```
 
 ## Back door check
 
