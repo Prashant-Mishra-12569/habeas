@@ -1,10 +1,8 @@
 import "server-only";
-import { ReadError } from "./habeas";
+import { ReadError, horizon } from "./network";
 import type { ClawbackEvent } from "./mainnet-types";
 
 export type { ClawbackEvent };
-
-export const MAINNET_HORIZON = process.env.MAINNET_HORIZON_URL ?? "https://horizon.stellar.org";
 
 /**
  * The Sep 19, 2026 USBDC pilot event: a payment and the clawback of the same
@@ -28,23 +26,10 @@ type HorizonOp = {
   to?: string;
 };
 
-async function horizon<T>(path: string): Promise<T> {
-  let res: Response;
-  try {
-    // Past operations never change, so a long cache is safe.
-    res = await fetch(`${MAINNET_HORIZON}${path}`, { next: { revalidate: 86_400 } });
-  } catch (e) {
-    throw new ReadError(`Couldn't reach Stellar's public Horizon server (${(e as Error).message}).`);
-  }
-  if (!res.ok) throw new ReadError(`Horizon answered ${res.status} for ${path}.`);
-  return res.json() as Promise<T>;
-}
-
-
 export async function getUsbdcEvent(): Promise<ClawbackEvent> {
   const [payment, clawback] = await Promise.all([
-    horizon<HorizonOp>(`/operations/${USBDC_EVENT.paymentOp}`),
-    horizon<HorizonOp>(`/operations/${USBDC_EVENT.clawbackOp}`),
+    horizon<HorizonOp>("mainnet", `/operations/${USBDC_EVENT.paymentOp}`, 86_400),
+    horizon<HorizonOp>("mainnet", `/operations/${USBDC_EVENT.clawbackOp}`, 86_400),
   ]);
   if (clawback.type !== "clawback") {
     throw new ReadError(`Operation ${clawback.id} is a ${clawback.type}, not a clawback.`);

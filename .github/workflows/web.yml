@@ -1,0 +1,30 @@
+name: Web
+
+on:
+  push:
+    branches: [main]
+    paths: ["apps/web/**", "deployments/testnet.json", ".github/workflows/web.yml"]
+  pull_request:
+    paths: ["apps/web/**", "deployments/testnet.json", ".github/workflows/web.yml"]
+
+defaults:
+  run:
+    working-directory: apps/web
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: apps/web/package-lock.json
+      - run: npm ci
+      - run: npm run sync-deployment
+      - run: npm run lint
+      - run: npm run typecheck
+      # Reads real Stellar mainnet and testnet; no mocks.
+      - run: npm test
+      - run: npm run build

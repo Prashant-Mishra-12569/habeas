@@ -1,26 +1,12 @@
 import "server-only";
-import {
-  Account,
-  BASE_FEE,
-  Contract,
-  Networks,
-  TransactionBuilder,
-  nativeToScVal,
-  rpc,
-  scValToNative,
-  type xdr,
-} from "@stellar/stellar-sdk";
+import { nativeToScVal, type xdr } from "@stellar/stellar-sdk";
+import { ReadError, SimulationError, simulateRead } from "./network";
 import deployment from "@/config/testnet.json";
 import type { Case, EndedBy, Reason, Status } from "./types";
 
 export type { Case, EndedBy, Reason, Status };
 
-export const TESTNET_RPC = process.env.TESTNET_RPC_URL ?? "https://soroban-testnet.stellar.org";
-export { deployment };
-
-const server = new rpc.Server(TESTNET_RPC);
-
-export class ReadError extends Error {}
+export { deployment, ReadError };
 
 const STROOPS = 10_000_000n;
 export function formatAmount(stroops: bigint): string {
@@ -31,25 +17,17 @@ export function formatAmount(stroops: bigint): string {
 
 const hex = (b: Buffer | Uint8Array | undefined | null) => (b ? Buffer.from(b).toString("hex") : null);
 
-/** Read-only contract call through simulation. Free, no signature. */
+/** Read-only call to the testnet Habeas contract. Free, no signature. */
 async function read(method: string, args: xdr.ScVal[] = []): Promise<unknown> {
-  // Simulation needs an existing source account; the sequence is ignored.
-  const source = new Account(deployment.relayer, "0");
-  const tx = new TransactionBuilder(source, { fee: BASE_FEE, networkPassphrase: Networks.TESTNET })
-    .addOperation(new Contract(deployment.habeas).call(method, ...args))
-    .setTimeout(30)
-    .build();
-  let sim: rpc.Api.SimulateTransactionResponse;
   try {
-    sim = await server.simulateTransaction(tx);
+    return await simulateRead("testnet", deployment.habeas, method, args, deployment.relayer);
   } catch (e) {
-    throw new ReadError(`Couldn't reach the Stellar testnet RPC (${(e as Error).message}).`);
+    if (e instanceof SimulationError) {
+      if (e.raw.includes("Error(Contract, #1)")) throw new ReadError("No case with that number.");
+      throw new ReadError(`The contract refused the read: ${e.message}`);
+    }
+    throw e;
   }
-  if (rpc.Api.isSimulationError(sim)) {
-    if (sim.error.includes("Error(Contract, #1)")) throw new ReadError(`No case with that number.`);
-    throw new ReadError(`The contract refused the read: ${sim.error.split("\n")[0]}`);
-  }
-  return scValToNative(sim.result!.retval);
 }
 
 type RawCase = Record<string, unknown> & {
