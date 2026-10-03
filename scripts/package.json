@@ -1,0 +1,11 @@
+{
+  "name": "habeas-scripts",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "cases": "node run-demo-cases.mjs"
+  },
+  "dependencies": {
+    "@stellar/stellar-sdk": "^17.2.1"
+  }
+}

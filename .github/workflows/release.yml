@@ -1,0 +1,23 @@
+# Builds the contract on GitHub Actions and publishes the wasm with a build
+# attestation (SEP-55), so anyone can check that the deployed contract came
+# from this repository. Runs when a tag like v0.1.0 is pushed.
+name: Verified build
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  id-token: write
+  contents: write
+  attestations: write
+
+jobs:
+  release-habeas:
+    uses: stellar-expert/soroban-build-workflow/.github/workflows/release.yml@main
+    with:
+      release_name: ${{ github.ref_name }}
+      release_description: "Habeas contract, built and attested by GitHub Actions"
+      package: "habeas"
+    secrets:
+      release_token: ${{ secrets.GITHUB_TOKEN }}

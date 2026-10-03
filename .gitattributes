@@ -1,0 +1,3 @@
+* text=auto eol=lf
+# Exact bytes matter: their SHA-256 fingerprints are recorded on-chain.
+scripts/demo-files/** -text

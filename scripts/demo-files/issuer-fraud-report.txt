@@ -1,0 +1,4 @@
+Habeas testnet demo file.
+Case: holder A, suspected fraud.
+Issuer's note: a card payment that funded this account was reported stolen by the card owner.
+This file is public test data. Its SHA-256 fingerprint is recorded on-chain.

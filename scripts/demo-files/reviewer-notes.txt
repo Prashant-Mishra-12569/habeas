@@ -1,0 +1,3 @@
+Habeas testnet demo file.
+Reviewer's notes: compared the card owner's report with the holder's bank statement.
+This file is public test data. Its SHA-256 fingerprint is recorded on-chain.

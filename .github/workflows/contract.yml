@@ -1,0 +1,28 @@
+name: Contract
+
+on:
+  push:
+    branches: [main]
+    paths: ["contracts/**", "Cargo.toml", "Cargo.lock", ".github/workflows/contract.yml"]
+  pull_request:
+    paths: ["contracts/**", "Cargo.toml", "Cargo.lock", ".github/workflows/contract.yml"]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Rust toolchain
+        run: |
+          rustup update stable
+          rustup default stable
+          rustup component add clippy rustfmt
+          rustup target add wasm32v1-none
+      - name: Format
+        run: cargo fmt --all -- --check
+      - name: Clippy
+        run: cargo clippy --all-targets -- -D warnings
+      - name: Tests
+        run: cargo test
+      - name: Wasm build
+        run: cargo build --package habeas --target wasm32v1-none --release

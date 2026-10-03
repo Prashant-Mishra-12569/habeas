@@ -1,0 +1,3 @@
+Habeas testnet demo file.
+Holder A's answer: the card is mine. Attached would be a bank statement showing the payment.
+This file is public test data. Its SHA-256 fingerprint is recorded on-chain.
