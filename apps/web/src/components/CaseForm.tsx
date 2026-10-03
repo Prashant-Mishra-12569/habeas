@@ -1,6 +1,7 @@
 "use client";
 
-import { motion, useReducedMotion } from "motion/react";
+import { motion } from "motion/react";
+import { instant, useReduceMotion } from "@/lib/use-reduce-motion";
 import type { ReactNode } from "react";
 import type { Status } from "@/lib/types";
 import { useT } from "@/i18n/client";
@@ -41,11 +42,11 @@ export function CaseForm({
   outcomeLine?: string | null;
 }) {
   const t = useT();
-  const reduce = useReducedMotion();
+  const reduce = useReduceMotion();
   // The copies slide out from under the form again whenever the status changes.
   const slide = (offset: number, delay: number) =>
     reduce
-      ? { initial: false as const, animate: { x: offset, y: offset } }
+      ? { initial: false as const, animate: { x: offset, y: offset }, transition: instant }
       : {
           initial: { x: 0, y: 0 },
           animate: { x: offset, y: offset },
@@ -58,17 +59,17 @@ export function CaseForm({
       <motion.div key={`pink-${status}`} aria-hidden className="absolute inset-0 rounded-[2px] bg-pink" {...slide(14, 0.08)} />
       <motion.div key={`canary-${status}`} aria-hidden className="absolute inset-0 rounded-[2px] bg-canary" {...slide(7, 0)} />
 
-      <section className="relative rounded-[2px] border border-rule bg-sheet">
+      <section className="@container relative rounded-[2px] border border-rule bg-sheet">
         <div className="perforation mx-4 mt-3" aria-hidden />
-        <header className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 px-5 pt-3 pb-3">
+        <header className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 px-4 pt-3 pb-3 @sm:px-5">
           <h3 className="text-lg">{title}</h3>
           {subtitle && <p className="text-sm text-muted">{subtitle}</p>}
         </header>
-        <div className="mx-5 border-t-2 border-ink" />
+        <div className="mx-4 border-t-2 border-ink @sm:mx-5" />
 
-        <dl className="grid grid-cols-1 sm:grid-cols-2">
+        <dl className="grid grid-cols-1 @lg:grid-cols-2">
           {rows.map((row) => (
-            <div key={row.label} className={`border-b border-rule px-5 py-3 ${row.wide ? "sm:col-span-2" : ""}`}>
+            <div key={row.label} className={`border-b border-rule px-4 py-3 @sm:px-5 ${row.wide ? "@lg:col-span-2" : ""}`}>
               <dt className="text-xs text-muted">{row.label}</dt>
               <dd className="mt-1 min-h-6">
                 {row.pending ? (
@@ -82,11 +83,11 @@ export function CaseForm({
         </dl>
 
         {(status || statusNote) && (
-          <footer className="px-5 py-4" aria-live="polite">
+          <footer className="px-4 py-4 @sm:px-5" aria-live="polite">
             <p className="text-xs text-muted">{t.words.status_}</p>
             {status && stages ? (
               <div className="mt-2">
-                <div className="flex flex-wrap gap-x-5 gap-y-2 text-sm">
+                <div className="grid max-w-xs grid-cols-2 gap-x-5 gap-y-2 text-sm @lg:flex @lg:max-w-none @lg:flex-wrap">
                   <TickBox checked={stages.frozen} label={t.words.stages[0]} />
                   <TickBox checked={stages.answered} label={t.words.stages[1]} delay={0.05} />
                   <TickBox checked={stages.decided} label={t.words.stages[2]} delay={0.1} />
@@ -101,7 +102,7 @@ export function CaseForm({
                   key={status}
                   initial={reduce ? false : { opacity: 0 }}
                   animate={{ opacity: 1 }}
-                  transition={{ duration: 0.3, ease: EASE }}
+                  transition={reduce ? instant : { duration: 0.3, ease: EASE }}
                   className="mt-3"
                 >
                   {closed && (

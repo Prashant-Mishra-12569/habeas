@@ -1,6 +1,7 @@
 "use client";
 
-import { motion, useReducedMotion } from "motion/react";
+import { motion } from "motion/react";
+import { instant, useReduceMotion } from "@/lib/use-reduce-motion";
 import { useId, type ReactNode } from "react";
 
 /**
@@ -9,7 +10,7 @@ import { useId, type ReactNode } from "react";
  * the stroke.
  */
 export function PenCircle({ children, delay = 0 }: { children: ReactNode; delay?: number }) {
-  const reduce = useReducedMotion();
+  const reduce = useReduceMotion();
   const id = `circle${useId().replace(/[^a-zA-Z0-9_-]/g, "")}`;
   return (
     <span className="relative inline-block px-1">
@@ -29,7 +30,7 @@ export function PenCircle({ children, delay = 0 }: { children: ReactNode; delay?
             style={{ originX: 0 }}
             initial={reduce ? false : { scaleX: 0 }}
             animate={{ scaleX: 1 }}
-            transition={{ duration: 0.55, delay, ease: [0.22, 1, 0.36, 1] }}
+            transition={reduce ? instant : { duration: 0.55, delay, ease: [0.22, 1, 0.36, 1] }}
           />
         </clipPath>
         <path

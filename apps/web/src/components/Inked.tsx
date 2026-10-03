@@ -1,13 +1,14 @@
 "use client";
 
-import { motion, useReducedMotion } from "motion/react";
+import { motion } from "motion/react";
+import { useReduceMotion } from "@/lib/use-reduce-motion";
 
 /**
  * Text that appears letter by letter, like someone filling in a form.
  * Opacity only. Screen readers get the whole text at once.
  */
 export function Inked({ text, delay = 0, perChar = 0.022 }: { text: string; delay?: number; perChar?: number }) {
-  const reduce = useReducedMotion();
+  const reduce = useReduceMotion();
   if (reduce) return <>{text}</>;
   return (
     <>
@@ -30,7 +31,7 @@ export function Inked({ text, delay = 0, perChar = 0.022 }: { text: string; dela
 
 /** Fades a block in after `delay` seconds. */
 export function Appear({ children, delay = 0 }: { children: React.ReactNode; delay?: number }) {
-  const reduce = useReducedMotion();
+  const reduce = useReduceMotion();
   if (reduce) return <>{children}</>;
   return (
     <motion.span

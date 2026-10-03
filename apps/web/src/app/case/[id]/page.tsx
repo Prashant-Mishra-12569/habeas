@@ -28,7 +28,7 @@ export default async function CasePage({ params }: PageProps<"/case/[id]">) {
     error = e instanceof ReadError ? e.message : (e as Error).message;
   }
   return (
-    <main className="mx-auto w-full max-w-3xl px-4 pt-14 sm:px-8">
+    <main className="mx-auto w-full max-w-3xl px-4 pt-8 sm:px-8 sm:pt-14">
       {c ? <CaseView c={c} asset={asset} /> : <ReadErrorNotice what={`${t.form.case} ${id}`} message={error} />}
       <p className="mt-4 text-sm text-muted">
         <a className="font-mono text-pen underline" href={contractUrl(deployment.habeas)} target="_blank" rel="noreferrer">

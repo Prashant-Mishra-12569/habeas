@@ -11,7 +11,7 @@ const en = {
     description: "Freezes and take-backs on Stellar with a public reason, a deadline to answer and a neutral reviewer.",
   },
   nav: { check: "Check a token", try: "Try it live", evidence: "Evidence", code: "Code", home: "Habeas home" },
-  prefs: { language: "Language", theme: "Theme", paper: "Paper", carbon: "Carbon" },
+  prefs: { language: "Language", theme: "Theme", paper: "Paper", carbon: "Carbon", switchTo: (name: string) => `Switch to ${name}` },
   words: {
     reason: {
       Fraud: "Suspected fraud",
@@ -94,6 +94,7 @@ const en = {
     lead2: "Habeas adds a fair process: a public reason, a deadline to answer and a neutral reviewer. If the process stalls, you keep your tokens by default.",
     compareTitle: "The same take back, two ways",
     compareCols: ["", "Today on Stellar", "With Habeas"],
+    compareShort: ["Today", "With Habeas"],
     compareRows: [
       ["A reason", "Not required", "Public, before anything happens"],
       ["Time to answer", "None", "A deadline, and answering is free"],
@@ -231,6 +232,7 @@ const en = {
       title: "With your Freighter wallet",
       lead: "Set Freighter to Testnet. You sign twice: once to accept DEMOUSD, once for your answer. Answering is free: Habeas pays the network fee.",
       connect: "Connect Freighter",
+      mobileNote: "On a phone? Freighter here is a browser extension, so this part works on a computer. A version without a wallet, for phones, is on its way.",
       connecting: "Waiting for Freighter…",
       missing: "Freighter isn't installed in this browser. Get it at freighter.app, then reload this page.",
       declined: "You declined in Freighter. Nothing was sent.",
@@ -279,7 +281,7 @@ const es: Dict = {
     description: "Congelamientos y recuperaciones en Stellar con una razón pública, un plazo para responder y un revisor neutral.",
   },
   nav: { check: "Revisar un token", try: "Pruébalo en vivo", evidence: "Evidencia", code: "Código", home: "Inicio de Habeas" },
-  prefs: { language: "Idioma", theme: "Tema", paper: "Papel", carbon: "Carbón" },
+  prefs: { language: "Idioma", theme: "Tema", paper: "Papel", carbon: "Carbón", switchTo: (name: string) => `Cambiar a ${name}` },
   words: {
     reason: {
       Fraud: "Sospecha de fraude",
@@ -362,6 +364,7 @@ const es: Dict = {
     lead2: "Habeas agrega un proceso justo: una razón pública, un plazo para responder y un revisor neutral. Si el proceso se detiene, conservas tus tokens por defecto.",
     compareTitle: "La misma recuperación, de dos formas",
     compareCols: ["", "Hoy en Stellar", "Con Habeas"],
+    compareShort: ["Hoy", "Con Habeas"],
     compareRows: [
       ["Una razón", "No es obligatoria", "Pública, antes de que pase nada"],
       ["Tiempo para responder", "Ninguno", "Un plazo, y responder es gratis"],
@@ -499,6 +502,7 @@ const es: Dict = {
       title: "Con tu billetera Freighter",
       lead: "Pon Freighter en Testnet. Firmas dos veces: una para aceptar DEMOUSD y otra para tu respuesta. Responder es gratis: Habeas paga la comisión de red.",
       connect: "Conectar Freighter",
+      mobileNote: "¿En un teléfono? Aquí Freighter es una extensión del navegador, así que esta parte funciona en un computador. Viene una versión sin billetera para teléfonos.",
       connecting: "Esperando a Freighter…",
       missing: "Freighter no está instalado en este navegador. Descárgalo en freighter.app y recarga esta página.",
       declined: "Rechazaste en Freighter. No se envió nada.",

@@ -61,7 +61,7 @@ export function CheckForm({ initial = "", initialNetwork = "mainnet" }: { initia
             {(["mainnet", "testnet"] as const).map((n) => (
               <label
                 key={n}
-                className={`flex min-h-10 cursor-pointer items-center px-3 has-[:focus-visible]:outline-3 has-[:focus-visible]:outline-[var(--pen)] ${network === n ? "bg-ink font-semibold text-paper" : "text-muted"}`}
+                className={`flex min-h-11 cursor-pointer items-center px-3 has-[:focus-visible]:outline-3 has-[:focus-visible]:outline-[var(--pen)] ${network === n ? "bg-ink font-semibold text-paper" : "text-muted"}`}
               >
                 <input type="radio" className="sr-only" name={`${id}-net`} checked={network === n} onChange={() => setNetwork(n)} />
                 {n === "mainnet" ? t.check.mainnet : t.check.testnet}

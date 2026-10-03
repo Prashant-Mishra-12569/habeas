@@ -1,6 +1,7 @@
 "use client";
 
-import { motion, useReducedMotion } from "motion/react";
+import { motion } from "motion/react";
+import { instant, useReduceMotion } from "@/lib/use-reduce-motion";
 import type { ReactNode } from "react";
 import type { AssetCheck, ScanOp } from "@/lib/asset-check-types";
 import { accountUrl, contractUrl, explorerFor, formatCount, formatDay, formatDuration, formatTokens, shortAddress, shortHash, txUrl } from "@/lib/format";
@@ -30,7 +31,7 @@ function Ext({ href, children }: { href: string; children: ReactNode }) {
 export function AnswerSheet({ r }: { r: AssetCheck }) {
   const t = useT();
   const lang = useLang();
-  const reduce = useReducedMotion();
+  const reduce = useReduceMotion();
   const ex = explorerFor(r.network);
   const partial = !r.history.complete;
   const verdictKey = r.verdict === "not-used" && partial ? "not-used-partial" : r.verdict;
@@ -41,13 +42,21 @@ export function AnswerSheet({ r }: { r: AssetCheck }) {
     </span>
   );
   const opList = (ops: ScanOp[]) => (
-    <ul className="mt-2 space-y-1 text-sm">
+    <ul className="mt-2 divide-y divide-rule text-sm">
       {ops.slice(0, MAX_LISTED).map((o) => (
-        <li key={o.op} className="flex flex-wrap gap-x-3">
-          <span>{formatDay(o.at, lang)}</span>
-          {o.amount && <span className="font-mono tabular">{formatTokens(o.amount, lang)} {r.code}</span>}
-          {o.holder && <span className="font-mono text-muted">{shortAddress(o.holder)}</span>}
-          <Ext href={txUrl(o.tx, ex)}>{shortHash(o.tx, 5)}</Ext>
+        <li key={o.op} className="py-1.5">
+          <p className="flex flex-wrap justify-between gap-x-3">
+            <span>{formatDay(o.at, lang)}</span>
+            {o.amount && (
+              <span className="font-mono tabular">
+                {formatTokens(o.amount, lang)} {r.code}
+              </span>
+            )}
+          </p>
+          <p className="flex flex-wrap justify-between gap-x-3 text-muted">
+            <span className="font-mono">{o.holder ? shortAddress(o.holder) : ""}</span>
+            <Ext href={txUrl(o.tx, ex)}>{shortHash(o.tx, 5)}</Ext>
+          </p>
         </li>
       ))}
       {ops.length > MAX_LISTED && <li className="text-muted">{t.check.a.more(ops.length - MAX_LISTED)}</li>}
@@ -177,12 +186,12 @@ export function AnswerSheet({ r }: { r: AssetCheck }) {
       </header>
       {r.holders !== null && <p className="mt-1 text-sm text-muted">{t.check.holders(formatCount(r.holders, lang))}</p>}
 
-      <div className={`mt-8 border-l-[6px] pl-5 ${VERDICT_BAR[verdictKey]}`}>
-        <p className="text-2xl font-extrabold tracking-tight sm:text-3xl">{t.check.verdict[verdictKey as keyof typeof t.check.verdict]}</p>
+      <div className={`mt-6 border-l-[6px] pl-4 sm:mt-8 sm:pl-5 ${VERDICT_BAR[verdictKey]}`}>
+        <p className="text-[1.6rem] font-extrabold leading-tight tracking-tight sm:text-3xl">{t.check.verdict[verdictKey as keyof typeof t.check.verdict]}</p>
         <p className="mt-2 max-w-[60ch]">{t.check.verdictLine[verdictKey as keyof typeof t.check.verdictLine]}</p>
       </div>
 
-      <div className="relative mt-10 mr-4 mb-4">
+      <div className="relative mt-8 mr-4 mb-4 sm:mt-10">
         <div aria-hidden className="absolute inset-0 translate-x-[14px] translate-y-[14px] rounded-[2px] bg-pink" />
         <div aria-hidden className="absolute inset-0 translate-x-[7px] translate-y-[7px] rounded-[2px] bg-canary" />
         <dl className="relative rounded-[2px] border border-rule bg-sheet">
@@ -192,8 +201,8 @@ export function AnswerSheet({ r }: { r: AssetCheck }) {
               key={row.q}
               initial={reduce ? false : { opacity: 0, y: 6 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.35, delay: 0.08 * i, ease: EASE }}
-              className="grid gap-2 border-b border-rule px-5 py-4 last:border-b-0 md:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] md:gap-8"
+              transition={reduce ? instant : { duration: 0.35, delay: 0.08 * i, ease: EASE }}
+              className="grid gap-2 border-b border-rule px-4 py-4 last:border-b-0 sm:px-5 md:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] md:gap-8"
             >
               <dt className="font-semibold">{row.q}</dt>
               <dd>{row.a}</dd>

@@ -11,10 +11,10 @@ export function Wordmark({ label }: { label: string }) {
   return (
     <Link href="/" aria-label={label} className="inline-flex min-h-11 items-center text-xl font-extrabold tracking-[-0.03em]">
       <span className="relative">
-        <span aria-hidden className="absolute left-[3px] top-[3px] select-none text-[color:var(--pink)]">
+        <span aria-hidden className="absolute left-[2px] top-[2px] select-none text-[color:var(--pink)]">
           Habeas
         </span>
-        <span aria-hidden className="absolute left-[1.5px] top-[1.5px] select-none text-[color:var(--canary)]">
+        <span aria-hidden className="absolute left-px top-px select-none text-[color:var(--canary)]">
           Habeas
         </span>
         <span className="relative">Habeas</span>
@@ -31,8 +31,8 @@ export function SiteHeader({ t, theme }: { t: Dict; theme: Theme }) {
   ];
   return (
     <header className="mx-auto w-full max-w-6xl px-4 pt-5 sm:px-8">
-      <div className="flex items-center justify-between gap-4">
-        <div className="flex items-center gap-8">
+      <div className="flex items-center justify-between gap-3">
+        <div className="flex min-w-0 items-center gap-8">
           <Wordmark label={t.nav.home} />
           <nav aria-label="Main" className="hidden md:block">
             <ul className="flex gap-6 text-sm">
@@ -48,11 +48,11 @@ export function SiteHeader({ t, theme }: { t: Dict; theme: Theme }) {
         </div>
         <Prefs initialTheme={theme} />
       </div>
-      <nav aria-label="Main" className="mt-2 md:hidden">
-        <ul className="flex gap-5 text-sm">
+      <nav aria-label="Main" className="mt-1 md:hidden">
+        <ul className="-ml-2 flex flex-wrap text-sm">
           {nav.map((n) => (
             <li key={n.href}>
-              <Link href={n.href} className="inline-flex min-h-11 items-center text-muted hover:text-ink">
+              <Link href={n.href} className="inline-flex min-h-11 items-center px-2 text-muted hover:text-ink">
                 {n.label}
               </Link>
             </li>

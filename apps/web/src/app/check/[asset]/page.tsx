@@ -32,7 +32,7 @@ export default async function CheckResultPage({ params, searchParams }: PageProp
   }
 
   return (
-    <main className="mx-auto w-full max-w-4xl px-4 pt-14 sm:px-8">
+    <main className="mx-auto w-full max-w-4xl px-4 pt-8 sm:px-8 sm:pt-14">
       {result ? <AnswerSheet r={result} /> : <ReadErrorNotice what={raw} message={error} />}
       <section className="mt-20">
         <h2 className="text-xl">{t.check.another}</h2>

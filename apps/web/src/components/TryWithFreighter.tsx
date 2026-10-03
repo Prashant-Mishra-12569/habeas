@@ -110,12 +110,15 @@ export function TryWithFreighter() {
   return (
     <section aria-labelledby="wallet-title" className="rounded-[2px] border border-rule bg-sheet">
       <div className="perforation mx-4 mt-3" aria-hidden />
-      <div className="px-5 py-5">
+      <div className="px-4 py-5 sm:px-5">
         <h2 id="wallet-title" className="text-xl">
           {w.title}
         </h2>
         <p className="mt-2 max-w-[60ch] text-muted">{w.lead}</p>
 
+        {!address && (
+          <p className="mt-4 hidden rounded-[2px] bg-canary px-3 py-2 text-sm pointer-coarse:block">{w.mobileNote}</p>
+        )}
         {!address && (
           <Button className="mt-5" busy={busy !== null} onClick={connect}>
             {busy ?? w.connect}
@@ -141,7 +144,7 @@ export function TryWithFreighter() {
               <ol className="space-y-6">
                 <li>
                   <TickBox checked={s.hasTrustline} label={`1. ${w.step1}`} />
-                  <div className="mt-2 ml-7">
+                  <div className="mt-2 ml-0 sm:ml-7">
                     {s.hasTrustline ? (
                       <p className="text-sm text-muted">{w.trustDone}</p>
                     ) : (
@@ -155,7 +158,7 @@ export function TryWithFreighter() {
 
                 <li>
                   <TickBox checked={hasCase} label={`2. ${w.step2}`} />
-                  <div className="mt-2 ml-7">
+                  <div className="mt-2 ml-0 sm:ml-7">
                     {hasCase ? (
                       <p className="text-sm">{w.started(s.activeCase!)}</p>
                     ) : (
@@ -172,7 +175,7 @@ export function TryWithFreighter() {
 
                 <li>
                   <TickBox checked={Boolean(answered)} label={`3. ${w.step3}`} />
-                  <div className="mt-2 ml-7">
+                  <div className="mt-2 ml-0 sm:ml-7">
                     {hasCase && !answered && (
                       <div className="max-w-xl">
                         <label htmlFor="answer" className="text-sm font-semibold">

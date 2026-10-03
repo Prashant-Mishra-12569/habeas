@@ -1,6 +1,7 @@
 "use client";
 
-import { motion, useMotionValueEvent, useReducedMotion, useScroll } from "motion/react";
+import { motion, useMotionValueEvent, useScroll } from "motion/react";
+import { useReduceMotion } from "@/lib/use-reduce-motion";
 import { useRef, useState } from "react";
 import type { Case, Status } from "@/lib/types";
 import { caseRows, caseStages } from "@/lib/case-rows";
@@ -16,7 +17,7 @@ import { TickBox } from "./TickBox";
 export function HowItWorks({ c, asset }: { c: Case; asset: string }) {
   const t = useT();
   const lang = useLang();
-  const reduce = useReducedMotion();
+  const reduce = useReduceMotion();
   const decided: Status = c.endedBy === "ReviewerUpheld" ? "Upheld" : "Rejected";
   const states: Status[] = ["Open", "Answered", decided, c.status];
   const [active, setActive] = useState(0);
@@ -28,7 +29,7 @@ export function HowItWorks({ c, asset }: { c: Case; asset: string }) {
 
   return (
     <div className="grid gap-10 lg:grid-cols-[1fr_1.1fr] lg:gap-16">
-      <ol ref={list} className="relative space-y-14 py-2 pl-10 lg:py-[12vh]">
+      <ol ref={list} className="relative space-y-10 py-2 pl-10 sm:space-y-14 lg:py-[12vh]">
         {/* The ink line: a rule that fills with ballpoint as you scroll. */}
         <span aria-hidden className="absolute top-0 bottom-0 left-[11px] w-[2px] bg-rule" />
         <motion.span
@@ -37,18 +38,19 @@ export function HowItWorks({ c, asset }: { c: Case; asset: string }) {
           style={{ scaleY: reduce ? 1 : scrollYProgress, originY: 0 }}
         />
         {t.home.how.map(([title, body], i) => (
-          <li key={title} className={`relative transition-opacity duration-300 ${i <= active ? "opacity-100" : "opacity-55"}`}>
+          <li key={title} className={`relative transition-opacity duration-300 ${i <= active ? "" : "lg:opacity-55"}`}>
             <span
               aria-hidden
               className={`absolute -left-10 top-0.5 flex h-6 w-6 items-center justify-center rounded-full border-2 font-mono text-xs transition-colors duration-300 ${
-                i <= active ? "border-pen bg-pen text-pen-ink" : "border-field bg-paper text-muted"
+                // Phones have no sticky form to follow, so every step stays lit there.
+                i <= active ? "border-pen bg-pen text-pen-ink" : "border-pen bg-pen text-pen-ink lg:border-field lg:bg-paper lg:text-muted"
               }`}
             >
               {i + 1}
             </span>
             <h3 className="text-xl">{title}</h3>
             <p className="mt-2 max-w-[46ch] text-muted">{body}</p>
-            <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-sm lg:hidden">
+            <div className="mt-3 grid max-w-xs grid-cols-2 gap-x-4 gap-y-1.5 text-sm lg:hidden">
               {(["frozen", "answered", "decided", "closed"] as const).map((k, n) => (
                 <TickBox
                   key={k}

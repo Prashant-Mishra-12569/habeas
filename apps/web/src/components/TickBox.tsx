@@ -1,6 +1,7 @@
 "use client";
 
-import { motion, useReducedMotion } from "motion/react";
+import { motion } from "motion/react";
+import { instant, useReduceMotion } from "@/lib/use-reduce-motion";
 import { useId } from "react";
 
 /**
@@ -18,7 +19,7 @@ export function TickBox({
   tone?: "pen" | "cleared" | "taken";
   delay?: number;
 }) {
-  const reduce = useReducedMotion();
+  const reduce = useReduceMotion();
   const color = tone === "cleared" ? "var(--cleared)" : tone === "taken" ? "var(--taken)" : "var(--pen)";
   const id = `tick${useId().replace(/[^a-zA-Z0-9_-]/g, "")}`;
   return (
@@ -36,7 +37,7 @@ export function TickBox({
                 style={{ originX: 0 }}
                 initial={reduce ? false : { scaleX: 0 }}
                 animate={{ scaleX: 1 }}
-                transition={{ duration: 0.35, delay, ease: [0.22, 1, 0.36, 1] }}
+                transition={reduce ? instant : { duration: 0.35, delay, ease: [0.22, 1, 0.36, 1] }}
               />
             </clipPath>
             <path

@@ -16,21 +16,23 @@ function Segmented<V extends string>({
   value,
   options,
   onChange,
+  className = "",
 }: {
   label: string;
   value: V;
   options: { value: V; label: string; lang?: string }[];
   onChange: (v: V) => void;
+  className?: string;
 }) {
   return (
-    <fieldset className="flex items-center rounded-[2px] border border-rule p-0.5 text-sm">
+    <fieldset className={`items-center rounded-[2px] border border-rule p-0.5 text-sm ${className}`}>
       <legend className="sr-only">{label}</legend>
       {options.map((o) => (
         <label
           key={o.value}
           lang={o.lang}
-          className={`flex min-h-10 min-w-11 cursor-pointer items-center justify-center rounded-[1px] px-2.5 transition-colors duration-200 has-[:focus-visible]:outline-3 has-[:focus-visible]:outline-[var(--pen)] ${
-            value === o.value ? "bg-ink text-paper font-semibold" : "text-muted hover:text-ink"
+          className={`flex min-h-11 min-w-11 cursor-pointer items-center justify-center rounded-[1px] px-2.5 transition-colors duration-200 has-[:focus-visible]:outline-3 has-[:focus-visible]:outline-[var(--pen)] ${
+            value === o.value ? "bg-ink font-semibold text-paper" : "text-muted hover:text-ink"
           }`}
         >
           <input type="radio" className="sr-only" name={label} value={o.value} checked={value === o.value} onChange={() => onChange(o.value)} />
@@ -38,6 +40,22 @@ function Segmented<V extends string>({
         </label>
       ))}
     </fieldset>
+  );
+}
+
+/** A sheet of paper: outlined for Paper, filled for Carbon. */
+function SheetIcon({ filled }: { filled: boolean }) {
+  return (
+    <svg width="20" height="20" viewBox="0 0 20 20" aria-hidden>
+      <path
+        d="M5 2.5h7l3.5 3.5v11.5H5z"
+        fill={filled ? "currentColor" : "none"}
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinejoin="round"
+      />
+      <path d="M12 2.5V6h3.5" fill="none" stroke={filled ? "var(--paper)" : "currentColor"} strokeWidth="1.5" strokeLinejoin="round" />
+    </svg>
   );
 }
 
@@ -49,9 +67,17 @@ export function Prefs({ initialTheme }: { initialTheme: Theme }) {
   const [, start] = useTransition();
   const [theme, setTheme] = useState<Theme>(initialTheme);
 
+  const applyTheme = (v: Theme) => {
+    setCookie("theme", v);
+    document.documentElement.dataset.theme = v;
+    setTheme(v);
+  };
+  const next: Theme = theme === "paper" ? "carbon" : "paper";
+
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex shrink-0 items-center gap-2">
       <Segmented<Lang>
+        className="flex"
         label={t.prefs.language}
         value={lang}
         options={[
@@ -64,18 +90,25 @@ export function Prefs({ initialTheme }: { initialTheme: Theme }) {
           start(() => router.refresh());
         }}
       />
+      {/* Phones: one button that flips the theme. */}
+      <button
+        type="button"
+        onClick={() => applyTheme(next)}
+        aria-label={`${t.prefs.theme}: ${theme === "paper" ? t.prefs.paper : t.prefs.carbon}. ${t.prefs.switchTo(next === "paper" ? t.prefs.paper : t.prefs.carbon)}`}
+        className="flex h-12 w-12 items-center justify-center rounded-[2px] border border-rule text-ink sm:hidden"
+      >
+        <SheetIcon filled={theme === "carbon"} />
+      </button>
+      {/* Wider screens: both choices, named. */}
       <Segmented<Theme>
+        className="hidden sm:flex"
         label={t.prefs.theme}
         value={theme}
         options={[
           { value: "paper", label: t.prefs.paper },
           { value: "carbon", label: t.prefs.carbon },
         ]}
-        onChange={(v) => {
-          setCookie("theme", v);
-          document.documentElement.dataset.theme = v;
-          setTheme(v);
-        }}
+        onChange={applyTheme}
       />
     </div>
   );

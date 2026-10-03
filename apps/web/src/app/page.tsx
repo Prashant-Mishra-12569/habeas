@@ -26,12 +26,12 @@ async function attempt<T>(fn: () => Promise<T>) {
 
 function Section({ id, title, lead, children }: { id: string; title: string; lead?: string; children: React.ReactNode }) {
   return (
-    <section id={id} aria-labelledby={`${id}-title`} className="mx-auto w-full max-w-6xl px-4 pt-24 sm:px-8">
-      <h2 id={`${id}-title`} className="text-2xl sm:text-3xl">
+    <section id={id} aria-labelledby={`${id}-title`} className="mx-auto w-full max-w-6xl px-4 pt-16 sm:px-8 sm:pt-24">
+      <h2 id={`${id}-title`} className="text-[1.75rem] sm:text-3xl">
         {title}
       </h2>
       {lead && <p className="mt-3 max-w-[60ch] text-muted">{lead}</p>}
-      <div className="mt-10">{children}</div>
+      <div className="mt-8 sm:mt-10">{children}</div>
     </section>
   );
 }
@@ -45,11 +45,11 @@ export default async function Home() {
   return (
     <main>
       {/* Hero: the problem, shown with a real take back from mainnet. */}
-      <section className="mx-auto grid w-full max-w-6xl gap-12 px-4 pt-14 sm:px-8 lg:grid-cols-[1fr_1.05fr] lg:items-start lg:gap-16 lg:pt-20">
+      <section className="mx-auto grid w-full max-w-6xl gap-10 px-4 pt-8 sm:gap-12 sm:px-8 sm:pt-14 lg:grid-cols-[1fr_1.05fr] lg:items-start lg:gap-16 lg:pt-20">
         <div className="lg:pt-6">
-          <h1 className="text-4xl sm:text-5xl">{t.home.h1}</h1>
-          <p className="mt-6 max-w-[52ch] text-lg leading-relaxed">{t.home.lead}</p>
-          <p className="mt-4 max-w-[52ch] text-lg leading-relaxed">{t.home.lead2}</p>
+          <h1 className="text-[clamp(2.25rem,9.2vw,4.05rem)]">{t.home.h1}</h1>
+          <p className="mt-5 max-w-[52ch] sm:mt-6 sm:text-lg sm:leading-relaxed">{t.home.lead}</p>
+          <p className="mt-3 max-w-[52ch] sm:mt-4 sm:text-lg sm:leading-relaxed">{t.home.lead2}</p>
           <div className="mt-8 flex flex-wrap gap-3">
             <ButtonLink href="/check">{t.nav.check}</ButtonLink>
             <ButtonLink href="/try" variant="secondary">
@@ -65,7 +65,25 @@ export default async function Home() {
 
       {/* The same take back, as two copies of one form. */}
       <Section id="compare" title={t.home.compareTitle}>
-        <div className="grid gap-6 md:grid-cols-2">
+        {/* Phones: one sheet, each row answered both ways, so they can be compared at a glance. */}
+        <div className="rounded-[2px] border border-rule bg-sheet md:hidden">
+          <div className="perforation mx-4 mt-3" aria-hidden />
+          <dl>
+            {t.home.compareRows.map((row) => (
+              <div key={row[0]} className="border-b border-rule px-4 py-3 last:border-b-0">
+                <dt className="font-semibold">{row[0]}</dt>
+                <dd className="mt-2 grid grid-cols-[5.75rem_1fr] gap-x-3 gap-y-1.5 text-sm">
+                  <span className="text-muted">{t.home.compareShort[0]}</span>
+                  <span className="text-muted">{row[1]}</span>
+                  <span className="font-semibold text-ink">{t.home.compareShort[1]}</span>
+                  <span className="font-medium text-pen">{row[2]}</span>
+                </dd>
+              </div>
+            ))}
+          </dl>
+        </div>
+        {/* Wider screens: two copies of the same form, side by side. */}
+        <div className="hidden gap-6 md:grid md:grid-cols-2">
           {[
             { name: today, col: 1, tone: "bg-pink/60", ink: "text-muted" },
             { name: withHabeas, col: 2, tone: "bg-sheet", ink: "text-pen" },

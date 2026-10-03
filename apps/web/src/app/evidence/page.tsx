@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import deployment from "@/config/testnet.json";
 import lock from "@/config/testnet-lock.json";
 import run from "@/config/testnet-run.json";
-import { accountUrl, contractUrl, formatDuration, formatUtc, shortHash, txUrl } from "@/lib/format";
+import { accountUrl, contractUrl, formatDuration, formatUtc, shortAddress, shortHash, txUrl } from "@/lib/format";
 import { USBDC_EVENT } from "@/lib/mainnet";
 import { getDict } from "@/i18n/server";
 
@@ -14,6 +14,16 @@ function Ext({ href, children }: { href: string; children: React.ReactNode }) {
   return (
     <a href={href} target="_blank" rel="noreferrer" className="break-all font-mono text-pen underline decoration-1">
       {children}
+    </a>
+  );
+}
+
+/** A full address on wide screens, shortened on phones; the link always has the full one. */
+function Addr({ href, value }: { href: string; value: string }) {
+  return (
+    <a href={href} target="_blank" rel="noreferrer" title={value} className="font-mono text-pen underline decoration-1">
+      <span className="sm:hidden">{shortAddress(value, 8)}</span>
+      <span className="hidden break-all sm:inline">{value}</span>
     </a>
   );
 }
@@ -33,7 +43,7 @@ function Block({ title, lead, children }: { title: string; lead?: string; childr
 
 function Row({ label, children }: { label: string; children: React.ReactNode }) {
   return (
-    <div className="grid gap-1 border-b border-rule px-5 py-3 last:border-b-0 md:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] md:gap-6">
+    <div className="grid gap-1 border-b border-rule px-4 py-3 last:border-b-0 sm:px-5 md:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] md:gap-6">
       <dt className="text-sm text-muted">{label}</dt>
       <dd className="text-sm">{children}</dd>
     </div>
@@ -46,14 +56,14 @@ export default async function EvidencePage() {
   const [code, issuer] = deployment.asset.split(":");
 
   return (
-    <main className="mx-auto w-full max-w-4xl px-4 pt-14 sm:px-8">
+    <main className="mx-auto w-full max-w-4xl px-4 pt-8 sm:px-8 sm:pt-14">
       <h1 className="text-3xl sm:text-4xl">{e.title}</h1>
       <p className="mt-3 max-w-[64ch]">{e.lead}</p>
 
       <Block title={e.deployTitle}>
         <dl>
           <Row label={e.rows.habeas}>
-            <Ext href={contractUrl(deployment.habeas)}>{deployment.habeas}</Ext>
+            <Addr href={contractUrl(deployment.habeas)} value={deployment.habeas} />
           </Row>
           <Row label={e.rows.wasm}>
             <span className="break-all font-mono">{deployment.wasm_sha256}</span>
@@ -71,16 +81,16 @@ export default async function EvidencePage() {
             <span className="font-mono">{code}</span>
           </Row>
           <Row label={e.rows.sac}>
-            <Ext href={contractUrl(deployment.sac)}>{deployment.sac}</Ext>
+            <Addr href={contractUrl(deployment.sac)} value={deployment.sac} />
           </Row>
           <Row label={e.rows.issuer}>
-            <Ext href={accountUrl(issuer)}>{issuer}</Ext>
+            <Addr href={accountUrl(issuer)} value={issuer} />
           </Row>
           <Row label={e.rows.reviewer}>
-            <Ext href={accountUrl(deployment.reviewer)}>{deployment.reviewer}</Ext>
+            <Addr href={accountUrl(deployment.reviewer)} value={deployment.reviewer} />
           </Row>
           <Row label={e.rows.relayer}>
-            <Ext href={accountUrl(deployment.relayer)}>{deployment.relayer}</Ext>
+            <Addr href={accountUrl(deployment.relayer)} value={deployment.relayer} />
           </Row>
           <Row label={e.rows.windows}>
             {formatDuration(deployment.answer_window_secs, lang)} / {formatDuration(deployment.review_window_secs, lang)}
@@ -91,7 +101,7 @@ export default async function EvidencePage() {
       <Block title={e.runTitle} lead={e.runLead(formatUtc(run.ran_at, lang))}>
         <ol>
           {run.steps.map((s, i) => (
-            <li key={s.hash} className="grid grid-cols-[2rem_1fr_auto] gap-3 border-b border-rule px-5 py-3 text-sm last:border-b-0">
+            <li key={s.hash} className="grid grid-cols-[1.5rem_1fr_auto] gap-2 border-b border-rule px-4 py-3 text-sm last:border-b-0 sm:grid-cols-[2rem_1fr_auto] sm:gap-3 sm:px-5">
               <span className="font-mono text-muted tabular">{i + 1}</span>
               <span>
                 {s.label}
@@ -117,7 +127,7 @@ export default async function EvidencePage() {
       <Block title={e.lockTitle} lead={e.lockLead}>
         <ol>
           {lock.steps.map((s) => (
-            <li key={s.hash} className="flex justify-between gap-4 border-b border-rule px-5 py-3 text-sm last:border-b-0">
+            <li key={s.hash} className="flex justify-between gap-4 border-b border-rule px-4 py-3 text-sm last:border-b-0 sm:px-5">
               <span>{s.label}</span>
               <Ext href={txUrl(s.hash)}>{shortHash(s.hash, 4)}</Ext>
             </li>
