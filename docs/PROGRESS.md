@@ -2,6 +2,20 @@
 
 Updated after every milestone. Newest first.
 
+## Phase 3: web app (started Oct 3, 2026)
+
+### Done
+
+- Studied Local402, AgentAllowance, AegisOS and stellar.org: `docs/DESIGN-NOTES.md`. Key point: AegisOS already uses a legal "case file" look (exhibits, round stamp), so Habeas stays on carbon-copy forms and avoids stamps, exhibits and mono all-caps labels. AgentAllowance's Render site stayed blank for 15+ s twice: the site goes on Vercel.
+- `apps/web`: Next.js 16.3.8, React 19.3.0, Tailwind 4, TypeScript 5.9.3 (create-next-app 16.3.8 installs `typescript ^5`, so we don't use TS 7), motion 14, @stellar/stellar-sdk 17.2.1. Fonts via `next/font`: Public Sans, Schibsted Grotesk (alternative heading), IBM Plex Mono.
+- Palette checked for WCAG AA in light and dark. Added: muted text, a darker field line for inputs (3:1 on every copy), and lighter dark-mode blue/green/red (the plan's values fail on the dark page).
+- `/styleguide` (waiting for Prashant's approval): colours, type, heading-face choice, buttons, fields, words list, the main animation (the real Sep 19 USBDC take back read live from mainnet Horizon, typed into the case form, with "Reason" and "Right to answer" marked "Not provided"), and two real testnet cases replayed step by step from their own on-chain timestamps. No mock data anywhere; failed reads show an error with "Try again".
+- Checked at 375 px (no sideways scroll) and desktop, light and dark. `tsc`, `eslint` and `next build` clean.
+
+### Waiting on Prashant
+
+- Approve the styleguide, or say what to change. Pick heading face A (Public Sans) or B (Schibsted Grotesk).
+
 ## Phase 2: the contract (Oct 3, 2026)
 
 ### Done

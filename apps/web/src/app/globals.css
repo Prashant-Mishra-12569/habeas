@@ -1,0 +1,129 @@
+@import "tailwindcss";
+
+/* Habeas design tokens: the carbon-copy form set. Copies stay pale; strong
+   colour only marks state (blue = action, green = cleared, red = taken back).
+   Every text pair below passes WCAG AA; see docs/DESIGN-NOTES.md. */
+:root {
+  --paper: #f7f8f4; /* form white */
+  --ink: #1f2229; /* graphite */
+  --muted: #50555e;
+  --rule: #d6d9d0; /* decorative form lines */
+  --field: #6a6f64; /* input lines, 3:1 on every copy */
+  --pen: #1f3a8f; /* ballpoint blue */
+  --pen-ink: #f7f8f4; /* text on a blue button */
+  --canary: #f1e8b8;
+  --pink: #ebcfd3;
+  --cleared: #2f6e4e;
+  --taken: #9e2b33;
+  --focus: #1f3a8f;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #17191e;
+    --ink: #f7f8f4;
+    --muted: #a9adb5;
+    --rule: #3a3e46;
+    --field: #7a7f88;
+    --pen: #9db0ee;
+    --pen-ink: #17191e;
+    --canary: #2a2817;
+    --pink: #2c1f22;
+    --cleared: #7dc09c;
+    --taken: #ee9aa1;
+    --focus: #9db0ee;
+  }
+}
+
+:root[data-theme="dark"] {
+  --paper: #17191e;
+  --ink: #f7f8f4;
+  --muted: #a9adb5;
+  --rule: #3a3e46;
+  --field: #7a7f88;
+  --pen: #9db0ee;
+  --pen-ink: #17191e;
+  --canary: #2a2817;
+  --pink: #2c1f22;
+  --cleared: #7dc09c;
+  --taken: #ee9aa1;
+  --focus: #9db0ee;
+}
+
+@theme inline {
+  --color-paper: var(--paper);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-rule: var(--rule);
+  --color-field: var(--field);
+  --color-pen: var(--pen);
+  --color-pen-ink: var(--pen-ink);
+  --color-canary: var(--canary);
+  --color-pink: var(--pink);
+  --color-cleared: var(--cleared);
+  --color-taken: var(--taken);
+
+  --font-sans: var(--font-public-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-alt: var(--font-schibsted), var(--font-public-sans), ui-sans-serif, sans-serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, monospace;
+
+  /* 1.25 type scale from a 17px body */
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1.0625rem;
+  --text-lg: 1.328rem;
+  --text-xl: 1.66rem;
+  --text-2xl: 2.075rem;
+  --text-3xl: 2.594rem;
+  --text-4xl: 3.242rem;
+
+  --ease-ink: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+html {
+  background: var(--paper);
+  color: var(--ink);
+  color-scheme: light dark;
+}
+
+body {
+  background: var(--paper);
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3 {
+  font-weight: 750;
+  letter-spacing: -0.015em;
+  line-height: 1.15;
+  text-wrap: balance;
+}
+
+p {
+  text-wrap: pretty;
+}
+
+:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+::selection {
+  background: var(--canary);
+  color: var(--ink);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
