@@ -9,6 +9,10 @@ const json = (p) => JSON.parse(readFileSync(new URL(p, root), "utf8"));
 const dep = json("deployments/testnet.json");
 const run = json("deployments/testnet-run.json");
 
+const labUrl =
+  "https://lab.stellar.org/smart-contracts/contract-explorer?$=network$id=testnet&label=Testnet&horizonUrl=https:////horizon-testnet.stellar.org&rpcUrl=https:////soroban-testnet.stellar.org&passphrase=Test%20SDF%20Network%20/;%20September%202015;&smartContracts$explorer$contractId=" +
+  dep.habeas +
+  ";;";
 const tx = (h) => `[${h.slice(0, 8)}](https://stellar.expert/explorer/testnet/tx/${h})`;
 const contract = (c) => `[\`${c}\`](https://stellar.expert/explorer/testnet/contract/${c})`;
 const account = (a) => `[\`${a}\`](https://stellar.expert/explorer/testnet/account/${a})`;
@@ -76,7 +80,11 @@ Holder balances after all cases (DEMOUSD, each started with 1,000): A ${run.bala
 
 ## Check the build yourself
 
-The deployed wasm was built by GitHub Actions from this repository and signed with a build attestation. To check it:
+The deployed wasm was built by GitHub Actions from this repository and signed with a build attestation (SEP-55).
+
+- **Stellar Lab:** [Verified Build view of the contract](${labUrl}). Lab hashes the on-chain wasm, reads its \`source_repo\` metadata and checks GitHub's attestation for that hash.
+- **Same check from a terminal:** \`node scripts/verify-build.mjs\` runs Lab's steps and prints \`VERIFIED\` (it prints \`NOT VERIFIED\` for the first, locally built deployment).
+- **Or by hand:**
 
 \`\`\`bash
 stellar contract fetch --id ${dep.habeas} --network testnet -o habeas.wasm
@@ -84,7 +92,7 @@ sha256sum habeas.wasm   # ${dep.wasm_sha256}
 gh attestation verify habeas.wasm --repo Prashant-Mishra-12569/habeas --signer-repo stellar-expert/soroban-build-workflow
 \`\`\`
 
-StellarExpert doesn't show a "verified source" badge for this contract, for two reasons outside this repo: the build workflow only reports to StellarExpert's mainnet endpoint, and that endpoint has been silently dropping submissions since August ([stellar-expert/soroban-build-workflow#9](https://github.com/stellar-expert/soroban-build-workflow/issues/9); our run got the same empty \`{}\` reply). The checks above don't depend on StellarExpert.
+StellarExpert shows no source badge: its build workflow only reports to its mainnet service, which has been dropping submissions since August ([stellar-expert/soroban-build-workflow#9](https://github.com/stellar-expert/soroban-build-workflow/issues/9)). The checks above don't depend on it.
 
 ## Back door check
 

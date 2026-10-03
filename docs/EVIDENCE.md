@@ -82,7 +82,11 @@ Holder balances after all cases (DEMOUSD, each started with 1,000): A 1000, B 75
 
 ## Check the build yourself
 
-The deployed wasm was built by GitHub Actions from this repository and signed with a build attestation. To check it:
+The deployed wasm was built by GitHub Actions from this repository and signed with a build attestation (SEP-55).
+
+- **Stellar Lab:** [Verified Build view of the contract](https://lab.stellar.org/smart-contracts/contract-explorer?$=network$id=testnet&label=Testnet&horizonUrl=https:////horizon-testnet.stellar.org&rpcUrl=https:////soroban-testnet.stellar.org&passphrase=Test%20SDF%20Network%20/;%20September%202015;&smartContracts$explorer$contractId=CD5XGBA4QHMK3SSSVOVAG6WUVH6XQVUS3DRCIYHUTGRXFCYPWBIVEZUU;;). Lab hashes the on-chain wasm, reads its `source_repo` metadata and checks GitHub's attestation for that hash.
+- **Same check from a terminal:** `node scripts/verify-build.mjs` runs Lab's steps and prints `VERIFIED` (it prints `NOT VERIFIED` for the first, locally built deployment).
+- **Or by hand:**
 
 ```bash
 stellar contract fetch --id CD5XGBA4QHMK3SSSVOVAG6WUVH6XQVUS3DRCIYHUTGRXFCYPWBIVEZUU --network testnet -o habeas.wasm
@@ -90,7 +94,7 @@ sha256sum habeas.wasm   # e822b7f162c873286a73019eb5ea915b29a287eaab02e626090d48
 gh attestation verify habeas.wasm --repo Prashant-Mishra-12569/habeas --signer-repo stellar-expert/soroban-build-workflow
 ```
 
-StellarExpert doesn't show a "verified source" badge for this contract, for two reasons outside this repo: the build workflow only reports to StellarExpert's mainnet endpoint, and that endpoint has been silently dropping submissions since August ([stellar-expert/soroban-build-workflow#9](https://github.com/stellar-expert/soroban-build-workflow/issues/9); our run got the same empty `{}` reply). The checks above don't depend on StellarExpert.
+StellarExpert shows no source badge: its build workflow only reports to its mainnet service, which has been dropping submissions since August ([stellar-expert/soroban-build-workflow#9](https://github.com/stellar-expert/soroban-build-workflow/issues/9)). The checks above don't depend on it.
 
 ## Back door check
 
