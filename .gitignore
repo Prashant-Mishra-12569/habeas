@@ -1,0 +1,26 @@
+# secrets
+.env
+.env.*
+!.env.example
+*.key
+.stellar/
+
+# rust / soroban
+target/
+**/test_snapshots/
+
+# node / next
+node_modules/
+.next/
+out/
+dist/
+coverage/
+playwright-report/
+test-results/
+.vercel
+
+# os / editors
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
