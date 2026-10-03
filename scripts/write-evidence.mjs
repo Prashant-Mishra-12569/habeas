@@ -100,7 +100,7 @@ After Habeas became the SAC admin, a classic \`Clawback\` signed by the asset is
 
 ## Contract tests
 
-\`cargo test\`: 50 tests against the real Stellar Asset Contract from the SDK. CI runs them with clippy on every push.
+\`cargo test\`: 54 tests against the real Stellar Asset Contract from the SDK, including a 2-of-3 reviewer panel signed with real ed25519 keys. CI runs them with clippy on every push.
 
 ## Phase 1 spikes
 

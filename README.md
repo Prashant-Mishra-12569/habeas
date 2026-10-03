@@ -19,14 +19,21 @@ Built for the [Find Your Way Hackathon](https://demo.stellarpassport.xyz/hackath
 
 Work in progress. Running on Stellar **testnet**.
 
-- Contract: [`contracts/habeas`](contracts/habeas), 50 tests against the real Stellar Asset Contract, deployed from a [verified GitHub build](docs/EVIDENCE.md#check-the-build-yourself).
+- Contract: [`contracts/habeas`](contracts/habeas), 54 tests against the real Stellar Asset Contract, deployed from a [verified GitHub build](docs/EVIDENCE.md#check-the-build-yourself).
 - Every case ending has been run on testnet, with transaction links: [`docs/EVIDENCE.md`](docs/EVIDENCE.md).
 - How cases work, functions, errors and events: [`docs/SPEC-cases.md`](docs/SPEC-cases.md).
 - Coming next: a token check that reads real mainnet data, case pages, and "Try it live".
 
 ## Closing the back door
 
-Making Habeas the token's admin is not enough on its own. The issuer's account can still freeze or take back with classic Stellar operations, skipping the contract. We tested this on testnet ([S4](spikes/RESULTS.md#s4-the-classic-back-door)). Habeas deployments lock the issuer account so the reviewer must co-sign any classic action, and the token check will report whether an asset's back door is really closed.
+Making Habeas the token's admin is not enough on its own. The issuer's account can still freeze or take back with classic Stellar operations, skipping the contract. We tested this on testnet ([S4](spikes/RESULTS.md#s4-the-classic-back-door)). There are two ways to close it, and the token check reports which one an asset uses:
+
+- **The reviewer co-signs (what a real bank would choose).** The reviewer is added as a signer on the issuer account and the thresholds are raised, so the issuer can't sign a freeze or take back alone. The bank keeps its account for anything else it may need later, but only with the reviewer's agreement.
+- **The issuer key is switched off (the demo).** Once the account's classic setup is finished, its key weight is set to 0. Nobody can ever sign for it again; minting still works because it goes through Habeas. It's the simplest setup to verify, and it can't be undone.
+
+## Reviewer: one person or a panel
+
+The demo uses one reviewer key. The contract doesn't care what kind of address the reviewer is, so a panel works without any change: a Stellar multisig account or a smart account. The test [`two_of_three_members_can_decide`](contracts/habeas/src/test.rs) registers a 2-of-3 panel as the reviewer and signs decisions with real ed25519 keys: two members can decide, while one member alone, an outsider, or the same member twice are refused.
 
 ## Run it yourself
 
@@ -46,10 +53,16 @@ cd scripts && npm install && cd .. && node scripts/run-demo-cases.mjs
 
 The deploy script creates fresh testnet accounts with Friendbot, issues a demo asset, deploys Habeas, locks the issuer account and checks the lock. The second script runs every kind of case and writes the transaction hashes to `deployments/testnet-run.json`.
 
+## Roadmap
+
+- A reviewer panel (2 of 3) for the live demo. The contract already supports it (see above); what's missing is the signing flow in the website.
+- Independent reviewer networks, so the issuer doesn't pick the reviewer.
+- Mainnet deployment once an issuer wants to use it.
+
 ## What this does not do
 
 - It does not decide who is right. The reviewer does.
-- The reviewer is chosen by the issuer. Independent reviewer networks are future work.
+- The reviewer is chosen by the issuer. Independent reviewer networks are on the roadmap.
 - While a case is open, the holder's whole balance of that token is frozen, not just the disputed amount. That's how Stellar freezing works. Only up to the case amount can be taken back.
 - No real issuer uses it yet. It runs on testnet.
 - Files stay off-chain. Only their fingerprints (SHA-256) are public.

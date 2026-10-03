@@ -31,6 +31,11 @@ struct T {
 
 impl T {
     fn new() -> T {
+        Self::with_reviewer(Address::generate)
+    }
+
+    /// Same setup, with the reviewer address made by `make_reviewer`.
+    fn with_reviewer(make_reviewer: impl FnOnce(&Env) -> Address) -> T {
         let env = Env::default();
         env.mock_all_auths();
         env.ledger().with_mut(|l| {
@@ -38,7 +43,7 @@ impl T {
             l.sequence_number = 1_000;
         });
         let issuer = Address::generate(&env);
-        let reviewer = Address::generate(&env);
+        let reviewer = make_reviewer(&env);
         let holder = Address::generate(&env);
 
         // The asset's classic issuer account is separate from the Habeas
@@ -872,4 +877,226 @@ fn two_holders_two_endings() {
     assert!(!t.frozen(&ana) && !t.frozen(&ben));
     assert_eq!(t.c().active_count(), 0);
     assert_eq!(t.c().case_count(), 2);
+}
+
+// ------------------------------------------------- reviewer panel (2 of 3)
+
+/// The reviewer can be a panel instead of one key. Here a 2-of-3 smart
+/// account is the reviewer, and every decision is signed with real ed25519
+/// keys and checked by the host, not mocked.
+mod panel {
+    use super::*;
+    use ed25519_dalek::{Signer, SigningKey};
+    use soroban_sdk::{
+        auth::{Context, CustomAccountInterface},
+        contract, contracterror, contractimpl, contracttype,
+        crypto::Hash,
+        xdr::{
+            self, HashIdPreimage, HashIdPreimageSorobanAuthorization, InvokeContractArgs, Limits,
+            ScVal, SorobanAddressCredentials, SorobanAuthorizationEntry, SorobanAuthorizedFunction,
+            SorobanAuthorizedInvocation, SorobanCredentials, VecM, WriteXdr,
+        },
+        Bytes, TryFromVal,
+    };
+
+    #[contracttype]
+    #[derive(Clone)]
+    pub struct MemberSig {
+        pub public_key: BytesN<32>,
+        pub signature: BytesN<64>,
+    }
+
+    #[contracttype]
+    enum PanelKey {
+        Members,
+        Threshold,
+    }
+
+    #[contracterror]
+    #[derive(Copy, Clone, Debug, Eq, PartialEq)]
+    #[repr(u32)]
+    pub enum PanelError {
+        NotEnoughSignatures = 1,
+        NotAMember = 2,
+        /// Signatures must be sorted by key with no repeats.
+        BadOrder = 3,
+    }
+
+    /// A minimal multisig account: any `threshold` of `members` must sign.
+    #[contract]
+    pub struct Panel;
+
+    #[contractimpl]
+    impl Panel {
+        pub fn __constructor(env: Env, members: Vec<BytesN<32>>, threshold: u32) {
+            env.storage().instance().set(&PanelKey::Members, &members);
+            env.storage()
+                .instance()
+                .set(&PanelKey::Threshold, &threshold);
+        }
+    }
+
+    #[contractimpl]
+    impl CustomAccountInterface for Panel {
+        type Signature = Vec<MemberSig>;
+        type Error = PanelError;
+
+        fn __check_auth(
+            env: Env,
+            payload: Hash<32>,
+            sigs: Vec<MemberSig>,
+            _contexts: Vec<Context>,
+        ) -> Result<(), PanelError> {
+            let members: Vec<BytesN<32>> =
+                env.storage().instance().get(&PanelKey::Members).unwrap();
+            let threshold: u32 = env.storage().instance().get(&PanelKey::Threshold).unwrap();
+            let message: Bytes = payload.to_bytes().into();
+            let mut last: Option<BytesN<32>> = None;
+            for sig in sigs.iter() {
+                if let Some(prev) = &last {
+                    if *prev >= sig.public_key {
+                        return Err(PanelError::BadOrder);
+                    }
+                }
+                if !members.contains(&sig.public_key) {
+                    return Err(PanelError::NotAMember);
+                }
+                // Panics (rejecting the auth) if the signature is wrong.
+                env.crypto()
+                    .ed25519_verify(&sig.public_key, &message, &sig.signature);
+                last = Some(sig.public_key.clone());
+            }
+            if sigs.len() < threshold {
+                return Err(PanelError::NotEnoughSignatures);
+            }
+            Ok(())
+        }
+    }
+
+    fn key(seed: u8) -> SigningKey {
+        SigningKey::from_bytes(&[seed; 32])
+    }
+
+    fn public(env: &Env, k: &SigningKey) -> BytesN<32> {
+        BytesN::from_array(env, &k.verifying_key().to_bytes())
+    }
+
+    struct PanelCase {
+        t: T,
+        id: u64,
+        members: [SigningKey; 3],
+    }
+
+    /// Habeas with a 2-of-3 panel as reviewer, and a case waiting for a decision.
+    fn setup() -> PanelCase {
+        let members = [key(11), key(22), key(33)];
+        let t = T::with_reviewer(|env| {
+            let keys = soroban_sdk::vec![
+                env,
+                public(env, &members[0]),
+                public(env, &members[1]),
+                public(env, &members[2])
+            ];
+            env.register(Panel, (keys, 2u32))
+        });
+        let id = t.open(100);
+        t.appeal(id);
+        PanelCase { t, id, members }
+    }
+
+    /// Builds the authorization entry a wallet would attach to a `decide`
+    /// call, signed by `signers`, and installs it as the only auth.
+    fn sign_decide(
+        pc: &PanelCase,
+        signers: &[&SigningKey],
+        nonce: i64,
+    ) -> (String, Option<BytesN<32>>) {
+        let env = &pc.t.env;
+        let statement = String::from_str(env, "Panel decision: the claim holds.");
+        let file: Option<BytesN<32>> = None;
+        let args: Vec<Val> = (pc.id, true, statement.clone(), file.clone()).into_val(env);
+        let args: VecM<ScVal> = args
+            .iter()
+            .map(|v| ScVal::try_from_val(env, &v).unwrap())
+            .collect::<std::vec::Vec<_>>()
+            .try_into()
+            .unwrap();
+        let invocation = SorobanAuthorizedInvocation {
+            function: SorobanAuthorizedFunction::ContractFn(InvokeContractArgs {
+                contract_address: pc.t.id.clone().into(),
+                function_name: "decide".try_into().unwrap(),
+                args,
+            }),
+            sub_invocations: VecM::default(),
+        };
+        let expiration = env.ledger().sequence() + 100;
+        let preimage = HashIdPreimage::SorobanAuthorization(HashIdPreimageSorobanAuthorization {
+            network_id: xdr::Hash(env.ledger().network_id().to_array()),
+            nonce,
+            signature_expiration_ledger: expiration,
+            invocation: invocation.clone(),
+        });
+        let payload = env
+            .crypto()
+            .sha256(&Bytes::from_slice(
+                env,
+                &preimage.to_xdr(Limits::none()).unwrap(),
+            ))
+            .to_array();
+
+        let mut sigs: std::vec::Vec<MemberSig> = signers
+            .iter()
+            .map(|k| MemberSig {
+                public_key: public(env, k),
+                signature: BytesN::from_array(env, &k.sign(&payload).to_bytes()),
+            })
+            .collect();
+        sigs.sort_by(|a, b| a.public_key.cmp(&b.public_key));
+        let sigs = Vec::from_slice(env, &sigs);
+
+        env.set_auths(&[SorobanAuthorizationEntry {
+            credentials: SorobanCredentials::Address(SorobanAddressCredentials {
+                address: pc.t.reviewer.clone().into(),
+                nonce,
+                signature_expiration_ledger: expiration,
+                signature: ScVal::try_from_val(env, &sigs.to_val()).unwrap(),
+            }),
+            root_invocation: invocation,
+        }]);
+        (statement, file)
+    }
+
+    #[test]
+    fn two_of_three_members_can_decide() {
+        let pc = setup();
+        let (s, f) = sign_decide(&pc, &[&pc.members[0], &pc.members[2]], 1);
+        pc.t.c().decide(&pc.id, &true, &s, &f);
+        assert_eq!(pc.t.signers(), std::slice::from_ref(&pc.t.reviewer));
+        assert_eq!(pc.t.c().get_case(&pc.id).status, Status::Upheld);
+    }
+
+    #[test]
+    fn one_member_alone_cannot_decide() {
+        let pc = setup();
+        let (s, f) = sign_decide(&pc, &[&pc.members[1]], 2);
+        assert!(pc.t.c().try_decide(&pc.id, &true, &s, &f).is_err());
+        assert_eq!(pc.t.c().get_case(&pc.id).status, Status::Answered);
+    }
+
+    #[test]
+    fn an_outsider_cannot_stand_in_for_a_member() {
+        let pc = setup();
+        let outsider = key(99);
+        let (s, f) = sign_decide(&pc, &[&pc.members[0], &outsider], 3);
+        assert!(pc.t.c().try_decide(&pc.id, &true, &s, &f).is_err());
+        assert_eq!(pc.t.c().get_case(&pc.id).status, Status::Answered);
+    }
+
+    #[test]
+    fn the_same_member_twice_does_not_count_as_two() {
+        let pc = setup();
+        let (s, f) = sign_decide(&pc, &[&pc.members[0], &pc.members[0]], 4);
+        assert!(pc.t.c().try_decide(&pc.id, &true, &s, &f).is_err());
+        assert_eq!(pc.t.c().get_case(&pc.id).status, Status::Answered);
+    }
 }
