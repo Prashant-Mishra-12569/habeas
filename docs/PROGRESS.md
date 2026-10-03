@@ -12,6 +12,12 @@ Updated after every milestone. Newest first.
 - `/styleguide` (waiting for Prashant's approval): colours, type, heading-face choice, buttons, fields, words list, the main animation (the real Sep 19 USBDC take back read live from mainnet Horizon, typed into the case form, with "Reason" and "Right to answer" marked "Not provided"), and two real testnet cases replayed step by step from their own on-chain timestamps. No mock data anywhere; failed reads show an error with "Try again".
 - Checked at 375 px (no sideways scroll) and desktop, light and dark. `tsc`, `eslint` and `next build` clean.
 
+- Asset check data layer (`src/lib/asset-check.ts`): issuer flags and signers, scan of the issuer's operations for freezes and take-backs (capped at 2,000 ops and says so), take-back memos as the only on-chain place for a reason, who controls the asset's token contract (SAC), and for Habeas admins the reviewer, cases and whether the classic back door is closed. "Protected" only for a verified Habeas wasm hash. 9 Vitest tests against real mainnet and testnet. Real findings: USDC's and PYUSD's token contracts are run by other contracts, BENJI's by its issuer account, and USBDCP has no token contract at all.
+- Issuers confirmed from primary sources: USDC `GA5ZSEJY…KZVN` (Circle docs), PYUSD `GDQE7IXJ…TU2V5` (Paxos stellar.toml), BENJI `GBHNGLLI…HZIW5` (Franklin Templeton stellar.toml). Several look-alike scam assets exist with the same codes, so the check always needs code + issuer.
+- Verdicts: added a fourth, "no powers" (issuer can't freeze or take back), next to the plan's three. "Powers never used" is worded as "not used in what we scanned" when the scan is partial.
+- Mainnet RPC: `mainnet.sorobanrpc.com`, falling back to `rpc.lightsail.network` (both free, listed in Stellar's docs).
+- Web CI on GitHub: lint, typecheck, real-network tests, build. Green.
+
 ### Waiting on Prashant
 
 - Approve the styleguide, or say what to change. Pick heading face A (Public Sans) or B (Schibsted Grotesk).
@@ -28,7 +34,7 @@ Updated after every milestone. Newest first.
   - Enums are stored by name (`["Cleared"]`), not numbers, so explorers are readable.
 - 50 tests against the real SAC from the SDK (plan asked for 25+). Mutation check: removing the holder's signature, flipping "reviewer silent" to take back, or dropping the reviewer from emergencies each makes tests fail. `cargo clippy -- -D warnings` clean.
 - CI on GitHub: fmt, clippy, tests, wasm build. Green.
-- Verified build: tag `v0.1.0` → GitHub Actions release with a SEP-55 build attestation (verified with `gh attestation verify`). The testnet instance is deployed from that exact wasm (`e822b7f1…`), and the on-chain wasm carries `source_repo` metadata. StellarExpert still showed "unverified" right after deploy; check again later.
+- Verified build: tag `v0.1.0` → GitHub Actions release with a SEP-55 build attestation (verified with `gh attestation verify`). The testnet instance is deployed from that exact wasm (`e822b7f1…`), and the on-chain wasm carries `source_repo` metadata. StellarExpert will not show a badge: the workflow only reports to its mainnet endpoint, and that endpoint is silently dropping submissions (stellar-expert/soroban-build-workflow#9, open since Aug; our run got the same `{}`). Documented in EVIDENCE.md; our own attestation check doesn't depend on it.
 - Testnet: `scripts/deploy-testnet.sh` issues DEMOUSD from scratch, deploys Habeas, hands it the SAC admin role, locks the issuer account, and checks a classic clawback is refused. `scripts/run-demo-cases.mjs` runs all six endings (cleared after appeal, taken back after appeal, no answer, reviewer silent, withdrawn, emergency) plus three refusals. Every hash checked on Horizon. `docs/EVIDENCE.md` is generated from the results.
 - The first deployment (local build) is kept in `deployments/archive/local-build/`.
 - Error parsing in `scripts/lib/stellar.mjs` tells Habeas errors apart from the asset contract's own numbered errors (they overlap, e.g. #13).

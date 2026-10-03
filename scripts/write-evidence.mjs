@@ -84,6 +84,8 @@ sha256sum habeas.wasm   # ${dep.wasm_sha256}
 gh attestation verify habeas.wasm --repo Prashant-Mishra-12569/habeas --signer-repo stellar-expert/soroban-build-workflow
 \`\`\`
 
+StellarExpert doesn't show a "verified source" badge for this contract, for two reasons outside this repo: the build workflow only reports to StellarExpert's mainnet endpoint, and that endpoint has been silently dropping submissions since August ([stellar-expert/soroban-build-workflow#9](https://github.com/stellar-expert/soroban-build-workflow/issues/9); our run got the same empty \`{}\` reply). The checks above don't depend on StellarExpert.
+
 ## Back door check
 
 After Habeas became the SAC admin, a classic \`Clawback\` signed by the asset issuer alone was refused with \`TxBadAuth\` (\`scripts/deploy-testnet.sh\`, last step). Before the lock it worked: see S4 in [\`spikes/RESULTS.md\`](../spikes/RESULTS.md).
