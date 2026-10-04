@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { ButtonLink } from "@/components/Button";
 import { CheckForm } from "@/components/CheckForm";
 import { EventForm } from "@/components/EventForm";
@@ -8,6 +9,7 @@ import { deployment, getCase } from "@/lib/habeas";
 import { getUsbdcEvent } from "@/lib/mainnet";
 import { ReadError } from "@/lib/network";
 import { getDict } from "@/i18n/server";
+import { REPO_URL, SITE_URL, pageMeta } from "@/lib/site";
 
 // Everything on this page is read from Stellar on each request.
 export const dynamic = "force-dynamic";
@@ -37,14 +39,41 @@ function Section({ id, title, lead, children }: { id: string; title: string; lea
   );
 }
 
+export async function generateMetadata(): Promise<Metadata> {
+  const { t, lang } = await getDict();
+  return { ...pageMeta({ title: t.meta.title, description: t.meta.description, path: "/", lang }), title: { absolute: t.meta.title } };
+}
+
+/** What search engines read about the site (schema.org). */
+function StructuredData({ description, lang }: { description: string; lang: string }) {
+  const data = {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    name: "Habeas",
+    url: SITE_URL,
+    description,
+    image: `${SITE_URL}/brand/habeas-mark.png`,
+    applicationCategory: "FinanceApplication",
+    operatingSystem: "Any",
+    inLanguage: lang,
+    isAccessibleForFree: true,
+    offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+    author: { "@type": "Person", name: "Prashant Mishra", url: "https://github.com/Prashant-Mishra-12569", sameAs: ["https://x.com/0xprashantt"] },
+    sameAs: [REPO_URL],
+  };
+  // "<" escaped so the JSON can never close the script tag.
+  return <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(data).replaceAll("<", "\\u003c") }} />;
+}
+
 export default async function Home() {
-  const { t } = await getDict();
+  const { t, lang } = await getDict();
   const [event, story] = await Promise.all([attempt(getUsbdcEvent), attempt(() => getCase(STORY_CASE))]);
   const asset = deployment.asset.split(":")[0];
   const [, today, withHabeas] = t.home.compareCols;
 
   return (
     <main>
+      <StructuredData description={t.meta.description} lang={lang} />
       {/* Hero: the problem, shown with a real take back from mainnet. */}
       <section className="mx-auto grid w-full max-w-6xl gap-10 px-4 pt-8 sm:gap-12 sm:px-8 sm:pt-14 lg:grid-cols-[1fr_1.05fr] lg:items-start lg:gap-16 lg:pt-20">
         <div className="lg:pt-6">

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { pageMeta } from "@/lib/site";
 import deployment from "@/config/testnet.json";
 import wallet from "@/config/testnet-freighter.json";
 import lock from "@/config/testnet-lock.json";
@@ -10,7 +11,10 @@ import { accountUrl, contractUrl, formatDuration, formatUtc, shortHash, txUrl } 
 import { USBDC_EVENT } from "@/lib/mainnet";
 import { getDict } from "@/i18n/server";
 
-export const metadata: Metadata = { title: "Evidence · Habeas" };
+export async function generateMetadata(): Promise<Metadata> {
+  const { t, lang } = await getDict();
+  return pageMeta({ ...t.meta.pages.evidence, path: "/evidence", lang });
+}
 
 const LAB_URL = `https://lab.stellar.org/smart-contracts/contract-explorer?$=network$id=testnet&label=Testnet&horizonUrl=https:////horizon-testnet.stellar.org&rpcUrl=https:////soroban-testnet.stellar.org&passphrase=Test%20SDF%20Network%20/;%20September%202015;&smartContracts$explorer$contractId=${deployment.habeas};;`;
 

@@ -1,5 +1,12 @@
+import type { Metadata } from "next";
 import { CheckForm } from "@/components/CheckForm";
 import { getDict } from "@/i18n/server";
+import { pageMeta } from "@/lib/site";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const { t, lang } = await getDict();
+  return pageMeta({ ...t.meta.pages.check, path: "/check", lang });
+}
 
 export default async function CheckPage() {
   const { t } = await getDict();

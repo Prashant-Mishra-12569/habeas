@@ -1,8 +1,12 @@
 import type { Metadata } from "next";
+import { pageMeta } from "@/lib/site";
 import { TryLive } from "@/components/TryLive";
 import { getDict } from "@/i18n/server";
 
-export const metadata: Metadata = { title: "Try it live · Habeas" };
+export async function generateMetadata(): Promise<Metadata> {
+  const { t, lang } = await getDict();
+  return pageMeta({ ...t.meta.pages.try, path: "/try", lang });
+}
 
 export default async function TryPage() {
   const { t } = await getDict();

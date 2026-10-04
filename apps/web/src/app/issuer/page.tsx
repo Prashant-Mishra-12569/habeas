@@ -1,10 +1,14 @@
 import type { Metadata } from "next";
+import { pageMeta } from "@/lib/site";
 import { IssuerForm } from "@/components/RolePages";
 import { ReadErrorNotice } from "@/components/ReadErrorNotice";
 import { getConfig } from "@/lib/habeas";
 import { getDict } from "@/i18n/server";
 
-export const metadata: Metadata = { title: "Open a case · Habeas" };
+export async function generateMetadata(): Promise<Metadata> {
+  const { t, lang } = await getDict();
+  return pageMeta({ ...t.meta.pages.issuer, path: "/issuer", lang });
+}
 export const dynamic = "force-dynamic";
 
 export default async function IssuerPage() {

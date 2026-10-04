@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { pageMeta } from "@/lib/site";
 import { ReadErrorNotice } from "@/components/ReadErrorNotice";
 import { Addr, Block, Ext, Row } from "@/components/Sheet";
 import { ATTEST_PREFIX, attestPublicKey } from "@/lib/attest";
@@ -8,7 +9,10 @@ import { X402_FACILITATOR, X402_NETWORK, X402_PAY_TO } from "@/lib/x402";
 import type { Verdict } from "@/lib/asset-check-types";
 import { getDict } from "@/i18n/server";
 
-export const metadata: Metadata = { title: "For developers · Habeas" };
+export async function generateMetadata(): Promise<Metadata> {
+  const { t, lang } = await getDict();
+  return pageMeta({ ...t.meta.pages.developers, path: "/developers", lang });
+}
 // The paid checks list is read from Stellar on each request.
 export const dynamic = "force-dynamic";
 

@@ -1,8 +1,12 @@
 import type { Metadata } from "next";
+import { pageMeta } from "@/lib/site";
 import { MyCases } from "@/components/RolePages";
 import { getDict } from "@/i18n/server";
 
-export const metadata: Metadata = { title: "My cases · Habeas" };
+export async function generateMetadata(): Promise<Metadata> {
+  const { t, lang } = await getDict();
+  return pageMeta({ ...t.meta.pages.me, path: "/me", lang });
+}
 
 export default async function MePage() {
   const { t } = await getDict();

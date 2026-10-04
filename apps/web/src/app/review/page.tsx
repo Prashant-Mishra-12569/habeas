@@ -1,11 +1,15 @@
 import type { Metadata } from "next";
+import { pageMeta } from "@/lib/site";
 import { ReadErrorNotice } from "@/components/ReadErrorNotice";
 import { ReviewQueue } from "@/components/RolePages";
 import { getConfig } from "@/lib/habeas";
 import { reviewQueue } from "@/lib/wallet-tx";
 import { getDict } from "@/i18n/server";
 
-export const metadata: Metadata = { title: "Review queue · Habeas" };
+export async function generateMetadata(): Promise<Metadata> {
+  const { t, lang } = await getDict();
+  return pageMeta({ ...t.meta.pages.review, path: "/review", lang });
+}
 export const dynamic = "force-dynamic";
 
 async function load() {
