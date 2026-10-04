@@ -149,6 +149,7 @@ Paid checks, each a USDC transfer from the agent to the address above:
 | --- | --- | --- |
 | 2026-10-04 06:39:12 | examples/agent-check.ts checks USBDCP; signature verified | [de37fb28](https://stellar.expert/explorer/testnet/tx/de37fb28e787b2d7cfb81e7d70a5520e600d6b7e40558c5a9fcc78b17e47dc01) |
 | 2026-10-04 06:45:57 | e2e/agent-api.spec.ts checks USBDCP; signature verified | [be26b724](https://stellar.expert/explorer/testnet/tx/be26b72422559105e10e6d31dde1721335afa94931c10ec2df0c6a2504592141) |
+| 2026-10-04 08:46:52 | examples/agent-check.ts against the live site (habeas-stellar.vercel.app); signature verified | [b5fb468a](https://stellar.expert/explorer/testnet/tx/b5fb468a1e42669e555c16bf92b3be3cdc25388dd4d6710914d00c6451b7cfb9) |
 
 A request for something that isn't an asset was answered 400 after the payment was offered; the agent's USDC balance stayed at 4.999 and no transaction was made. The live list is on the site's [developer page](https://habeas-stellar.vercel.app/developers).
 

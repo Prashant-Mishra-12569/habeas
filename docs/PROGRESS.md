@@ -12,21 +12,19 @@ Updated after every milestone. Live site: https://habeas-stellar.vercel.app · R
 | 4. Case pages | Done. `/case/[id]` (form, timeline with every transaction, countdown, free settle, free answer), `/me`, `/issuer`, `/review`. |
 | 5. Try it live | Done. With or without a wallet (phones use the no-wallet path), both endings, case file and share link. Playwright runs it on testnet. |
 | 6. x402 agent check | Done. `/api/v1/check/[asset]` paid with x402 (0.001 testnet USDC), signed answers, `examples/agent-check.ts`, `/developers`. Paid on testnet by the example and by Playwright. |
-| 7. Telegram alerts | Built and tested on testnet without Telegram (`--dry-run` caught case 25 live). Waiting for the bot token, then hosting. |
+| 7. Telegram alerts | Built and tested. Bot @habeas_alerts_bot (token checked); packaged for Railway (`railway.json`, `apps/alerts/Dockerfile`, volume at `/data`). |
 
 ## What's left
 
 **Next:**
 
-- Phase 7: send real Telegram messages once the bot exists, then host it (or run it locally for the video and keep it marked beta).
-- Phase 10: 5-slide deck, video script and recording support, X post draft, a final pass from a clean browser.
+- Phase 7: once Railway runs the bot, watch an address in Telegram and run a real case to see the messages arrive.
+- Phase 10 (Prashant): deck, video, X post.
 
 **Needs Prashant:**
 
-- Vercel: add `HABEAS_ATTEST_SECRET` and redeploy. Until then the live paid check answers with an error and charges nothing, and `/api/v1/key` answers 503. The value is in `apps/web/.env.local`, or run `stellar keys secret habeas-attest` in your own terminal.
 - GitHub Actions secrets (optional, so CI also runs the paid check): `HABEAS_ATTEST_SECRET` (same value) and `AGENT_SECRET` (`stellar keys secret habeas-agent`, a testnet account with 4.99 testnet USDC; each CI run spends 0.001).
-- Telegram: create the bot with @BotFather and paste the token into `apps/alerts/.env` (steps in `apps/alerts/README.md`, including the bot picture). Tell me the bot's username, never the token.
-- Hosting the bot: Railway (always on, a volume keeps the watch list, needs a Railway account and uses its trial credit), Render free web service (free, but sleeps without an outside pinger and forgets watchers on redeploy), or this PC during the video (marked beta, as the plan allows).
+- Railway: create the service from the GitHub repo, add `TELEGRAM_BOT_TOKEN` and a volume at `/data` (steps in `apps/alerts/README.md`).
 - Spanish read by a native speaker (site, README.es.md, bot messages); a phone test with a friend who doesn't use crypto; the video in your own voice.
 
 **Small items to decide or do later:**

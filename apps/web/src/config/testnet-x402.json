@@ -9,13 +9,35 @@
   "attest_key": "GAJ2MWWEY5VAMG3GW72Z36647UVIYWZKOZDBF5BUTZM2JNTOZWUJHZ4J",
   "agent": "GBMVNEL3YK6ZVHRM4V3USXAKZBRXH6QOLKMCR45MOQPCKJ2BK26SUZYW",
   "setup": [
-    { "label": "Treasury opens a USDC trustline", "hash": "d7b8f607eb42309154d47697451a7c7f1952507dfa3ad7fe66bc0ec0682ef1ed" },
-    { "label": "Example agent opens a USDC trustline", "hash": "7e2ba8577928f84c3705a67018acef8399ea0459fddaf9bbcbc8fd596540be7e" },
-    { "label": "Example agent buys 5 testnet USDC with XLM on the testnet exchange", "hash": "dc39b9577ebc3263ab0a9e9463a6a99ce0e3bf6c2a488f571fd211977e586563" }
+    {
+      "label": "Treasury opens a USDC trustline",
+      "hash": "d7b8f607eb42309154d47697451a7c7f1952507dfa3ad7fe66bc0ec0682ef1ed"
+    },
+    {
+      "label": "Example agent opens a USDC trustline",
+      "hash": "7e2ba8577928f84c3705a67018acef8399ea0459fddaf9bbcbc8fd596540be7e"
+    },
+    {
+      "label": "Example agent buys 5 testnet USDC with XLM on the testnet exchange",
+      "hash": "dc39b9577ebc3263ab0a9e9463a6a99ce0e3bf6c2a488f571fd211977e586563"
+    }
   ],
   "paid": [
-    { "label": "examples/agent-check.ts checks USBDCP; signature verified", "at": "2026-10-04T06:39:12Z", "hash": "de37fb28e787b2d7cfb81e7d70a5520e600d6b7e40558c5a9fcc78b17e47dc01" },
-    { "label": "e2e/agent-api.spec.ts checks USBDCP; signature verified", "at": "2026-10-04T06:45:57Z", "hash": "be26b72422559105e10e6d31dde1721335afa94931c10ec2df0c6a2504592141" }
+    {
+      "label": "examples/agent-check.ts checks USBDCP; signature verified",
+      "at": "2026-10-04T06:39:12Z",
+      "hash": "de37fb28e787b2d7cfb81e7d70a5520e600d6b7e40558c5a9fcc78b17e47dc01"
+    },
+    {
+      "label": "e2e/agent-api.spec.ts checks USBDCP; signature verified",
+      "at": "2026-10-04T06:45:57Z",
+      "hash": "be26b72422559105e10e6d31dde1721335afa94931c10ec2df0c6a2504592141"
+    },
+    {
+      "label": "examples/agent-check.ts against the live site (habeas-stellar.vercel.app); signature verified",
+      "at": "2026-10-04T08:46:52Z",
+      "hash": "b5fb468a1e42669e555c16bf92b3be3cdc25388dd4d6710914d00c6451b7cfb9"
+    }
   ],
   "not_charged": "A request for something that isn't an asset was answered 400 after the payment was offered; the agent's USDC balance stayed at 4.999 and no transaction was made."
 }

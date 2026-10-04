@@ -1,0 +1,12 @@
+# Only the alerts bot is built with Docker (apps/alerts/Dockerfile).
+.git
+**/node_modules
+**/.env*
+target
+contracts
+apps/web
+examples
+scripts
+spikes
+docs
+apps/alerts/data

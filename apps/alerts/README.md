@@ -43,6 +43,17 @@ The bot keeps who-watches-what and its place in the event stream in `data/state.
 
 Set `PORT` to also answer health checks over HTTP (`GET /` returns the last poll time and any error), for hosts that expect a web service.
 
+## Host it on Railway
+
+The repository root has a `railway.json` that builds `apps/alerts/Dockerfile`, so Railway needs no build settings:
+
+1. New project → **GitHub Repository** → `habeas`.
+2. In the service's **Variables**, add `TELEGRAM_BOT_TOKEN` with the token from @BotFather.
+3. Add a **Volume** to the service, mounted at `/data`. The watch list and the event cursor live there, so they survive redeploys.
+4. Deploy. The logs should say `@habeas_alerts_bot is running`.
+
+Only one copy of the bot can read Telegram at a time: stop any local `npm start` once Railway is running. Railway redeploys only when `apps/alerts/`, `deployments/testnet.json` or `railway.json` change.
+
 ## Without Telegram
 
 ```bash
