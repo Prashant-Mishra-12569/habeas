@@ -24,8 +24,12 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function RootLayout({ children }: LayoutProps<"/">) {
   const [{ lang, t }, theme] = await Promise.all([getDict(), getTheme()]);
   return (
-    <html lang={lang} data-theme={theme} className={`${publicSans.variable} ${plexMono.variable} h-full`}>
-      <body className="flex min-h-full flex-col">
+    // Browser extensions (password managers, Bitdefender's anti-tracker and
+    // others) add attributes to <html> and <body> before React loads. This
+    // only silences those two elements, one level deep; mismatches inside our
+    // own components still surface.
+    <html lang={lang} data-theme={theme} className={`${publicSans.variable} ${plexMono.variable} h-full`} suppressHydrationWarning>
+      <body className="flex min-h-full flex-col" suppressHydrationWarning>
         <LangProvider lang={lang}>
           <SiteHeader t={t} theme={theme} />
           <div className="flex-1">{children}</div>

@@ -1,5 +1,5 @@
 {
-  "recorded_at": "2026-10-04T06:01:22.999Z",
+  "recorded_at": "2026-10-04T06:26:53.640Z",
   "note": "Cases run through the website API on testnet (scripts/test-free-answer.mjs, scripts/test-wallet-roles.mjs, and the Playwright Try it live test).",
   "cases": [
     {
@@ -78,6 +78,75 @@
           "kind": "settled",
           "at": 1791091257,
           "hash": "74b88be989d8dcd53c36b57709f7d45b0bc741661abce3dee94ffbb10c803e8b"
+        }
+      ]
+    },
+    {
+      "id": 19,
+      "label": "Prashant on Try it live, test wallet: answered, reviewer rejected, settled: Cleared",
+      "status": "Cleared",
+      "ended_by": "ReviewerRejected",
+      "steps": [
+        {
+          "kind": "opened",
+          "at": 1791094202,
+          "hash": "4e68e72a779df48b02c90547650d77d7a8c6202700ce0e94a874587787349efc"
+        },
+        {
+          "kind": "answered",
+          "at": 1791094222,
+          "hash": "d84831561bff53936344be2f27c0aadce7d42f69e933088e110d78c01b65dc13"
+        },
+        {
+          "kind": "decided",
+          "at": 1791094237,
+          "hash": "af8e533bd988eedc353ae62bb1fc33823e4c892a5db4f1ae7ed76e17fc0bb8c1"
+        },
+        {
+          "kind": "settled",
+          "at": 1791094252,
+          "hash": "1285e748b38ea3e3676f1a5bf0e86caba732c1d9e9eb6419664282ae3a1ec1f6"
+        }
+      ]
+    },
+    {
+      "id": 20,
+      "label": "Prashant on Try it live, the second ending: no answer, settled: Taken back",
+      "status": "TakenBack",
+      "ended_by": "NoAnswer",
+      "steps": [
+        {
+          "kind": "opened",
+          "at": 1791094332,
+          "hash": "95494612a482f74eb7aebb8701f1bd64167c2b3ab053652a49bc6f8cc3aa9175"
+        },
+        {
+          "kind": "settled",
+          "at": 1791094552,
+          "hash": "f06d5ad50b98ffbd721fb0bd2dccf37ac9cf4ec5571bd4f7f12674766287c8c7"
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "label": "Prashant's Freighter case: answered, the reviewer never decided, settled from the case page: Cleared by default",
+      "status": "Cleared",
+      "ended_by": "ReviewerSilent",
+      "steps": [
+        {
+          "kind": "opened",
+          "at": 1791037377,
+          "hash": "18564b2f4ef70309812b5262d7485e5dbff5b747d7631216b0a1f9eb3fc5e818"
+        },
+        {
+          "kind": "answered",
+          "at": 1791037437,
+          "hash": "8d2c8c9372c126a6e6bec26190115e228f0a1b33cb10d743bb2221a7056ca859"
+        },
+        {
+          "kind": "settled",
+          "at": 1791094982,
+          "hash": "ea423610dfc869115efd9535d9c04c21bb0515807832adb779e0f2f42aae5227"
         }
       ]
     }
