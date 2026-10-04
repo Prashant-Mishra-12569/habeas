@@ -5,6 +5,8 @@
 
 # Habeas
 
+[Español](README.es.md)
+
 **A fair process before anyone takes your tokens.** Live: https://habeas-stellar.vercel.app
 
 Banks and funds that issue tokens on Stellar can freeze them or take them back (clawback). Sometimes that's needed: fraud happens, mistakes happen. But today it can happen with no reason given and no way to answer. On Sep 19, 2026, the issuer of U.S. Bank's pilot stablecoin sent 24,000 tokens and took them back 15 minutes later. The public record shows the act, but no reason and no process ([the operations](docs/EVIDENCE.md#the-real-world-event-habeas-responds-to-mainnet)).
@@ -22,7 +24,7 @@ Built for the [Find Your Way Hackathon](https://demo.stellarpassport.xyz/hackath
 
 ## Status
 
-Work in progress, running on Stellar **testnet**. Live site: **https://habeas-stellar.vercel.app** (English and Spanish, light "Paper" and dark "Carbon").
+Running on Stellar **testnet**. Live site: **https://habeas-stellar.vercel.app** (English and Spanish, light "Paper" and dark "Carbon").
 
 - **Contract:** [`contracts/habeas`](contracts/habeas), 54 tests against the real Stellar Asset Contract, deployed from a [verified GitHub build](docs/EVIDENCE.md#check-the-build-yourself).
 - **Every case ending** has been run on testnet, with transaction links: [`docs/EVIDENCE.md`](docs/EVIDENCE.md) and [/evidence](https://habeas-stellar.vercel.app/evidence).
@@ -62,7 +64,7 @@ The demo uses one reviewer key. The contract doesn't care what kind of address t
 
 ## Run it yourself
 
-You need Rust, the [Stellar CLI](https://developers.stellar.org/docs/tools/cli) (28.x) and Node 20+.
+You need Rust, the [Stellar CLI](https://developers.stellar.org/docs/tools/cli) (28.x) and Node 22.18 or newer (24 recommended; the alerts bot and the x402 example run TypeScript directly).
 
 ```bash
 cargo test
