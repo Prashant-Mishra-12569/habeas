@@ -106,7 +106,9 @@ h3 {
   text-wrap: balance;
 }
 
-h3 {
+/* .heading-sm: an h2 that should look like an h3, to keep heading levels in order. */
+h3,
+.heading-sm {
   font-weight: 700;
   letter-spacing: -0.012em;
 }

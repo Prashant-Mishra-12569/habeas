@@ -198,7 +198,10 @@ export function AnswerSheet({ r }: { r: AssetCheck }) {
           <div className="perforation mx-4 mt-3" aria-hidden />
           {rows.map((row, i) => (
             <motion.div
-              key={row.q}
+              // Keyed on `reduce` too: when the browser reports "Reduce motion" right
+              // after hydration, the row remounts in its final state instead of
+              // fading in late.
+              key={`${row.q}-${reduce}`}
               initial={reduce ? false : { opacity: 0, y: 6 }}
               animate={{ opacity: 1, y: 0 }}
               transition={reduce ? instant : { duration: 0.35, delay: 0.08 * i, ease: EASE }}

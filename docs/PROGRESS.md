@@ -19,7 +19,7 @@ Updated after every milestone. Live site: https://habeas-stellar.vercel.app · R
 **Next phases:**
 
 - Phase 7: send real Telegram messages once the bot exists, then host it (or run it locally for the video and keep it marked beta).
-- Phase 9 polish: Lighthouse accessibility ≥ 95, Spanish reviewed by a native speaker.
+- Phase 9 polish: Spanish reviewed by a native speaker (accessibility is done, see below).
 - Phase 10: README in Spanish, demo video, 5-slide deck, X post.
 
 **Needs Prashant:**
@@ -34,6 +34,14 @@ Updated after every milestone. Live site: https://habeas-stellar.vercel.app · R
 - The USBDCP issuer has now taken tokens back 37 times (latest Oct 3, 2026), not only on Sep 19. The hero still tells the Sep 19 story, which is accurate; we could add "and 36 more since" once we decide on wording.
 - Optional: turn off the Vercel Toolbar in the Vercel project settings. Its loader reads `document.cookie`, which Chrome lists as a performance "issue" in DevTools. The other one comes from Next.js itself (`next-instant-navigation-testing` check). Neither is our code and neither affects visitors.
 - Optional (from the plan): the Stellar dev skill and Raven MCP for Claude Code. Not installed; we've worked from the SDK sources and Stellar's docs directly.
+
+## Phase 9: accessibility (Oct 4)
+
+- Lighthouse accessibility: 100 on all ten main pages (was 98 on home, 100 elsewhere).
+- Fixed: the wordmark's carbon copies were two extra hidden copies of "Habeas", so the link's accessible name didn't match its text; they're now drawn with `text-shadow`, same look. The hero form's title skipped a heading level (h1 to h3).
+- Found beyond Lighthouse with axe on desktop and in Carbon: the "how a case works" steps dimmed with opacity fell to 2.5:1 contrast; steps not reached yet now use the muted ink colour (AA) instead.
+- Reduced motion: rows and stamps that were scheduled to animate during hydration still ran with their delays for visitors with "Reduce motion" on (check page rows were invisible for ~1 s). They now remount in their final state as soon as the browser reports the setting; measured: all rows visible at +100 ms.
+- `e2e/a11y.spec.ts`: axe WCAG 2.x A/AA on 10 pages × (phone Paper EN, phone Carbon ES, desktop Paper EN), in CI.
 
 ## Phase 7: Telegram alerts (Oct 4)
 

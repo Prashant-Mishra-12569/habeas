@@ -38,7 +38,7 @@ export function HowItWorks({ c, asset }: { c: Case; asset: string }) {
           style={{ scaleY: reduce ? 1 : scrollYProgress, originY: 0 }}
         />
         {t.home.how.map(([title, body], i) => (
-          <li key={title} className={`relative transition-opacity duration-300 ${i <= active ? "" : "lg:opacity-55"}`}>
+          <li key={title} className="relative">
             <span
               aria-hidden
               className={`absolute -left-10 top-0.5 flex h-6 w-6 items-center justify-center rounded-full border-2 font-mono text-xs transition-colors duration-300 ${
@@ -48,7 +48,7 @@ export function HowItWorks({ c, asset }: { c: Case; asset: string }) {
             >
               {i + 1}
             </span>
-            <h3 className="text-xl">{title}</h3>
+            <h3 className={`text-xl transition-colors duration-300 motion-reduce:transition-none ${i <= active ? "" : "lg:text-muted"}`}>{title}</h3>
             <p className="mt-2 max-w-[46ch] text-muted">{body}</p>
             <div className="mt-3 grid max-w-xs grid-cols-2 gap-x-4 gap-y-1.5 text-sm lg:hidden">
               {(["frozen", "answered", "decided", "closed"] as const).map((k, n) => (

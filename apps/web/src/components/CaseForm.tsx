@@ -56,13 +56,13 @@ export function CaseForm({
 
   return (
     <div className="relative mr-4 mb-4">
-      <motion.div key={`pink-${status}`} aria-hidden className="absolute inset-0 rounded-[2px] bg-pink" {...slide(14, 0.08)} />
-      <motion.div key={`canary-${status}`} aria-hidden className="absolute inset-0 rounded-[2px] bg-canary" {...slide(7, 0)} />
+      <motion.div key={`pink-${status}-${reduce}`} aria-hidden className="absolute inset-0 rounded-[2px] bg-pink" {...slide(14, 0.08)} />
+      <motion.div key={`canary-${status}-${reduce}`} aria-hidden className="absolute inset-0 rounded-[2px] bg-canary" {...slide(7, 0)} />
 
       <section className="@container relative rounded-[2px] border border-rule bg-sheet">
         <div className="perforation mx-4 mt-3" aria-hidden />
         <header className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 px-4 pt-3 pb-3 @sm:px-5">
-          <h3 className="text-lg">{title}</h3>
+          <h2 className="heading-sm text-lg">{title}</h2>
           {subtitle && <p className="text-sm text-muted">{subtitle}</p>}
         </header>
         <div className="mx-4 border-t-2 border-ink @sm:mx-5" />
@@ -99,7 +99,7 @@ export function CaseForm({
                   />
                 </div>
                 <motion.div
-                  key={status}
+                  key={`${status}-${reduce}`}
                   initial={reduce ? false : { opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={reduce ? instant : { duration: 0.3, ease: EASE }}

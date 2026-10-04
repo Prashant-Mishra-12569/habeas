@@ -30,6 +30,7 @@ export function TickBox({
           <>
             <clipPath id={id}>
               <motion.rect
+                key={String(reduce)}
                 x="-2"
                 y="-6"
                 width="26"

@@ -23,6 +23,7 @@ export function PenCircle({ children, delay = 0 }: { children: ReactNode; delay?
       >
         <clipPath id={id}>
           <motion.rect
+            key={String(reduce)}
             x="-10"
             y="-10"
             width="140"

@@ -10,15 +10,8 @@ import { Prefs } from "./Prefs";
 export function Wordmark({ label }: { label: string }) {
   return (
     <Link href="/" aria-label={label} className="inline-flex min-h-11 items-center text-xl font-extrabold tracking-[-0.03em]">
-      <span className="relative">
-        <span aria-hidden className="absolute left-[2px] top-[2px] select-none text-[color:var(--pink)]">
-          Habeas
-        </span>
-        <span aria-hidden className="absolute left-px top-px select-none text-[color:var(--canary)]">
-          Habeas
-        </span>
-        <span className="relative">Habeas</span>
-      </span>
+      {/* The canary and pink carbon copies, drawn as shadows so the link reads "Habeas" once. */}
+      <span className="[text-shadow:1px_1px_0_var(--canary),2px_2px_0_var(--pink)]">Habeas</span>
     </Link>
   );
 }

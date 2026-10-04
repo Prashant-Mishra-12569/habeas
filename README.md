@@ -23,7 +23,7 @@ Work in progress, running on Stellar **testnet**. Live site: **https://habeas-st
 - **Every case ending** has been run on testnet, with transaction links: [`docs/EVIDENCE.md`](docs/EVIDENCE.md) and [/evidence](https://habeas-stellar.vercel.app/evidence).
 - **Free answer, proven with a real wallet:** in Freighter the holder signs only the authorization and Habeas pays the network fee ([case 8](https://habeas-stellar.vercel.app/case/8)).
 - **Token check on real mainnet data:** [USBDCP](https://habeas-stellar.vercel.app/check/USBDCP-GDABKPZMAIULVJVJJQM7L3VIG5A2IS5V4KP2P3YNP6YWRUBJNBGFGG6E), USDC, PYUSD and BENJI, plus the protected demo token.
-- **Works on phones:** every page is tested at 320, 390, 768 and 1440 px in CI (Playwright).
+- **Works on phones, accessible:** every page is tested at 320, 390, 768 and 1440 px in CI (Playwright), and against WCAG 2.x AA with axe in both themes and languages; Lighthouse accessibility 100.
 - How cases work, functions, errors and events: [`docs/SPEC-cases.md`](docs/SPEC-cases.md).
 - **Try it live**, with or without a wallet (phones too): get frozen, answer for free, the reviewer decides, settle; then the other ending where silence means the tokens are taken back. Playwright runs it on testnet.
 - **Case pages:** every case's timeline with its transactions, a free settle button, and pages for holders (`/me`), the issuer (`/issuer`) and the reviewer (`/review`).
