@@ -2,6 +2,7 @@ import "server-only";
 import { Contract, authorizeEntry, buildAuthorizationEntryPreimage, nativeToScVal, xdr } from "@stellar/stellar-sdk";
 import { deployment, getCase } from "./habeas";
 import { ReadError, SimulationError } from "./network";
+import { rpc } from "@stellar/stellar-sdk";
 import { PASSPHRASE, build, envKey, send, server, simulate, withAuth } from "./tx";
 
 /**
@@ -101,4 +102,33 @@ export async function submitAnswer(
   }
   tx.sign(relayer);
   return { hash: (await send(tx)).hash };
+}
+
+/**
+ * Closes a case that can close: reviewer decided, answer window over with no
+ * answer, or reviewer silent past the review window. Anyone may settle; the
+ * relayer pays so nobody needs XLM to do it.
+ */
+export async function settleCase(caseId: number): Promise<{ hash: string; outcome: string }> {
+  if (!Number.isInteger(caseId) || caseId < 1) throw new ReadError("That isn't a case number.");
+  const relayer = envKey("RELAYER_SECRET");
+  const call = new Contract(deployment.habeas).call("settle", nativeToScVal(BigInt(caseId), { type: "u64" }));
+  let tx;
+  try {
+    tx = await build(relayer.publicKey(), call);
+    const sim = await simulate(tx);
+    tx = rpc.assembleTransaction(tx, sim).build();
+  } catch (e) {
+    if (e instanceof SimulationError && e.raw.includes("Error(Contract, #8)")) {
+      const c = await getCase(caseId);
+      const until = c.status === "Answered" ? c.reviewBy : c.answerBy;
+      const secs = Math.max(1, until - Math.floor(Date.now() / 1000));
+      throw new ReadError(`This case can't close yet. It can be settled in about ${Math.ceil(secs / 60)} min, once the ${c.status === "Answered" ? "review" : "answer"} window ends.`);
+    }
+    if (e instanceof SimulationError && e.raw.includes("Error(Contract, #2)")) throw new ReadError("This case is already closed.");
+    explain(e);
+  }
+  tx.sign(relayer);
+  const sent = await send(tx);
+  return { hash: sent.hash, outcome: Array.isArray(sent.value) ? String(sent.value[0]) : String(sent.value) };
 }

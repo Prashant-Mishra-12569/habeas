@@ -18,7 +18,7 @@ export const PASSPHRASE = Networks.TESTNET;
 export const server = new rpc.Server(NETWORKS.testnet.rpc[0]);
 
 /** A testnet demo key from the server environment. Never sent to the browser. */
-export function envKey(name: "HABEAS_ISSUER_SECRET" | "RELAYER_SECRET"): Keypair {
+export function envKey(name: "HABEAS_ISSUER_SECRET" | "HABEAS_REVIEWER_SECRET" | "RELAYER_SECRET"): Keypair {
   const secret = process.env[name];
   if (!secret) throw new ReadError(`The server is missing ${name}. See apps/web/.env.example.`);
   return Keypair.fromSecret(secret);

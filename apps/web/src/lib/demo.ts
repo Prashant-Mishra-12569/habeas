@@ -120,3 +120,33 @@ export async function startDemoCase(address: string): Promise<{ caseId: number; 
     throw e;
   }
 }
+
+/** What the demo reviewer writes. Its decision is public, like everyone's. */
+const REVIEW_STATEMENT = "Demo reviewer: the holder answered and the issuer's file doesn't prove the claim. The claim is rejected.";
+
+/**
+ * The demo reviewer decides an answered demo case. In Try it live the
+ * reviewer sides with the holder, so visitors see the full process end with
+ * their tokens unfrozen; the "no answer" ending shows the other outcome.
+ */
+export async function reviewDemoCase(caseId: number): Promise<{ hash: string }> {
+  if (!Number.isInteger(caseId) || caseId < 1) throw new ReadError("That isn't a case number.");
+  const reviewer = envKey("HABEAS_REVIEWER_SECRET");
+  try {
+    const r = await invokeAs(reviewer, deployment.habeas, "decide", [
+      nativeToScVal(BigInt(caseId), { type: "u64" }),
+      nativeToScVal(false),
+      nativeToScVal(REVIEW_STATEMENT, { type: "string" }),
+      xdr.ScVal.scvVoid(),
+    ]);
+    return { hash: r.hash };
+  } catch (e) {
+    if (e instanceof SimulationError) {
+      if (e.raw.includes("Error(Contract, #9)")) throw new ReadError("The holder hasn't answered yet, so there's nothing to decide.");
+      if (e.raw.includes("Error(Contract, #11)")) throw new ReadError("The reviewer already decided this case.");
+      if (e.raw.includes("Error(Contract, #7)")) throw new ReadError("The review window has closed. The holder wins by default; settle the case.");
+      if (e.raw.includes("Error(Contract, #2)")) throw new ReadError("This case is already closed.");
+    }
+    throw e;
+  }
+}

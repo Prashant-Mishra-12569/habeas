@@ -6,7 +6,7 @@ import { ReadError } from "./network";
  * meant for people (ReadError) come back as 400 with their message; anything
  * else is logged and answered with a generic 500.
  */
-export function jsonRoute<T>(fn: (body: Record<string, unknown>) => Promise<T>) {
+export function jsonRoute<T>(fn: (body: Record<string, unknown>, req: Request) => Promise<T>) {
   return async (req: Request) => {
     let body: Record<string, unknown>;
     try {
@@ -15,7 +15,7 @@ export function jsonRoute<T>(fn: (body: Record<string, unknown>) => Promise<T>) 
       return Response.json({ error: "The request wasn't valid JSON." }, { status: 400 });
     }
     try {
-      return Response.json(await fn(body));
+      return Response.json(await fn(body, req));
     } catch (e) {
       if (e instanceof ReadError) return Response.json({ error: e.message }, { status: 400 });
       console.error(e);
