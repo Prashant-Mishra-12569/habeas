@@ -35,6 +35,13 @@ Updated after every milestone. Live site: https://habeas-stellar.vercel.app · R
 - Optional: turn off the Vercel Toolbar in the Vercel project settings. Its loader reads `document.cookie`, which Chrome lists as a performance "issue" in DevTools. The other one comes from Next.js itself (`next-instant-navigation-testing` check). Neither is our code and neither affects visitors.
 - Optional (from the plan): the Stellar dev skill and Raven MCP for Claude Code. Not installed; we've worked from the SDK sources and Stellar's docs directly.
 
+## Phase 9: logo, SEO and final polish (Oct 4)
+
+- Logo: Prashant's mark (`apps/web/public/brand/habeas-logo.png`) in the header and footer, favicon, app and Apple icons, web manifest (with a maskable icon), stellar.toml (`ORG_LOGO`, DEMOUSD `image`), README and styleguide. `scripts/make-brand.mjs` makes every size from the one file. On Carbon the navy pillars vanished, so Carbon uses a variant with the pillars lifted toward slate.
+- SEO: per-page titles and descriptions in EN/ES; case and token pages describe real chain data ("Case #20: Taken back"); canonical links; Open Graph and X cards; share images drawn like the site (site card, case card with the live status stamp, token card with the issuer's settings); sitemap, robots (API excluded), manifest, schema.org `WebApplication` data, no auto phone links on iOS. `e2e/seo.spec.ts` checks it.
+- Evidence page: now lists the website-run cases (7, 8, 9, 12, 19, 20) with a link per step, which outlive RPC's 7-day event window, and the x402 setup and payments.
+- Full Playwright suite on the final build: 80 passed, 1 skipped (the paid check, which needs `AGENT_SECRET`).
+
 ## Phase 9: accessibility (Oct 4)
 
 - Lighthouse accessibility: 100 on all ten main pages (was 98 on home, 100 elsewhere).
