@@ -149,6 +149,34 @@
           "hash": "ea423610dfc869115efd9535d9c04c21bb0515807832adb779e0f2f42aae5227"
         }
       ]
+    },
+    {
+      "id": 42,
+      "label": "Telegram alerts test: Prashant watched the holder in @habeas_alerts_bot (running on Railway); a message arrived for each step",
+      "status": "Cleared",
+      "ended_by": "ReviewerRejected",
+      "steps": [
+        {
+          "kind": "opened",
+          "at": 1791104907,
+          "hash": "a751733afec86264cfa4a653215c5fa0b292f2495530afee171139f680533324"
+        },
+        {
+          "kind": "answered",
+          "at": 1791104912,
+          "hash": "b3a916a4be2f2898081c9963fdc4415e745f0dc45452f1f4e0eb855ca800341a"
+        },
+        {
+          "kind": "decided",
+          "at": 1791104917,
+          "hash": "90f25c351212ff118bde505d143325da7a53e6b3e82867e467079ff7deb1b14b"
+        },
+        {
+          "kind": "settled",
+          "at": 1791104922,
+          "hash": "c656eeefbd797c8afef1eb682836a328e936188a757275468ee91286f3839996"
+        }
+      ]
     }
   ]
 }

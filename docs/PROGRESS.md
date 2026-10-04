@@ -12,19 +12,17 @@ Updated after every milestone. Live site: https://habeas-stellar.vercel.app · R
 | 4. Case pages | Done. `/case/[id]` (form, timeline with every transaction, countdown, free settle, free answer), `/me`, `/issuer`, `/review`. |
 | 5. Try it live | Done. With or without a wallet (phones use the no-wallet path), both endings, case file and share link. Playwright runs it on testnet. |
 | 6. x402 agent check | Done. `/api/v1/check/[asset]` paid with x402 (0.001 testnet USDC), signed answers, `examples/agent-check.ts`, `/developers`. Paid on testnet by the example and by Playwright. |
-| 7. Telegram alerts | Built and tested. Bot @habeas_alerts_bot (token checked); packaged for Railway (`railway.json`, `apps/alerts/Dockerfile`, volume at `/data`). |
+| 7. Telegram alerts | Done. @habeas_alerts_bot runs 24/7 on Railway (volume at `/data`); case 42 sent a message for every step to Prashant's phone. |
 
 ## What's left
 
 **Next:**
 
-- Phase 7: once Railway runs the bot, watch an address in Telegram and run a real case to see the messages arrive.
 - Phase 10 (Prashant): deck, video, X post.
 
 **Needs Prashant:**
 
 - GitHub Actions secrets (optional, so CI also runs the paid check): `HABEAS_ATTEST_SECRET` (same value) and `AGENT_SECRET` (`stellar keys secret habeas-agent`, a testnet account with 4.99 testnet USDC; each CI run spends 0.001).
-- Railway: create the service from the GitHub repo, add `TELEGRAM_BOT_TOKEN` and a volume at `/data` (steps in `apps/alerts/README.md`).
 - Spanish read by a native speaker (site, README.es.md, bot messages); a phone test with a friend who doesn't use crypto; the video in your own voice.
 
 **Small items to decide or do later:**
