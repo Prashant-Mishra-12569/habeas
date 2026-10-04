@@ -65,3 +65,10 @@ test("sitemap, robots, manifest and icons are served", async ({ request }) => {
     expect((await request.get(path)).status(), path).toBe(200);
   }
 });
+
+test("an unknown address gets a real 404 that search engines skip", async ({ page }) => {
+  const res = await page.goto("/no-such-page");
+  expect(res?.status()).toBe(404);
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText("This page isn't on file.");
+  expect(await page.locator('meta[name="robots"]').first().getAttribute("content")).toMatch(/noindex/);
+});

@@ -422,6 +422,17 @@ const en = {
     paidWhat: "the paid checks",
     paidFrom: (who: string) => `from ${who}`,
   },
+  notFound: {
+    title: "This page isn't on file.",
+    body: "The address may have a typo, or the page moved. Cases live at /case/ and a number; token checks at /check/.",
+    home: "Go to the home page",
+  },
+  crash: {
+    title: "Something went wrong on our side.",
+    body: "The page stopped before it could show anything. Nothing about anyone's tokens changed. Try again; if it keeps happening, the error ID below helps us find it.",
+    retry: "Try again",
+    id: "Error ID",
+  },
   loading: "Reading Stellar…",
   errors: {
     title: (what: string) => `We couldn't load ${what}.`,
@@ -854,6 +865,17 @@ const es: Dict = {
     paidNone: "Aún no hay revisiones pagadas.",
     paidWhat: "las revisiones pagadas",
     paidFrom: (who: string) => `de ${who}`,
+  },
+  notFound: {
+    title: "Esta página no está en el archivo.",
+    body: "Puede que la dirección tenga un error o que la página se haya movido. Los casos están en /case/ y un número; las revisiones de tokens en /check/.",
+    home: "Ir al inicio",
+  },
+  crash: {
+    title: "Algo falló de nuestro lado.",
+    body: "La página se detuvo antes de mostrar algo. Nada cambió en los tokens de nadie. Intenta de nuevo; si sigue pasando, el ID del error de abajo nos ayuda a encontrarlo.",
+    retry: "Intentar de nuevo",
+    id: "ID del error",
   },
   loading: "Leyendo Stellar…",
   errors: {

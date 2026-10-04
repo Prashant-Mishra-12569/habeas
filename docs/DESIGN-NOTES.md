@@ -30,3 +30,10 @@ Looked at for structure and clarity, not looks.
 - Phones are designed for, not shrunk to: the theme switch becomes one 44 px button, headings scale with the screen (`clamp`), "today vs with Habeas" is one sheet with both answers per row, forms choose one or two columns from their own width (container queries), long addresses are shortened.
 - Reduced motion uses a server-safe hook (`src/lib/use-reduce-motion.ts`): motion's own hook made hydration fail for visitors with "Reduce motion" on.
 - Every page is checked at 320, 390, 768 and 1440 px in CI (`apps/web/e2e/layout.spec.ts`); `apps/web/e2e/screens.mjs` makes screenshots of every page on seven sizes for review by eye.
+
+## Logo (Oct 4)
+
+- The mark is Prashant's (`apps/web/public/brand/habeas-logo.png`). It carries its own gold glow and shading; the "no gradients, no glow" rule is for interface surfaces, and the mark is used as an image, never imitated in CSS.
+- It always sits next to the name "Habeas", never alone, at 28 px in the header and 24 px in the footer. The name keeps its canary and pink misregistration.
+- Carbon: the navy pillars disappear on the dark page, so Carbon uses a generated variant with the dark pixels lifted toward slate (gold untouched). CSS chooses the variant from `data-theme`, so the server and the browser render the same markup.
+- Every size comes from `apps/web/scripts/make-brand.mjs`; swap the source file and re-run it.
