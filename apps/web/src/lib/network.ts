@@ -32,6 +32,9 @@ export const NETWORKS = {
 /** A read from Stellar failed. The message is shown to people, so keep it plain. */
 export class ReadError extends Error {}
 
+/** Stellar answered, and has no such account, asset or record. */
+export class NotFoundError extends ReadError {}
+
 export async function horizon<T>(network: Network, path: string, revalidate = 60): Promise<T> {
   const url = `${NETWORKS[network].horizon}${path}`;
   let res: Response;
@@ -40,7 +43,7 @@ export async function horizon<T>(network: Network, path: string, revalidate = 60
   } catch (e) {
     throw new ReadError(`Couldn't reach Stellar's public Horizon server (${(e as Error).message}).`);
   }
-  if (res.status === 404) throw new ReadError(`Stellar has no record of that (${path}).`);
+  if (res.status === 404) throw new NotFoundError(`Stellar has no record of that (${path}).`);
   if (!res.ok) throw new ReadError(`Horizon answered ${res.status} for ${path}.`);
   return res.json() as Promise<T>;
 }

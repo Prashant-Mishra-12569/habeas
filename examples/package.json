@@ -1,0 +1,20 @@
+{
+  "name": "habeas-examples",
+  "private": true,
+  "type": "module",
+  "description": "Examples for the Habeas paid agent check (x402 on Stellar testnet).",
+  "scripts": {
+    "agent-check": "node agent-check.ts"
+  },
+  "engines": {
+    "node": ">=22.18"
+  },
+  "dependencies": {
+    "@stellar/stellar-sdk": "^17.2.1",
+    "@x402/fetch": "^2.28.0",
+    "@x402/stellar": "^2.28.0"
+  },
+  "overrides": {
+    "axios": "^1.20.0"
+  }
+}
