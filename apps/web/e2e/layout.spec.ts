@@ -17,6 +17,7 @@ const PAGES = [
   "/case/8",
   "/try",
   "/evidence",
+  "/developers",
   "/me",
   "/issuer",
   "/review",

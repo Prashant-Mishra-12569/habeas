@@ -121,14 +121,15 @@ export default async function Home() {
       </Section>
 
       <Section id="builders" title={t.home.buildersTitle} lead={t.home.buildersLead}>
-        <ul className="grid gap-px overflow-hidden rounded-[2px] border border-rule bg-rule sm:grid-cols-2 lg:grid-cols-4">
+        <ul className="grid gap-px overflow-hidden rounded-[2px] border border-rule bg-rule sm:grid-cols-2 lg:grid-cols-5">
           {[
+            { href: "/developers", label: t.home.builders.api, detail: "GET /api/v1/check · 0.001 USDC" },
             { href: `${REPO}/tree/main/contracts/habeas`, label: t.home.builders.contract, detail: "Rust · soroban-sdk 28" },
             { href: "/evidence", label: t.home.builders.evidence, detail: "testnet" },
             { href: LAB_URL, label: t.home.builders.build, detail: `wasm ${deployment.wasm_sha256.slice(0, 8)}…` },
             { href: `${REPO}/blob/main/docs/SPEC-cases.md`, label: t.home.builders.spec, detail: "SPEC-cases.md" },
           ].map((l) => (
-            <li key={l.label} className="bg-sheet">
+            <li key={l.label} className="bg-sheet sm:last:col-span-2 lg:last:col-span-1">
               <a href={l.href} className="flex min-h-24 flex-col justify-between gap-3 p-5 hover:bg-paper">
                 <span className="font-semibold text-pen underline decoration-1">{l.label}</span>
                 <span className="font-mono text-xs text-muted">{l.detail}</span>

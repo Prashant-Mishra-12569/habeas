@@ -11,29 +11,36 @@ Updated after every milestone. Live site: https://habeas-stellar.vercel.app · R
 | 3. Web app, styleguide, asset check | Done. Styleguide approved, redesign live, works from 320 px phones to desktop. |
 | 4. Case pages | Done. `/case/[id]` (form, timeline with every transaction, countdown, free settle, free answer), `/me`, `/issuer`, `/review`. |
 | 5. Try it live | Done. With or without a wallet (phones use the no-wallet path), both endings, case file and share link. Playwright runs it on testnet. |
-| 6. x402 agent check | Not started. |
+| 6. x402 agent check | Done. `/api/v1/check/[asset]` paid with x402 (0.001 testnet USDC), signed answers, `examples/agent-check.ts`, `/developers`. Paid on testnet by the example and by Playwright. |
 | 7. Telegram alerts | Not started. |
 
 ## What's left
 
 **Next phases:**
 
-- Phase 6: x402 paid machine check (`/api/v1/check/[asset]`, signed answers, `examples/agent-check.ts`).
 - Phase 7: Telegram alerts (Prashant creates the bot with @BotFather).
 - Phase 9 polish: Lighthouse accessibility ≥ 95, Spanish reviewed by a native speaker.
 - Phase 10: README in Spanish, demo video, 5-slide deck, X post.
 
 **Needs Prashant:**
 
-- Vercel: add `HABEAS_REVIEWER_SECRET` (in `apps/web/.env.local`) so the live site's reviewer step works, then redeploy.
-- Optional: add the three demo keys as GitHub Actions secrets so CI also runs the full Try it live flow (today CI runs the layout checks and skips the flow).
-- Case 8 (your Freighter case) is ready to settle; try the "Settle case" button on /case/8 or /review.
+- Vercel: add `HABEAS_ATTEST_SECRET` (the paid check's signing key) and redeploy. Get the value in your own terminal with `stellar keys secret habeas-attest`; until it's set, the live paid check answers with an error and charges nothing.
+- GitHub Actions secrets, so CI also runs the paid check: `HABEAS_ATTEST_SECRET` (same value) and `AGENT_SECRET` (`stellar keys secret habeas-agent`, a testnet account holding 4.99 testnet USDC; each CI run spends 0.001).
 
 **Small items to decide or do later:**
 
 - The USBDCP issuer has now taken tokens back 37 times (latest Oct 3, 2026), not only on Sep 19. The hero still tells the Sep 19 story, which is accurate; we could add "and 36 more since" once we decide on wording.
 - Optional: turn off the Vercel Toolbar in the Vercel project settings. Its loader reads `document.cookie`, which Chrome lists as a performance "issue" in DevTools. The other one comes from Next.js itself (`next-instant-navigation-testing` check). Neither is our code and neither affects visitors.
 - Optional (from the plan): the Stellar dev skill and Raven MCP for Claude Code. Not installed; we've worked from the SDK sources and Stellar's docs directly.
+
+## Phase 6: x402 agent check (Oct 4)
+
+- `GET /api/v1/check/CODE-ISSUER?network=` behind `withX402` (`@x402/next` 2.28.0): exact scheme, `stellar:testnet`, 0.001 USDC (Circle's testnet USDC contract), paid to a treasury account, verified and collected by the x402.org facilitator, which also pays the fee. The answer is the asset check JSON plus an ed25519 signature over sha256 of a prefixed canonical JSON; the key is published at `/api/v1/key`.
+- Charged only for answers: `withX402` settles only when the handler succeeds. A bad asset (400), an unknown one (404) or a Stellar outage (502) costs nothing; checked on testnet (balance unchanged, no transaction).
+- `examples/agent-check.ts`: a buyer in ~50 lines with `@x402/fetch`; pays, verifies the signature against the pinned key, prints the verdict. Runs on Node 22.18+ with no build step.
+- `/developers` (EN/ES): request, price, what the answer says, how it's signed, how to try it, and the paid checks so far, read live from Horizon.
+- `scripts/setup-x402.mjs` made the treasury, signing and example agent accounts (agent bought 5 testnet USDC on the testnet exchange). Tests: 3 Vitest (canonical JSON, signature, tampering), Playwright 402 contract and a paid round trip. Payments in `docs/EVIDENCE.md`.
+- `@x402/stellar` depends on Stellar SDK 16, which pulled an axios with known advisories; an npm override pins axios 1.20 (`npm audit` clean apart from `eslint-config-next`'s lint-time globbing, which has no fix upstream).
 
 ## Phases 4 and 5 (Oct 4)
 

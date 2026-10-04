@@ -78,6 +78,7 @@ export function SiteFooter({ t }: { t: Dict }) {
             { href: "/issuer", label: t.footer.links.issuer },
             { href: "/review", label: t.footer.links.review },
             { href: "/evidence", label: t.nav.evidence },
+            { href: "/developers", label: t.footer.links.developers },
           ].map((l) => (
             <li key={l.href}>
               <Link className="inline-flex min-h-11 items-center underline" href={l.href}>

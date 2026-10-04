@@ -124,6 +124,34 @@ Tested on the live site with Freighter (Chrome extension), Testnet, case 8, hold
 
 Freighter showed "Confirm Authorizations: appeal" and signed the CAP-71 address-bound preimage (credentials addressV2) as is; no fallback was needed.
 
+## Paid agent check (x402)
+
+`GET /api/v1/check/[asset]` sells the asset check to machines for 0.001 USDC per answer on Stellar testnet, signed by Habeas. Payments are verified and collected by the [x402.org facilitator](https://x402.org/facilitator), which also pays the network fee (fee payer [`GC6CSXBV4C6RL3HEDTW57KXYXSSXKAWKGYDEOSATXM3XNKXSR2VRYN3K`](https://stellar.expert/explorer/testnet/account/GC6CSXBV4C6RL3HEDTW57KXYXSSXKAWKGYDEOSATXM3XNKXSR2VRYN3K)).
+
+| What | Value |
+| --- | --- |
+| Paid to | [`GD2YGUUJU4LC75TFPODRSZVQEX472MVIFMN5XD77GZREWFCCSTBGG7U2`](https://stellar.expert/explorer/testnet/account/GD2YGUUJU4LC75TFPODRSZVQEX472MVIFMN5XD77GZREWFCCSTBGG7U2) |
+| Signing key (ed25519), also at `/api/v1/key` | [`GAJ2MWWEY5VAMG3GW72Z36647UVIYWZKOZDBF5BUTZM2JNTOZWUJHZ4J`](https://stellar.expert/explorer/testnet/account/GAJ2MWWEY5VAMG3GW72Z36647UVIYWZKOZDBF5BUTZM2JNTOZWUJHZ4J) |
+| USDC contract (Circle, testnet) | [`CBIELTK6YBZJU5UP2WWQEUCYKLPU6AUNZ2BQ4WWFEIE3USCIHMXQDAMA`](https://stellar.expert/explorer/testnet/contract/CBIELTK6YBZJU5UP2WWQEUCYKLPU6AUNZ2BQ4WWFEIE3USCIHMXQDAMA) |
+| Example agent | [`GBMVNEL3YK6ZVHRM4V3USXAKZBRXH6QOLKMCR45MOQPCKJ2BK26SUZYW`](https://stellar.expert/explorer/testnet/account/GBMVNEL3YK6ZVHRM4V3USXAKZBRXH6QOLKMCR45MOQPCKJ2BK26SUZYW) |
+
+Setup (`scripts/setup-x402.mjs`):
+
+| Step | tx |
+| --- | --- |
+| Treasury opens a USDC trustline | [d7b8f607](https://stellar.expert/explorer/testnet/tx/d7b8f607eb42309154d47697451a7c7f1952507dfa3ad7fe66bc0ec0682ef1ed) |
+| Example agent opens a USDC trustline | [7e2ba857](https://stellar.expert/explorer/testnet/tx/7e2ba8577928f84c3705a67018acef8399ea0459fddaf9bbcbc8fd596540be7e) |
+| Example agent buys 5 testnet USDC with XLM on the testnet exchange | [dc39b957](https://stellar.expert/explorer/testnet/tx/dc39b9577ebc3263ab0a9e9463a6a99ce0e3bf6c2a488f571fd211977e586563) |
+
+Paid checks, each a USDC transfer from the agent to the address above:
+
+| When (UTC) | What | tx |
+| --- | --- | --- |
+| 2026-10-04 06:39:12 | examples/agent-check.ts checks USBDCP; signature verified | [de37fb28](https://stellar.expert/explorer/testnet/tx/de37fb28e787b2d7cfb81e7d70a5520e600d6b7e40558c5a9fcc78b17e47dc01) |
+| 2026-10-04 06:45:57 | e2e/agent-api.spec.ts checks USBDCP; signature verified | [be26b724](https://stellar.expert/explorer/testnet/tx/be26b72422559105e10e6d31dde1721335afa94931c10ec2df0c6a2504592141) |
+
+A request for something that isn't an asset was answered 400 after the payment was offered; the agent's USDC balance stayed at 4.999 and no transaction was made. The live list is on the site's [developer page](https://habeas-stellar.vercel.app/developers).
+
 ## The issuer key is switched off
 
 After its classic setup was finished, the demo asset issuer's key was set to weight 0 with no other signers. Nobody can sign for that account again; DEMOUSD can only be frozen, taken back or minted through Habeas. (A real bank would more likely keep its key and add the reviewer as a required co-signer, which we tested in S4.)

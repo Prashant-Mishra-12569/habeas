@@ -11,6 +11,7 @@ const run = json("deployments/testnet-run.json");
 const lock = json("deployments/testnet-lock.json");
 const wallet = json("deployments/testnet-freighter.json");
 const web = json("deployments/testnet-web.json");
+const x402 = json("deployments/testnet-x402.json");
 
 const labUrl =
   "https://lab.stellar.org/smart-contracts/contract-explorer?$=network$id=testnet&label=Testnet&horizonUrl=https:////horizon-testnet.stellar.org&rpcUrl=https:////soroban-testnet.stellar.org&passphrase=Test%20SDF%20Network%20/;%20September%202015;&smartContracts$explorer$contractId=" +
@@ -24,6 +25,8 @@ const STEP = { opened: "Opened", answered: "Answered", decided: "Decided", settl
 const webRows = web.cases
   .map((c) => `| #${c.id} | ${c.label} | ${c.steps.map((s) => `${STEP[s.kind]} ${s.hash ? tx(s.hash) : "(no link)"}`).join(", ")} |`)
   .join("\n");
+const x402SetupRows = x402.setup.map((s) => `| ${s.label} | ${tx(s.hash)} |`).join("\n");
+const x402PaidRows = x402.paid.map((s) => `| ${s.at.replace("T", " ").replace("Z", "")} | ${s.label} | ${tx(s.hash)} |`).join("\n");
 const walletRows = wallet.steps.map((s) => `| ${s.label} | ${tx(s.hash)} |`).join("\n");
 const lockRows = lock.steps.map((s) => `| ${s.label} | ${tx(s.hash)} |`).join("\n");
 const rows = run.steps.map((s, i) => `| ${i + 1} | ${s.label} | ${tx(s.hash)} |`).join("\n");
@@ -122,6 +125,31 @@ Tested on the live site with ${wallet.wallet}, case ${wallet.case_id}, holder \`
 ${walletRows}
 
 ${wallet.note}
+
+## Paid agent check (x402)
+
+\`GET ${x402.endpoint}\` sells the asset check to machines for ${x402.price} per answer on Stellar testnet, signed by Habeas. Payments are verified and collected by the [x402.org facilitator](${x402.facilitator}), which also pays the network fee (fee payer ${account(x402.facilitator_fee_payer)}).
+
+| What | Value |
+| --- | --- |
+| Paid to | ${account(x402.treasury)} |
+| Signing key (ed25519), also at \`/api/v1/key\` | ${account(x402.attest_key)} |
+| USDC contract (Circle, testnet) | ${contract(x402.usdc_contract)} |
+| Example agent | ${account(x402.agent)} |
+
+Setup (\`scripts/setup-x402.mjs\`):
+
+| Step | tx |
+| --- | --- |
+${x402SetupRows}
+
+Paid checks, each a USDC transfer from the agent to the address above:
+
+| When (UTC) | What | tx |
+| --- | --- | --- |
+${x402PaidRows}
+
+${x402.not_charged} The live list is on the site's [developer page](https://habeas-stellar.vercel.app/developers).
 
 ## The issuer key is switched off
 
