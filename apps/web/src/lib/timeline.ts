@@ -15,9 +15,9 @@ import type { Case } from "./types";
  * without a transaction link and the page says why.
  */
 
-export type StepKind = "opened" | "answered" | "decided" | "settled" | "withdrawn" | "emergency";
-export type TimelineStep = { kind: StepKind; at: number; tx: string | null };
-export type Timeline = { steps: TimelineStep[]; oldestKept: number };
+import type { StepKind, Timeline, TimelineStep } from "./timeline-types";
+
+export type { StepKind, Timeline, TimelineStep };
 
 const EVENT_FOR: Record<StepKind, string> = {
   opened: "case_opened",

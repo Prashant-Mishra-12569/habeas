@@ -150,3 +150,26 @@ export async function reviewDemoCase(caseId: number): Promise<{ hash: string }> 
     throw e;
   }
 }
+
+/**
+ * Gives a new testnet account its XLM: Friendbot first, and if Friendbot is
+ * slow or rate-limited, the relayer creates the account with a little XLM.
+ */
+export async function fundAccount(address: string): Promise<{ funded: boolean; by: "exists" | "friendbot" | "relayer" }> {
+  checkAddress(address);
+  if ((await accountState(address)).exists) return { funded: true, by: "exists" };
+  try {
+    const res = await fetch(`https://friendbot.stellar.org?addr=${encodeURIComponent(address)}`, { signal: AbortSignal.timeout(20_000) });
+    if (res.ok) return { funded: true, by: "friendbot" };
+  } catch {
+    // fall through to the relayer
+  }
+  const relayer = envKey("RELAYER_SECRET");
+  const tx = new TransactionBuilder(await server.getAccount(relayer.publicKey()), { fee: "1000", networkPassphrase: PASSPHRASE })
+    .addOperation(Operation.createAccount({ destination: address, startingBalance: "5" }))
+    .setTimeout(60)
+    .build();
+  tx.sign(relayer);
+  await send(tx);
+  return { funded: true, by: "relayer" };
+}

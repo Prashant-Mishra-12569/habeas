@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { TryWithFreighter } from "@/components/TryWithFreighter";
+import { TryLive } from "@/components/TryLive";
 import { getDict } from "@/i18n/server";
 
 export const metadata: Metadata = { title: "Try it live · Habeas" };
@@ -11,7 +11,7 @@ export default async function TryPage() {
       <h1 className="text-[clamp(2.1rem,8vw,3.24rem)]">{t.tryIt.title}</h1>
       <p className="mt-4 max-w-[60ch] sm:text-lg">{t.tryIt.lead}</p>
       <div className="mt-8 sm:mt-10">
-        <TryWithFreighter />
+        <TryLive />
       </div>
     </main>
   );
