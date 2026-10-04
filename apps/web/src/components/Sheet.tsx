@@ -5,7 +5,7 @@ import { shortAddress } from "@/lib/format";
 
 export function Ext({ href, children }: { href: string; children: React.ReactNode }) {
   return (
-    <a href={href} target="_blank" rel="noreferrer" className="break-all font-mono text-pen underline decoration-1">
+    <a href={href} target="_blank" rel="noreferrer" className="whitespace-nowrap font-mono text-pen underline decoration-1">
       {children}
     </a>
   );

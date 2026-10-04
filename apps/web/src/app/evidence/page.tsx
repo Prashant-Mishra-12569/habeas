@@ -3,6 +3,8 @@ import deployment from "@/config/testnet.json";
 import wallet from "@/config/testnet-freighter.json";
 import lock from "@/config/testnet-lock.json";
 import run from "@/config/testnet-run.json";
+import web from "@/config/testnet-web.json";
+import x402 from "@/config/testnet-x402.json";
 import { Addr, Block, Ext, Row } from "@/components/Sheet";
 import { accountUrl, contractUrl, formatDuration, formatUtc, shortHash, txUrl } from "@/lib/format";
 import { USBDC_EVENT } from "@/lib/mainnet";
@@ -11,6 +13,9 @@ import { getDict } from "@/i18n/server";
 export const metadata: Metadata = { title: "Evidence · Habeas" };
 
 const LAB_URL = `https://lab.stellar.org/smart-contracts/contract-explorer?$=network$id=testnet&label=Testnet&horizonUrl=https:////horizon-testnet.stellar.org&rpcUrl=https:////soroban-testnet.stellar.org&passphrase=Test%20SDF%20Network%20/;%20September%202015;&smartContracts$explorer$contractId=${deployment.habeas};;`;
+
+/** Which tick-box stage each recorded step fills. */
+const STAGE = { opened: 0, answered: 1, decided: 2, settled: 3, withdrawn: 3, emergency: 3 } as const;
 
 export default async function EvidencePage() {
   const { t, lang } = await getDict();
@@ -86,6 +91,30 @@ export default async function EvidencePage() {
         </dl>
       </Block>
 
+      <Block title={e.webTitle} lead={e.webLead}>
+        <ol>
+          {web.cases.map((c) => (
+            <li key={c.id} className="border-b border-rule px-4 py-3 text-sm last:border-b-0 sm:px-5">
+              <p>
+                <a className="font-mono text-pen underline" href={`/case/${c.id}`}>
+                  #{c.id}
+                </a>{" "}
+                <span className="font-semibold">{t.words.status[c.status as keyof typeof t.words.status]}</span>
+                <span className="text-muted"> · {c.label}</span>
+              </p>
+              <p className="mt-1 flex flex-wrap gap-x-4 gap-y-1">
+                {c.steps.map((s) => (
+                  <span key={s.kind} className="whitespace-nowrap">
+                    <span className="text-muted">{t.words.stages[STAGE[s.kind as keyof typeof STAGE]]}</span>{" "}
+                    <Ext href={txUrl(s.hash)}>{shortHash(s.hash, 4)}</Ext>
+                  </span>
+                ))}
+              </p>
+            </li>
+          ))}
+        </ol>
+      </Block>
+
       <Block title={e.walletTitle} lead={e.walletLead}>
         <ol>
           {wallet.steps.map((s) => (
@@ -96,6 +125,33 @@ export default async function EvidencePage() {
           ))}
         </ol>
       </Block>
+
+      <Block title={e.x402Title} lead={e.x402Lead}>
+        <dl>
+          <Row label={e.x402Rows.payTo}>
+            <Addr href={accountUrl(x402.treasury)} value={x402.treasury} />
+          </Row>
+          <Row label={e.x402Rows.signer}>
+            <Addr href={accountUrl(x402.attest_key)} value={x402.attest_key} />
+          </Row>
+          <Row label={e.x402Rows.agent}>
+            <Addr href={accountUrl(x402.agent)} value={x402.agent} />
+          </Row>
+        </dl>
+        <ol className="border-t border-rule">
+          {[...x402.setup, ...x402.paid].map((s) => (
+            <li key={s.hash} className="flex justify-between gap-4 border-b border-rule px-4 py-3 text-sm last:border-b-0 sm:px-5">
+              <span>{s.label}</span>
+              <Ext href={txUrl(s.hash)}>{shortHash(s.hash, 4)}</Ext>
+            </li>
+          ))}
+        </ol>
+      </Block>
+      <p className="mt-2 text-sm">
+        <a className="inline-flex min-h-11 items-center text-pen underline" href="/developers">
+          {e.x402Live}
+        </a>
+      </p>
 
       <Block title={e.lockTitle} lead={e.lockLead}>
         <ol>
