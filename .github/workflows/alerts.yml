@@ -26,4 +26,9 @@ jobs:
       # Real testnet events (saved in src/fixtures) and a live contract read.
       - run: npm test
       # Replays the last day of real events for the demo reviewer, without Telegram.
-      - run: node src/main.ts --dry-run --watch GAS6L6UQUB4PMX2XZTHPM33ITBBQKQEUNOUSNCPMOFJBQHOC4R7G4N2R --from-ledger $(( $(curl -s -X POST https://soroban-testnet.stellar.org -H 'content-type: application/json' -d '{"jsonrpc":"2.0","id":1,"method":"getLatestLedger"}' | jq .result.sequence) - 17000 )) --once
+      - name: Dry run over the last day of events
+        run: |
+          body='{"jsonrpc":"2.0","id":1,"method":"getLatestLedger"}'
+          latest=$(curl -s -X POST https://soroban-testnet.stellar.org -H 'content-type: application/json' -d "$body" | jq .result.sequence)
+          reviewer=$(jq -r .reviewer ../../deployments/testnet.json)
+          node src/main.ts --dry-run --once --from-ledger $((latest - 17000)) --watch "$reviewer"
