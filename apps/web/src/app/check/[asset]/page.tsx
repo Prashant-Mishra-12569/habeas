@@ -1,21 +1,15 @@
 import type { Metadata } from "next";
-import { cache } from "react";
 import { AnswerSheet } from "@/components/AnswerSheet";
 import { CheckForm } from "@/components/CheckForm";
 import { ReadErrorNotice } from "@/components/ReadErrorNotice";
 import { checkAsset, parseAsset } from "@/lib/asset-check";
 import { ReadError } from "@/lib/network";
 import { getDict } from "@/i18n/server";
+import { issuerFlags } from "@/lib/issuer-flags";
 import { pageMeta } from "@/lib/site";
 
 // Read from Stellar on every request; nothing is cached or stored.
 export const dynamic = "force-dynamic";
-
-/** One check per request, shared by the page and its metadata. */
-const check = cache((network: "mainnet" | "testnet", raw: string) => {
-  const { code, issuer } = parseAsset(raw);
-  return checkAsset(network, code, issuer);
-});
 
 export async function generateMetadata({ params, searchParams }: PageProps<"/check/[asset]">): Promise<Metadata> {
   const [{ asset }, { network: net }, { t, lang }] = await Promise.all([params, searchParams, getDict()]);
@@ -23,9 +17,13 @@ export async function generateMetadata({ params, searchParams }: PageProps<"/che
   const raw = decodeURIComponent(asset);
   const code = raw.split(/[-:]/)[0];
   const path = `/check/${asset}${network === "testnet" ? "?network=testnet" : ""}`;
+  // The full check scans the issuer's history and can take seconds; metadata
+  // waiting on it would arrive after the page has started streaming. The
+  // issuer's settings are one fast read and answer the headline question.
   try {
-    const r = await check(network, raw);
-    return pageMeta({ title: t.meta.checkTitle(r.code), description: t.meta.checkDescription(t.check.verdict[r.verdict], t.check.verdictLine[r.verdict]), path, lang });
+    const { issuer } = parseAsset(raw);
+    const f = await issuerFlags(network, issuer);
+    return pageMeta({ title: t.meta.checkTitle(code), description: t.meta.checkDescription(code, f.revocable, f.clawback), path, lang });
   } catch {
     return pageMeta({ title: t.meta.checkTitle(code), description: t.meta.pages.check.description, path, lang, index: false });
   }
@@ -41,7 +39,8 @@ export default async function CheckResultPage({ params, searchParams }: PageProp
   let result: Awaited<ReturnType<typeof checkAsset>> | null = null;
   let error = "";
   try {
-    result = await check(network, raw);
+    const { code, issuer } = parseAsset(raw);
+    result = await checkAsset(network, code, issuer);
   } catch (e) {
     error = e instanceof ReadError ? e.message : `Unexpected error: ${(e as Error).message}`;
   }

@@ -23,7 +23,8 @@ const en = {
     caseDescription: (amount: string, reason: string, line: string) => `${amount}. Reason: ${reason}. ${line}`,
     caseUnknown: (id: string) => `Case #${id}`,
     checkTitle: (code: string) => `${code}: can it be frozen or taken back?`,
-    checkDescription: (verdict: string, line: string) => `${verdict}. ${line}`,
+    checkDescription: (code: string, freeze: boolean, clawback: boolean) =>
+      `Can the issuer freeze ${code}? ${freeze ? "Yes" : "No"}. Can it be taken back (clawback)? ${clawback ? "Yes" : "No"}. See its full history and a verdict, read live from Stellar.`,
   },
   nav: { check: "Check a token", try: "Try it live", evidence: "Evidence", code: "Code", home: "Habeas home" },
   prefs: { language: "Language", theme: "Theme", paper: "Paper", carbon: "Carbon", switchTo: (name: string) => `Switch to ${name}` },
@@ -467,7 +468,8 @@ const es: Dict = {
     caseDescription: (amount: string, reason: string, line: string) => `${amount}. Razón: ${reason}. ${line}`,
     caseUnknown: (id: string) => `Caso #${id}`,
     checkTitle: (code: string) => `${code}: ¿se puede congelar o recuperar?`,
-    checkDescription: (verdict: string, line: string) => `${verdict}. ${line}`,
+    checkDescription: (code: string, freeze: boolean, clawback: boolean) =>
+      `¿Puede el emisor congelar ${code}? ${freeze ? "Sí" : "No"}. ¿Se puede recuperar (clawback)? ${clawback ? "Sí" : "No"}. Mira su historial completo y un veredicto, leídos en vivo de Stellar.`,
   },
   nav: { check: "Revisar un token", try: "Pruébalo en vivo", evidence: "Evidencia", code: "Código", home: "Inicio de Habeas" },
   prefs: { language: "Idioma", theme: "Tema", paper: "Papel", carbon: "Carbón", switchTo: (name: string) => `Cambiar a ${name}` },

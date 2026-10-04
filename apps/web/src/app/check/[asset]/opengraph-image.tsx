@@ -1,6 +1,6 @@
 import { parseAsset } from "@/lib/asset-check";
 import { shortAddress } from "@/lib/format";
-import { NotFoundError, horizon, type Network } from "@/lib/network";
+import { issuerFlagsAnyNetwork } from "@/lib/issuer-flags";
 import { OG_COLORS as C, OG_SIZE, ogCard } from "@/lib/og";
 import { SITE_URL } from "@/lib/site";
 
@@ -8,20 +8,6 @@ export const alt = "Can this Stellar token be frozen or taken back? The issuer's
 export const size = OG_SIZE;
 export const contentType = "image/png";
 export const dynamic = "force-dynamic";
-
-type Flags = { flags: { auth_revocable: boolean; auth_clawback_enabled: boolean } };
-
-/** Share images get no query string, so look on mainnet first, then testnet. */
-async function issuerFlags(issuer: string): Promise<{ network: Network; flags: Flags["flags"] } | null> {
-  for (const network of ["mainnet", "testnet"] as const) {
-    try {
-      return { network, flags: (await horizon<Flags>(network, `/accounts/${issuer}`)).flags };
-    } catch (e) {
-      if (!(e instanceof NotFoundError)) return null;
-    }
-  }
-  return null;
-}
 
 function Answer({ q, yes }: { q: string; yes: boolean }) {
   return (
@@ -41,7 +27,8 @@ export default async function Image({ params }: { params: Promise<{ asset: strin
   } catch {
     // Not an asset: fall through to the plain card.
   }
-  const found = parsed ? await issuerFlags(parsed.issuer) : null;
+  // Share images get no query string, so the network is found by looking.
+  const found = parsed ? await issuerFlagsAnyNetwork(parsed.issuer) : null;
   return ogCard(
     [
       <div key="t" style={{ display: "flex", alignItems: "baseline", gap: 24, marginBottom: 14 }}>
@@ -55,8 +42,8 @@ export default async function Image({ params }: { params: Promise<{ asset: strin
       </div>,
       ...(found
         ? [
-            <Answer key="f" q="Can the issuer freeze it?" yes={found.flags.auth_revocable} />,
-            <Answer key="c" q="Can it be taken back (clawback)?" yes={found.flags.auth_clawback_enabled} />,
+            <Answer key="f" q="Can the issuer freeze it?" yes={found.flags.revocable} />,
+            <Answer key="c" q="Can it be taken back (clawback)?" yes={found.flags.clawback} />,
           ]
         : [
             <div key="u" style={{ display: "flex", fontSize: 36, color: C.ink, marginTop: 12 }}>

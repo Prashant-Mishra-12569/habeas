@@ -46,7 +46,7 @@ test("case and token pages describe what's on the chain", async ({ page }) => {
   await expect(page).toHaveTitle("Case #20: Taken back · Habeas");
   expect(await page.locator('meta[name="description"]').getAttribute("content")).toMatch(/^400 DEMOUSD\. Reason: Suspected fraud\./);
   await page.goto("/check/USBDCP-GDABKPZMAIULVJVJJQM7L3VIG5A2IS5V4KP2P3YNP6YWRUBJNBGFGG6E");
-  expect(await page.locator('meta[name="description"]').getAttribute("content")).toMatch(/^Powers used without a public process\./);
+  expect(await page.locator('meta[name="description"]').getAttribute("content")).toContain("Can the issuer freeze USBDCP? Yes. Can it be taken back (clawback)? Yes.");
 });
 
 test("the styleguide stays out of search results", async ({ page }) => {
