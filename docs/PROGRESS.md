@@ -12,18 +12,20 @@ Updated after every milestone. Live site: https://habeas-stellar.vercel.app · R
 | 4. Case pages | Done. `/case/[id]` (form, timeline with every transaction, countdown, free settle, free answer), `/me`, `/issuer`, `/review`. |
 | 5. Try it live | Done. With or without a wallet (phones use the no-wallet path), both endings, case file and share link. Playwright runs it on testnet. |
 | 6. x402 agent check | Done. `/api/v1/check/[asset]` paid with x402 (0.001 testnet USDC), signed answers, `examples/agent-check.ts`, `/developers`. Paid on testnet by the example and by Playwright. |
-| 7. Telegram alerts | Not started. |
+| 7. Telegram alerts | Built and tested on testnet without Telegram (`--dry-run` caught case 25 live). Waiting for the bot token, then hosting. |
 
 ## What's left
 
 **Next phases:**
 
-- Phase 7: Telegram alerts (Prashant creates the bot with @BotFather).
+- Phase 7: send real Telegram messages once the bot exists, then host it (or run it locally for the video and keep it marked beta).
 - Phase 9 polish: Lighthouse accessibility ≥ 95, Spanish reviewed by a native speaker.
 - Phase 10: README in Spanish, demo video, 5-slide deck, X post.
 
 **Needs Prashant:**
 
+- Telegram: create the bot with @BotFather and paste the token into `apps/alerts/.env` (steps in `apps/alerts/README.md`). Tell me the bot's username, never the token.
+- Hosting the bot: Railway (always on, a volume keeps the watch list, needs a Railway account and uses its trial credit), Render free web service (free, but sleeps without an outside pinger and forgets watchers on redeploy), or this PC during the video (marked beta, as the plan allows).
 - Vercel: add `HABEAS_ATTEST_SECRET` (the paid check's signing key) and redeploy. Get the value in your own terminal with `stellar keys secret habeas-attest`; until it's set, the live paid check answers with an error and charges nothing.
 - GitHub Actions secrets, so CI also runs the paid check: `HABEAS_ATTEST_SECRET` (same value) and `AGENT_SECRET` (`stellar keys secret habeas-agent`, a testnet account holding 4.99 testnet USDC; each CI run spends 0.001).
 
@@ -32,6 +34,13 @@ Updated after every milestone. Live site: https://habeas-stellar.vercel.app · R
 - The USBDCP issuer has now taken tokens back 37 times (latest Oct 3, 2026), not only on Sep 19. The hero still tells the Sep 19 story, which is accurate; we could add "and 36 more since" once we decide on wording.
 - Optional: turn off the Vercel Toolbar in the Vercel project settings. Its loader reads `document.cookie`, which Chrome lists as a performance "issue" in DevTools. The other one comes from Next.js itself (`next-instant-navigation-testing` check). Neither is our code and neither affects visitors.
 - Optional (from the plan): the Stellar dev skill and Raven MCP for Claude Code. Not installed; we've worked from the SDK sources and Stellar's docs directly.
+
+## Phase 7: Telegram alerts (Oct 4)
+
+- `apps/alerts`: grammy 1.46 bot, Node 24 running TypeScript directly (no build step). Reads Habeas events from RPC `getEvents` every 20 s, following the cursor across RPC's bounded scan windows; keeps watchers and the cursor in `data/state.json` so a restart doesn't resend alerts; after a week offline (RPC's retention) it restarts from the latest ledger.
+- `/watch`, `/stop`, `/cases`, `/start`, in English or Spanish by the person's Telegram language. Holders hear every step; the reviewer hears when a decision is needed (silence means the holder wins); the issuer hears answers, decisions and closings. One message per chat per event.
+- `--dry-run` prints the messages without Telegram. Replayed Prashant's cases 19 and 20, and caught case 25 live as `scripts/test-free-answer.mjs` ran it (opened, answered, decided, settled, each within one poll).
+- 8 tests with `node --test` on real events from cases 19 and 20 (saved as XDR in `src/fixtures`, since RPC drops them after ~7 days) plus a live contract read. CI: `.github/workflows/alerts.yml`, which also replays the last day of events.
 
 ## Phase 6: x402 agent check (Oct 4)
 

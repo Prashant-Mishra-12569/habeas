@@ -28,7 +28,7 @@ Work in progress, running on Stellar **testnet**. Live site: **https://habeas-st
 - **Try it live**, with or without a wallet (phones too): get frozen, answer for free, the reviewer decides, settle; then the other ending where silence means the tokens are taken back. Playwright runs it on testnet.
 - **Case pages:** every case's timeline with its transactions, a free settle button, and pages for holders (`/me`), the issuer (`/issuer`) and the reviewer (`/review`).
 - **Paid check for agents (x402):** wallets and AI agents pay 0.001 testnet USDC per call for a signed token check ([below](#paid-check-for-agents-x402)).
-- Coming next: Telegram alerts.
+- **Telegram alerts (beta):** watch an address and get a message when it's frozen, when a decision is needed, and when the case closes ([`apps/alerts`](apps/alerts)).
 
 ## Paid check for agents (x402)
 
@@ -78,6 +78,8 @@ cd apps/web && cp .env.example .env.local && npm install && npm run dev
 The site needs three testnet keys in `apps/web/.env.local` for Try it live and a fourth to sign paid checks (see `.env.example`); every other page only reads public Stellar data.
 
 The deploy script creates fresh testnet accounts with Friendbot, issues a demo asset, deploys Habeas, locks the issuer account and checks the lock. The second script runs every kind of case and writes the transaction hashes to `deployments/testnet-run.json`.
+
+The Telegram alerts bot has its own setup (a token from @BotFather): [`apps/alerts/README.md`](apps/alerts/README.md).
 
 ## Roadmap
 

@@ -1,0 +1,23 @@
+{
+  "name": "habeas-alerts",
+  "private": true,
+  "type": "module",
+  "description": "Telegram alerts for Habeas cases: polls Stellar RPC for contract events and messages the people watching an address.",
+  "scripts": {
+    "start": "node --env-file-if-exists=.env src/main.ts",
+    "dry-run": "node --env-file-if-exists=.env src/main.ts --dry-run",
+    "test": "node --test src/*.test.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "engines": {
+    "node": ">=22.18"
+  },
+  "dependencies": {
+    "@stellar/stellar-sdk": "^17.2.1",
+    "grammy": "^1.46.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.19.1",
+    "typescript": "^5.9.3"
+  }
+}
