@@ -87,6 +87,14 @@ const en = {
     note: (gap: string) =>
       `Taken back ${gap} after the tokens arrived. The record shows what happened, not why, and the holder had no way to answer.`,
     caption: "U.S. Bank's pilot stablecoin, Sep 19, 2026. A legitimate test. What's missing is the process.",
+    sources: "Sources",
+    sourceBank: "U.S. Bank's announcement",
+    sourceBankNote: "",
+    sourceTellus: "Tellus Cooperative's analysis",
+    sourceTellusNote: "in Spanish",
+    sourceHorizon: "The two transactions on Horizon:",
+    sourcePayment: "payment",
+    sourceClawback: "take back",
   },
   home: {
     h1: "Your tokens can be frozen and taken. You should know why.",
@@ -359,6 +367,14 @@ const es: Dict = {
     note: (gap: string) =>
       `Recuperado ${gap} después de que llegaron los tokens. El registro muestra qué pasó, no por qué, y el titular no tuvo cómo responder.`,
     caption: "La stablecoin piloto de U.S. Bank, 19 de septiembre de 2026. Una prueba legítima. Lo que falta es el proceso.",
+    sources: "Fuentes",
+    sourceBank: "El anuncio de U.S. Bank",
+    sourceBankNote: "en inglés",
+    sourceTellus: "El análisis de Tellus Cooperative",
+    sourceTellusNote: "",
+    sourceHorizon: "Las dos transacciones en Horizon:",
+    sourcePayment: "pago",
+    sourceClawback: "recuperación",
   },
   home: {
     h1: "Pueden congelar y quitarte tus tokens. Deberías saber por qué.",

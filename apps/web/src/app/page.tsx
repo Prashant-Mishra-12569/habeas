@@ -3,6 +3,7 @@ import { CheckForm } from "@/components/CheckForm";
 import { EventForm } from "@/components/EventForm";
 import { HowItWorks } from "@/components/HowItWorks";
 import { ReadErrorNotice } from "@/components/ReadErrorNotice";
+import { Sources } from "@/components/Sources";
 import { deployment, getCase } from "@/lib/habeas";
 import { getUsbdcEvent } from "@/lib/mainnet";
 import { ReadError } from "@/lib/network";
@@ -59,7 +60,10 @@ export default async function Home() {
         </div>
         <figure>
           {event.ok ? <EventForm e={event.data} /> : <ReadErrorNotice what="the mainnet take back" message={event.message} />}
-          <figcaption className="mt-1 max-w-[52ch] text-sm text-muted">{t.event.caption}</figcaption>
+          <figcaption className="mt-1 max-w-[52ch] text-sm text-muted">
+            {t.event.caption}
+            <Sources t={t} />
+          </figcaption>
         </figure>
       </section>
 
