@@ -1,16 +1,34 @@
+import Image from "next/image";
 import Link from "next/link";
+import mark from "@/assets/habeas-mark.png";
+import markCarbon from "@/assets/habeas-mark-carbon.png";
 import type { Theme } from "@/i18n/server";
 import type { Dict } from "@/i18n/dict";
 import { Prefs } from "./Prefs";
 
 /**
- * The name, printed with a slight carbon-copy misregistration: canary and
- * pink copies sit a pixel or two off behind the original.
+ * The Habeas mark. Decorative next to the name, so it has no alt text of its
+ * own. Carbon gets a variant with lighter pillars (scripts/make-brand.mjs);
+ * CSS picks one, so the server and browser render the same markup.
+ */
+export function Mark({ className = "h-7 w-auto" }: { className?: string }) {
+  return (
+    <>
+      <Image src={mark} alt="" unoptimized loading="eager" className={`${className} carbon:hidden`} />
+      <Image src={markCarbon} alt="" unoptimized loading="eager" className={`${className} hidden carbon:block`} />
+    </>
+  );
+}
+
+/**
+ * The mark and the name, the name printed with a slight carbon-copy
+ * misregistration: canary and pink copies a pixel or two off behind it.
  */
 export function Wordmark({ label }: { label: string }) {
   return (
-    <Link href="/" aria-label={label} className="inline-flex min-h-11 items-center text-xl font-extrabold tracking-[-0.03em]">
-      {/* The canary and pink carbon copies, drawn as shadows so the link reads "Habeas" once. */}
+    <Link href="/" aria-label={label} className="inline-flex min-h-11 shrink-0 items-center gap-2 text-xl font-extrabold tracking-[-0.03em]">
+      <Mark />
+      {/* The copies are shadows, so the link reads "Habeas" once. */}
       <span className="[text-shadow:1px_1px_0_var(--canary),2px_2px_0_var(--pink)]">Habeas</span>
     </Link>
   );
@@ -62,7 +80,10 @@ export function SiteFooter({ t }: { t: Dict }) {
       <div className="perforation" aria-hidden />
       <div className="mt-8 flex flex-wrap items-end justify-between gap-6">
         <div>
-          <p className="text-lg font-extrabold tracking-tight">{t.footer.motto}</p>
+          <p className="flex items-center gap-2.5 text-lg font-extrabold tracking-tight">
+            <Mark className="h-6 w-auto" />
+            {t.footer.motto}
+          </p>
           <p className="mt-1 max-w-[60ch] text-sm text-muted">{t.footer.built}</p>
         </div>
         <ul className="flex flex-wrap gap-x-5 text-sm">

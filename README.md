@@ -1,6 +1,11 @@
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="apps/web/public/brand/habeas-mark-carbon.png">
+  <img src="apps/web/public/brand/habeas-mark.png" alt="Habeas logo" width="96">
+</picture>
+
 # Habeas
 
-**A fair process before anyone takes your tokens.**
+**A fair process before anyone takes your tokens.** Live: https://habeas-stellar.vercel.app
 
 Banks and funds that issue tokens on Stellar can freeze them or take them back (clawback). Sometimes that's needed: fraud happens, mistakes happen. But today it can happen with no reason given and no way to answer. On Sep 19, 2026, the issuer of U.S. Bank's pilot stablecoin sent 24,000 tokens and took them back 15 minutes later. The public record shows the act, but no reason and no process ([the operations](docs/EVIDENCE.md#the-real-world-event-habeas-responds-to-mainnet)).
 

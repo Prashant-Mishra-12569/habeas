@@ -16,7 +16,9 @@ ACCOUNTS = ["${issuer}"]
 ORG_NAME = "Habeas (testnet demo)"
 ORG_URL = "${site}"
 ORG_DESCRIPTION = "A fair process before a Stellar token issuer freezes or takes back tokens: a public reason, a deadline to answer and a neutral reviewer."
+ORG_LOGO = "${site}/brand/icon-512.png"
 ORG_GITHUB = "Prashant-Mishra-12569/habeas"
+ORG_TWITTER = "0xprashantt"
 
 [[CURRENCIES]]
 code = "${code}"
@@ -24,6 +26,7 @@ issuer = "${issuer}"
 status = "test"
 display_decimals = 2
 name = "Habeas demo dollar"
+image = "${site}/brand/icon-512.png"
 desc = "A test token on Stellar testnet with no value. Its token contract (${deployment.sac}) is run by the Habeas contract (${deployment.habeas}), so it can only be frozen or taken back through a case with a public reason, a deadline to answer and a neutral reviewer. The issuer account's key is switched off."
 conditions = "Freezes and take-backs only through a Habeas case. If the reviewer doesn't decide in time, the holder keeps the tokens. Details: ${site}/check/${code}-${issuer}?network=testnet"
 is_asset_anchored = false

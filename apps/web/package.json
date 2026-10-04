@@ -28,6 +28,8 @@
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.13.0",
+    "@fontsource/ibm-plex-mono": "^5.3.0",
+    "@fontsource/public-sans": "^5.3.0",
     "@playwright/test": "^1.63.0",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^24.19.1",
@@ -36,6 +38,7 @@
     "@x402/fetch": "^2.28.0",
     "eslint": "^9",
     "eslint-config-next": "16.3.8",
+    "sharp": "^0.35.5",
     "tailwindcss": "^4",
     "typescript": "^5.9.3",
     "vitest": "^5.0.3"

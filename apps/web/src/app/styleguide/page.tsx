@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { pageMeta } from "@/lib/site";
+import { getDict } from "@/i18n/server";
 import { Button } from "@/components/Button";
 import { CaseReplay } from "@/components/CaseReplay";
 import { EventForm } from "@/components/EventForm";
@@ -11,7 +13,10 @@ import { contractUrl } from "@/lib/format";
 import { getUsbdcEvent } from "@/lib/mainnet";
 import { ReadError } from "@/lib/network";
 
-export const metadata: Metadata = { title: "Styleguide · Habeas" };
+export async function generateMetadata(): Promise<Metadata> {
+  const { t, lang } = await getDict();
+  return pageMeta({ ...t.meta.pages.styleguide, path: "/styleguide", lang, index: false });
+}
 // Everything below is read from Stellar on each request.
 export const dynamic = "force-dynamic";
 
@@ -56,6 +61,35 @@ export default async function StyleguidePage() {
       <p className="mt-3 max-w-[64ch]">
         The carbon-copy form set. Paper is the white original; Carbon turns the page into the carbon sheet itself. Use the switches at the top to see both, in English or Spanish. Every form here is filled with real data: a mainnet take back and two testnet cases.
       </p>
+
+      <Section
+        id="logo"
+        title="Logo"
+        intro="One source file (public/brand/habeas-logo.png); scripts/make-brand.mjs makes every size from it. On Carbon the navy pillars are lifted so the H still reads on the dark page. The mark sits next to the name, never instead of it."
+      >
+        <div className="grid gap-4 sm:grid-cols-2">
+          {[
+            { label: "On Paper", bg: "#F7F8F4", src: "/brand/habeas-mark.png", ink: "#1F2229" },
+            { label: "On Carbon", bg: "#0F1120", src: "/brand/habeas-mark-carbon.png", ink: "#E8EAF4" },
+          ].map((v) => (
+            <figure key={v.label} className="rounded-[2px] border border-rule p-6" style={{ background: v.bg }}>
+              <div className="flex items-center gap-3">
+                {/* eslint-disable-next-line @next/next/no-img-element -- a fixed swatch, not content */}
+                <img src={v.src} alt="" className="h-16 w-auto" />
+                <span className="text-3xl font-extrabold tracking-[-0.03em]" style={{ color: v.ink }}>
+                  Habeas
+                </span>
+              </div>
+              <figcaption className="mt-4 text-sm" style={{ color: v.ink }}>
+                {v.label}
+              </figcaption>
+            </figure>
+          ))}
+        </div>
+        <p className="mt-4 text-sm text-muted">
+          Files: favicon.ico (16, 32, 48), icon.png (512), apple-icon.png (180, on paper), manifest icons 192 and 512 plus a maskable 512, a 640 px avatar for the Telegram bot.
+        </p>
+      </Section>
 
       <Section id="motion" title="The main animation" intro="A real take back from mainnet fills itself in. The two fields a fair process needs stay empty and get circled in pen.">
         <div className="max-w-2xl">

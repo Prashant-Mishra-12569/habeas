@@ -25,6 +25,7 @@ A chat watching more than one of these gets one message per event. Messages foll
 4. Pick a username ending in `bot`, for example `habeas_alerts_bot`. If it's taken, try `habeas_case_alerts_bot`.
 5. BotFather replies with a token (numbers, a colon, letters). Treat it like a password: don't paste it in chats, issues or commits.
 6. Copy `.env.example` to `.env` in this folder and paste the token after `TELEGRAM_BOT_TOKEN=`. `.env` is git-ignored.
+7. Optional, for a finished look: send `/setuserpic`, pick the bot and upload `brand/bot-avatar.png` from this folder (the Habeas mark, sized for Telegram's round crop). `/setdescription` and `/setabouttext` take a sentence like "Tells you when a Habeas case about your Stellar address is opened, decided or closed."
 
 ## Run
 

@@ -1,5 +1,8 @@
 @import "tailwindcss";
 
+/* carbon:… applies when the Carbon theme is on (data-theme on <html>). */
+@custom-variant carbon (&:where([data-theme="carbon"], [data-theme="carbon"] *));
+
 /* Habeas design tokens. Two themes, both on-theme for a carbon-copy form set:
    "Paper" (default): the white original, ballpoint blue ink, canary and pink copies.
    "Carbon": the page becomes the carbon sheet itself, a deep blue-black with
