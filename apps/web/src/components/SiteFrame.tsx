@@ -72,12 +72,19 @@ export function SiteFooter({ t }: { t: Dict }) {
           <p className="text-lg font-extrabold tracking-tight">{t.footer.motto}</p>
           <p className="mt-1 max-w-[60ch] text-sm text-muted">{t.footer.built}</p>
         </div>
-        <ul className="flex flex-wrap gap-5 text-sm">
-          <li>
-            <Link className="inline-flex min-h-11 items-center underline" href="/evidence">
-              {t.nav.evidence}
-            </Link>
-          </li>
+        <ul className="flex flex-wrap gap-x-5 text-sm">
+          {[
+            { href: "/me", label: t.footer.links.me },
+            { href: "/issuer", label: t.footer.links.issuer },
+            { href: "/review", label: t.footer.links.review },
+            { href: "/evidence", label: t.nav.evidence },
+          ].map((l) => (
+            <li key={l.href}>
+              <Link className="inline-flex min-h-11 items-center underline" href={l.href}>
+                {l.label}
+              </Link>
+            </li>
+          ))}
           <li>
             <a className="inline-flex min-h-11 items-center underline" href="https://github.com/Prashant-Mishra-12569/habeas">
               {t.nav.code}

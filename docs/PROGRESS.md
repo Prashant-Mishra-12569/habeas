@@ -2,34 +2,46 @@
 
 Updated after every milestone. Live site: https://habeas-stellar.vercel.app · Repo: https://github.com/Prashant-Mishra-12569/habeas
 
-## Where we are (Oct 3, 2026, end of day)
+## Where we are (Oct 4, 2026)
 
 | Phase | Status |
 | --- | --- |
 | 1. Tools, repo, spikes | Done. All four spikes passed, including S3 in a real Freighter wallet. |
 | 2. Contract | Done. 54 tests, verified build deployed on testnet, every ending run on-chain. |
 | 3. Web app, styleguide, asset check | Done. Styleguide approved, redesign live, works from 320 px phones to desktop. |
-| 4. Case pages | Started: public `/case/[id]` and the free answer (proven with Freighter). Issuer and reviewer pages not built. |
-| 5. Try it live | Started: the Freighter path works end to end on the live site. No-wallet path not built. |
+| 4. Case pages | Done. `/case/[id]` (form, timeline with every transaction, countdown, free settle, free answer), `/me`, `/issuer`, `/review`. |
+| 5. Try it live | Done. With or without a wallet (phones use the no-wallet path), both endings, case file and share link. Playwright runs it on testnet. |
 | 6. x402 agent check | Not started. |
 | 7. Telegram alerts | Not started. |
 
 ## What's left
 
-**Next phases (not started, by Prashant's call):**
+**Next phases:**
 
-- Phase 4: issuer page (open a case, file fingerprint computed in the browser), reviewer queue and decide, `/me` for a connected wallet, case timeline from contract events, settle button.
-- Phase 5: Try it live without a wallet (temporary in-browser key funded by Friendbot; this is the phone path), the demo reviewer deciding, the "what if I don't answer" second ending, a shareable case file, rate limits on the demo endpoints.
 - Phase 6: x402 paid machine check (`/api/v1/check/[asset]`, signed answers, `examples/agent-check.ts`).
 - Phase 7: Telegram alerts (Prashant creates the bot with @BotFather).
-- Phase 9 polish: Lighthouse accessibility ≥ 95, Spanish reviewed by a native speaker, Playwright running the full case flow on testnet.
+- Phase 9 polish: Lighthouse accessibility ≥ 95, Spanish reviewed by a native speaker.
 - Phase 10: README in Spanish, demo video, 5-slide deck, X post.
+
+**Needs Prashant:**
+
+- Vercel: add `HABEAS_REVIEWER_SECRET` (in `apps/web/.env.local`) so the live site's reviewer step works, then redeploy.
+- Optional: add the three demo keys as GitHub Actions secrets so CI also runs the full Try it live flow (today CI runs the layout checks and skips the flow).
+- Case 8 (your Freighter case) is ready to settle; try the "Settle case" button on /case/8 or /review.
 
 **Small items to decide or do later:**
 
 - The USBDCP issuer has now taken tokens back 37 times (latest Oct 3, 2026), not only on Sep 19. The hero still tells the Sep 19 story, which is accurate; we could add "and 36 more since" once we decide on wording.
 - Optional: turn off the Vercel Toolbar in the Vercel project settings. Its loader reads `document.cookie`, which Chrome lists as a performance "issue" in DevTools. The other one comes from Next.js itself (`next-instant-navigation-testing` check). Neither is our code and neither affects visitors.
 - Optional (from the plan): the Stellar dev skill and Raven MCP for Claude Code. Not installed; we've worked from the SDK sources and Stellar's docs directly.
+
+## Phases 4 and 5 (Oct 4)
+
+- Sources for the home page story (U.S. Bank's announcement, Tellus Cooperative's analysis, the two Horizon operations) under the hero, each checked to resolve, with the language noted.
+- Case timeline from contract events (`src/lib/timeline.ts`): each step's ledger is estimated from the case record's timestamp and corrected against a real ledger's close time, so a step costs ~2 RPC calls instead of scanning days. RPC keeps events ~7 days; older steps show "link no longer kept" and why. 5 Vitest tests on real cases.
+- Server actions: settle (relayer pays, anyone can trigger; waits out a few seconds of ledger lag and retries once), demo reviewer decision, test-wallet funding (Friendbot, relayer fallback), wallet-signed build/submit for the issuer and reviewer pages (submit accepts only Habeas `open_case`, `decide`, `withdraw`; a call needing someone else's signature is refused at build with a plain message). Best-effort rate limits on demo endpoints.
+- Try it live: a throwaway key in the tab's session storage for visitors without a wallet (SDK loaded only then), five steps, the second ending with a countdown, case file links. Found and fixed with the e2e test: the countdown aimed at the exact deadline second, but deadlines run on ledger time and a transaction lands in the next ledger; countdowns now add a ledger of margin and short waits say "about N seconds".
+- Tested on testnet: `scripts/test-free-answer.mjs` (case 9, all four steps found), `scripts/test-wallet-roles.mjs` (case 12, issuer and reviewer pages' API, refusals), case 7 settled by default, and `e2e/try-live.spec.ts` (full no-wallet session on a phone, both endings, then /me). Records in `deployments/testnet-web.json` and `docs/EVIDENCE.md`.
 
 ## Phase 3 and early 4/5 (Oct 3)
 

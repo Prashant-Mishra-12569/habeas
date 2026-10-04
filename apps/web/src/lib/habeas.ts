@@ -67,6 +67,17 @@ export async function activeCaseFor(holder: string): Promise<number | null> {
   return id === undefined || id === null ? null : Number(id);
 }
 
+/** Case ids opened against a holder, oldest first. */
+export async function holderCaseIds(holder: string): Promise<number[]> {
+  const ids = (await read("cases_for", [new Address(holder).toScVal()])) as bigint[];
+  return ids.map(Number);
+}
+
+export async function getConfig(): Promise<{ issuer: string; reviewer: string; answerWindow: number; reviewWindow: number }> {
+  const c = (await read("get_config")) as { issuer: string; reviewer: string; answer_window: bigint; review_window: bigint };
+  return { issuer: c.issuer, reviewer: c.reviewer, answerWindow: Number(c.answer_window), reviewWindow: Number(c.review_window) };
+}
+
 export async function caseCount(): Promise<number> {
   return Number(await read("case_count"));
 }

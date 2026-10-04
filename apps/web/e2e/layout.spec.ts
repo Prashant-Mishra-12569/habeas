@@ -17,6 +17,9 @@ const PAGES = [
   "/case/8",
   "/try",
   "/evidence",
+  "/me",
+  "/issuer",
+  "/review",
 ];
 
 for (const size of SIZES) {

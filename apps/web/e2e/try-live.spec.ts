@@ -44,6 +44,11 @@ test.describe("Try it live without a wallet", () => {
       await page.getByRole("button", { name: "Settle case" }).click({ timeout: 5 * 60_000 });
       await expect(page.getByText(/Taken back: 400 DEMOUSD went back to the issuer/)).toBeVisible(chain);
 
+      // The same test wallet sees both cases on /me.
+      await page.goto("/me");
+      await page.getByRole("button", { name: "Use this tab's test wallet" }).click(chain);
+      await expect(page.getByRole("link", { name: /^Case \d+/ })).toHaveCount(2, chain);
+
       expect(errors).toEqual([]);
       await ctx.close();
     });

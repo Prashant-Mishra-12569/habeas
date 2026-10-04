@@ -9,6 +9,7 @@ import type { Timeline } from "@/lib/timeline-types";
 import type { Case } from "@/lib/types";
 import { clock, useCountdown } from "@/lib/use-countdown";
 import { useLang, useT } from "@/i18n/client";
+import { post } from "@/lib/post";
 import { Button } from "./Button";
 import { CaseTimeline } from "./CaseTimeline";
 import { TickBox } from "./TickBox";
@@ -19,12 +20,6 @@ type CaseView = { case: Case; timeline: Timeline | null; now: number };
 const SESSION = "habeas-try";
 const closed = (c: Case) => c.status === "Cleared" || c.status === "TakenBack";
 
-async function post<T>(path: string, body: unknown): Promise<T> {
-  const res = await fetch(path, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(body) });
-  const json = await res.json();
-  if (!res.ok) throw new Error(json.error ?? `Request failed (${res.status}).`);
-  return json as T;
-}
 
 function remember(first: number | null, second: number | null) {
   try {

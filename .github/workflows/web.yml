@@ -31,4 +31,10 @@ jobs:
       # Every page at phone, tablet and desktop sizes: no sideways scroll,
       # no console errors, tappable header controls.
       - run: npx playwright install --with-deps chromium
+      # The full Try it live flow needs the testnet demo keys; without these
+      # repository secrets it is skipped and only the layout checks run.
       - run: npm run e2e
+        env:
+          HABEAS_ISSUER_SECRET: ${{ secrets.HABEAS_ISSUER_SECRET }}
+          HABEAS_REVIEWER_SECRET: ${{ secrets.HABEAS_REVIEWER_SECRET }}
+          RELAYER_SECRET: ${{ secrets.RELAYER_SECRET }}

@@ -7,14 +7,9 @@ import { type Signer, freighterSigner } from "@/lib/signer";
 import type { Case } from "@/lib/types";
 import { clock, useCountdown } from "@/lib/use-countdown";
 import { useT } from "@/i18n/client";
+import { post } from "@/lib/post";
 import { Button } from "./Button";
 
-async function post<T>(path: string, body: unknown): Promise<T> {
-  const res = await fetch(path, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(body) });
-  const json = await res.json();
-  if (!res.ok) throw new Error(json.error ?? `Request failed (${res.status}).`);
-  return json as T;
-}
 
 /** When a case can be settled by anyone, as unix seconds (0 = now). */
 function settleAt(c: Case): number {

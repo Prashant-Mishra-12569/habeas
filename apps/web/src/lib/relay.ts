@@ -109,7 +109,7 @@ export async function submitAnswer(
  * answer, or reviewer silent past the review window. Anyone may settle; the
  * relayer pays so nobody needs XLM to do it.
  */
-export async function settleCase(caseId: number): Promise<{ hash: string; outcome: string }> {
+export async function settleCase(caseId: number, retried = false): Promise<{ hash: string; outcome: string }> {
   if (!Number.isInteger(caseId) || caseId < 1) throw new ReadError("That isn't a case number.");
   const relayer = envKey("RELAYER_SECRET");
   const call = new Contract(deployment.habeas).call("settle", nativeToScVal(BigInt(caseId), { type: "u64" }));
@@ -123,7 +123,14 @@ export async function settleCase(caseId: number): Promise<{ hash: string; outcom
       const c = await getCase(caseId);
       const until = c.status === "Answered" ? c.reviewBy : c.answerBy;
       const secs = Math.max(1, until - Math.floor(Date.now() / 1000));
-      throw new ReadError(`This case can't close yet. It can be settled in about ${Math.ceil(secs / 60)} min, once the ${c.status === "Answered" ? "review" : "answer"} window ends.`);
+      // Deadlines run on ledger time, a few seconds behind the clock. If the
+      // case is seconds away from closing, wait for the next ledgers and retry.
+      if (!retried && secs <= 20) {
+        await new Promise((r) => setTimeout(r, (secs + 7) * 1000));
+        return settleCase(caseId, true);
+      }
+      const when = secs < 60 ? `about ${secs} seconds` : `about ${Math.ceil(secs / 60)} minutes`;
+      throw new ReadError(`This case can't close yet. It can be settled in ${when}, once the ${c.status === "Answered" ? "review" : "answer"} window ends.`);
     }
     if (e instanceof SimulationError && e.raw.includes("Error(Contract, #2)")) throw new ReadError("This case is already closed.");
     explain(e);

@@ -96,6 +96,18 @@ gh attestation verify habeas.wasm --repo Prashant-Mishra-12569/habeas --signer-r
 
 StellarExpert shows no source badge: its build workflow only reports to its mainnet service, which has been dropping submissions since August ([stellar-expert/soroban-build-workflow#9](https://github.com/stellar-expert/soroban-build-workflow/issues/9)). The checks above don't depend on it.
 
+## Through the website
+
+These cases ran through the website's own API (the same code and calls the pages use): the issuer page, the free answer, the review queue and the settle button.
+
+| Case | What happened | Steps |
+| --- | --- | --- |
+| #9 | Answered for free, reviewer rejected, settled: Cleared | Opened [31545c8b](https://stellar.expert/explorer/testnet/tx/31545c8b268908243197ef745cce9543647dec1ccffaa2f2eac2b9727e298549), Answered [adaa1d6b](https://stellar.expert/explorer/testnet/tx/adaa1d6b04495f3b07e949ceb231a601caa611e428b46f4f48c4de62f595207d), Decided [9f09d3f2](https://stellar.expert/explorer/testnet/tx/9f09d3f20c57c63438fe9420a1bd185679f8b58562c3db5e75ed02c64e1e3f9d), Settled [db0c4167](https://stellar.expert/explorer/testnet/tx/db0c4167515653e5683239771dcb10762c231c1fef55e3093b16b2af1b70b144) |
+| #12 | Opened from the issuer page, answered, reviewer upheld from the review page, settled: Taken back | Opened [d8d3be2c](https://stellar.expert/explorer/testnet/tx/d8d3be2c1b3dc537eb8017f100790264390583adc96f0aa8b2f581637d24b5f7), Answered [9984c5a2](https://stellar.expert/explorer/testnet/tx/9984c5a20705f714f9d493a19861232a02e488b652d4933d014ed30b45179756), Decided [f1456ed8](https://stellar.expert/explorer/testnet/tx/f1456ed81390226e8f9d01346877e85657e54d4d75642c48ec03658dd11189f7), Settled [74e69683](https://stellar.expert/explorer/testnet/tx/74e69683fc0db64c9f637af2a8ce94892d24924d3b525fb5d1b3a9df36058ba5) |
+| #7 | Answered, the reviewer never decided, settled: Cleared by default | Opened [e8f83884](https://stellar.expert/explorer/testnet/tx/e8f8388458ecf0d04c7ccd3de73e1d75e11452f0f8be5ff2cd2f2c9e7df13586), Answered [e3db6daf](https://stellar.expert/explorer/testnet/tx/e3db6daf187f53e62ea5ef6990a68bb9ea2554efef1985689f438d3bb525ec80), Settled [74b88be9](https://stellar.expert/explorer/testnet/tx/74b88be989d8dcd53c36b57709f7d45b0bc741661abce3dee94ffbb10c803e8b) |
+
+The Playwright test `apps/web/e2e/try-live.spec.ts` also runs a full Try it live session as a phone visitor without a wallet (both endings) on every run.
+
 ## Free answer with a real wallet
 
 Tested on the live site with Freighter (Chrome extension), Testnet, case 8, holder `GDFTUXEFF2ARQN75KCHH2M7SUL2LNEFH37X2WRTAFMS6TICFFTXGKGN6`.

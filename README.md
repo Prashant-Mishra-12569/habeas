@@ -25,7 +25,9 @@ Work in progress, running on Stellar **testnet**. Live site: **https://habeas-st
 - **Token check on real mainnet data:** [USBDCP](https://habeas-stellar.vercel.app/check/USBDCP-GDABKPZMAIULVJVJJQM7L3VIG5A2IS5V4KP2P3YNP6YWRUBJNBGFGG6E), USDC, PYUSD and BENJI, plus the protected demo token.
 - **Works on phones:** every page is tested at 320, 390, 768 and 1440 px in CI (Playwright).
 - How cases work, functions, errors and events: [`docs/SPEC-cases.md`](docs/SPEC-cases.md).
-- Coming next: Try it live without a wallet (for phones), case pages for the issuer and the reviewer, a paid machine check (x402) and Telegram alerts.
+- **Try it live**, with or without a wallet (phones too): get frozen, answer for free, the reviewer decides, settle; then the other ending where silence means the tokens are taken back. Playwright runs it on testnet.
+- **Case pages:** every case's timeline with its transactions, a free settle button, and pages for holders (`/me`), the issuer (`/issuer`) and the reviewer (`/review`).
+- Coming next: a paid machine check (x402) and Telegram alerts.
 
 ## Closing the back door
 
@@ -58,7 +60,7 @@ cd scripts && npm install && cd .. && node scripts/run-demo-cases.mjs
 cd apps/web && cp .env.example .env.local && npm install && npm run dev
 ```
 
-The site needs two testnet keys in `apps/web/.env.local` for Try it live (see `.env.example`); every other page only reads public Stellar data.
+The site needs three testnet keys in `apps/web/.env.local` for Try it live (see `.env.example`); every other page only reads public Stellar data.
 
 The deploy script creates fresh testnet accounts with Friendbot, issues a demo asset, deploys Habeas, locks the issuer account and checks the lock. The second script runs every kind of case and writes the transaction hashes to `deployments/testnet-run.json`.
 

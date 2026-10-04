@@ -10,6 +10,7 @@ const dep = json("deployments/testnet.json");
 const run = json("deployments/testnet-run.json");
 const lock = json("deployments/testnet-lock.json");
 const wallet = json("deployments/testnet-freighter.json");
+const web = json("deployments/testnet-web.json");
 
 const labUrl =
   "https://lab.stellar.org/smart-contracts/contract-explorer?$=network$id=testnet&label=Testnet&horizonUrl=https:////horizon-testnet.stellar.org&rpcUrl=https:////soroban-testnet.stellar.org&passphrase=Test%20SDF%20Network%20/;%20September%202015;&smartContracts$explorer$contractId=" +
@@ -19,6 +20,10 @@ const tx = (h) => `[${h.slice(0, 8)}](https://stellar.expert/explorer/testnet/tx
 const contract = (c) => `[\`${c}\`](https://stellar.expert/explorer/testnet/contract/${c})`;
 const account = (a) => `[\`${a}\`](https://stellar.expert/explorer/testnet/account/${a})`;
 
+const STEP = { opened: "Opened", answered: "Answered", decided: "Decided", settled: "Settled", withdrawn: "Withdrawn", emergency: "Emergency" };
+const webRows = web.cases
+  .map((c) => `| #${c.id} | ${c.label} | ${c.steps.map((s) => `${STEP[s.kind]} ${s.hash ? tx(s.hash) : "(no link)"}`).join(", ")} |`)
+  .join("\n");
 const walletRows = wallet.steps.map((s) => `| ${s.label} | ${tx(s.hash)} |`).join("\n");
 const lockRows = lock.steps.map((s) => `| ${s.label} | ${tx(s.hash)} |`).join("\n");
 const rows = run.steps.map((s, i) => `| ${i + 1} | ${s.label} | ${tx(s.hash)} |`).join("\n");
@@ -97,6 +102,16 @@ gh attestation verify habeas.wasm --repo Prashant-Mishra-12569/habeas --signer-r
 \`\`\`
 
 StellarExpert shows no source badge: its build workflow only reports to its mainnet service, which has been dropping submissions since August ([stellar-expert/soroban-build-workflow#9](https://github.com/stellar-expert/soroban-build-workflow/issues/9)). The checks above don't depend on it.
+
+## Through the website
+
+These cases ran through the website's own API (the same code and calls the pages use): the issuer page, the free answer, the review queue and the settle button.
+
+| Case | What happened | Steps |
+| --- | --- | --- |
+${webRows}
+
+The Playwright test \`apps/web/e2e/try-live.spec.ts\` also runs a full Try it live session as a phone visitor without a wallet (both endings) on every run.
 
 ## Free answer with a real wallet
 
