@@ -16,18 +16,18 @@ Updated after every milestone. Live site: https://habeas-stellar.vercel.app · R
 
 ## What's left
 
-**Next phases:**
+**Next:**
 
 - Phase 7: send real Telegram messages once the bot exists, then host it (or run it locally for the video and keep it marked beta).
-- Phase 9 polish: Spanish reviewed by a native speaker (accessibility is done, see below).
-- Phase 10: README in Spanish, demo video, 5-slide deck, X post.
+- Phase 10: 5-slide deck, video script and recording support, X post draft, a final pass from a clean browser.
 
 **Needs Prashant:**
 
-- Telegram: create the bot with @BotFather and paste the token into `apps/alerts/.env` (steps in `apps/alerts/README.md`). Tell me the bot's username, never the token.
+- Vercel: add `HABEAS_ATTEST_SECRET` and redeploy. Until then the live paid check answers with an error and charges nothing, and `/api/v1/key` answers 503. The value is in `apps/web/.env.local`, or run `stellar keys secret habeas-attest` in your own terminal.
+- GitHub Actions secrets (optional, so CI also runs the paid check): `HABEAS_ATTEST_SECRET` (same value) and `AGENT_SECRET` (`stellar keys secret habeas-agent`, a testnet account with 4.99 testnet USDC; each CI run spends 0.001).
+- Telegram: create the bot with @BotFather and paste the token into `apps/alerts/.env` (steps in `apps/alerts/README.md`, including the bot picture). Tell me the bot's username, never the token.
 - Hosting the bot: Railway (always on, a volume keeps the watch list, needs a Railway account and uses its trial credit), Render free web service (free, but sleeps without an outside pinger and forgets watchers on redeploy), or this PC during the video (marked beta, as the plan allows).
-- Vercel: add `HABEAS_ATTEST_SECRET` (the paid check's signing key) and redeploy. Get the value in your own terminal with `stellar keys secret habeas-attest`; until it's set, the live paid check answers with an error and charges nothing.
-- GitHub Actions secrets, so CI also runs the paid check: `HABEAS_ATTEST_SECRET` (same value) and `AGENT_SECRET` (`stellar keys secret habeas-agent`, a testnet account holding 4.99 testnet USDC; each CI run spends 0.001).
+- Spanish read by a native speaker (site, README.es.md, bot messages); a phone test with a friend who doesn't use crypto; the video in your own voice.
 
 **Small items to decide or do later:**
 
