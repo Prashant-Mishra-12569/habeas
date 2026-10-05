@@ -48,7 +48,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export async function generateViewport(): Promise<Viewport> {
   const theme = await getTheme();
-  return { themeColor: theme === "carbon" ? "#0b0d1b" : "#f7f8f4", colorScheme: theme === "carbon" ? "dark" : "light" };
+  return { themeColor: theme === "carbon" ? "#0c0c0e" : "#f7f8f4", colorScheme: theme === "carbon" ? "dark" : "light" };
 }
 
 export default async function RootLayout({ children }: LayoutProps<"/">) {
