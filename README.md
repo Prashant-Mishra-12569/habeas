@@ -35,7 +35,7 @@ Running on Stellar **testnet**. Live site: **https://habeas-stellar.vercel.app**
 - **Try it live**, with or without a wallet (phones too): get frozen, answer for free, the reviewer decides, settle; then the other ending where silence means the tokens are taken back. Playwright runs it on testnet.
 - **Case pages:** every case's timeline with its transactions, a free settle button, and pages for holders (`/me`), the issuer (`/issuer`) and the reviewer (`/review`).
 - **Paid check for agents (x402):** wallets and AI agents pay 0.001 testnet USDC per call for a signed token check ([below](#paid-check-for-agents-x402)).
-- **Telegram alerts (beta):** watch an address and get a message when it's frozen, when a decision is needed, and when the case closes ([`apps/alerts`](apps/alerts)).
+- **Telegram alerts:** [@habeas_alerts_bot](https://t.me/habeas_alerts_bot) runs 24/7. Watch an address and get a message when it's frozen, answered, decided and closed. Case pages, My cases and Try it live open the bot with the address already filled in ([`apps/alerts`](apps/alerts)).
 
 ## Paid check for agents (x402)
 
@@ -61,6 +61,29 @@ Making Habeas the token's admin is not enough on its own. The issuer's account c
 ## Reviewer: one person or a panel
 
 The demo uses one reviewer key. The contract doesn't care what kind of address the reviewer is, so a panel works without any change: a Stellar multisig account or a smart account. The test [`two_of_three_members_can_decide`](contracts/habeas/src/test.rs) registers a 2-of-3 panel as the reviewer and signs decisions with real ed25519 keys: two members can decide, while one member alone, an outsider, or the same member twice are refused.
+
+## Common questions
+
+**Who decides, and does the holder always win?** No. A reviewer named when the contract is set up decides, with a public reason. The issuer can't be the reviewer and can't replace it alone. Every ending, each run on testnet ([/evidence](https://habeas-stellar.vercel.app/evidence)):
+
+| What happened | Result |
+| --- | --- |
+| The holder never answered | Taken back |
+| The reviewer sided with the issuer | Taken back |
+| The reviewer sided with the holder | Cleared |
+| The holder answered and the reviewer stayed silent past the deadline | Cleared |
+| The issuer withdrew the case | Cleared |
+| Emergency signed by the issuer and the reviewer together | Taken back |
+
+In Try it live the website plays the reviewer and you pick the decision, so you can see both outcomes.
+
+**How does Habeas know whose evidence is true?** It doesn't, and it doesn't claim to. Like a court, it guarantees the process, not the verdict: a public reason, a deadline to answer, a neutral decision with its own reason, and a record nobody can quietly change. Files stay with the parties; their fingerprints (SHA-256) are on Stellar, so a file can't be swapped later.
+
+**Why trust one reviewer?** You don't have to. The reviewer can be a 2-of-3 panel with no change to the contract, already tested with real signatures ([above](#reviewer-one-person-or-a-panel)).
+
+**Why would an issuer use it?** A token whose freezes and take backs go through a public process is easier for holders, exchanges and regulators to trust. The free [token check](https://habeas-stellar.vercel.app/check) shows the difference: "Protected by Habeas" next to "Powers used without a public process".
+
+**Can it run on mainnet?** The contract is the same code on mainnet and testnet. Before real money it needs an independent audit, a real reviewer organisation and an issuer who chooses to hand over the token's admin. Until then it runs on testnet and reads mainnet.
 
 ## Run it yourself
 

@@ -1,8 +1,10 @@
 "use client";
 
 import { motion, useScroll, useTransform, type MotionValue } from "motion/react";
-import { useRef } from "react";
+import { useRef, useSyncExternalStore } from "react";
 import { useReduceMotion } from "@/lib/use-reduce-motion";
+
+const noop = () => () => {};
 
 function Word({ word, i, n, progress, accent }: { word: string; i: number; n: number; progress: MotionValue<number>; accent: boolean }) {
   const opacity = useTransform(progress, [i / n, (i + 1) / n], [0.16, 1]);
@@ -21,10 +23,13 @@ function Word({ word, i, n, progress, accent }: { word: string; i: number; n: nu
 export function ScrollWords({ text, className = "" }: { text: string; className?: string }) {
   const ref = useRef<HTMLParagraphElement>(null);
   const reduce = useReduceMotion();
+  // Server and first paint get the plain sentence; the dimmed words only
+  // appear once the page is live and can light them up while scrolling.
+  const live = useSyncExternalStore(noop, () => true, () => false);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start 85%", "end 40%"] });
   const words = text.split(" ");
   const plain = text.replaceAll("*", "");
-  if (reduce) {
+  if (reduce || !live) {
     return (
       <p ref={ref} className={className}>
         {words.map((w, i) => (

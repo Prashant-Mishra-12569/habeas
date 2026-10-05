@@ -35,7 +35,7 @@ Funciona en Stellar **testnet**. Sitio: **https://habeas-stellar.vercel.app** (i
 - **Pruébalo en vivo**, con o sin billetera (también en el teléfono): quedas congelado, respondes gratis, el revisor decide y se cierra el caso; luego el otro final, donde el silencio significa que se recuperan los tokens. Playwright lo corre en testnet.
 - **Páginas de casos:** la historia de cada caso con sus transacciones, un botón gratuito para cerrarlo y páginas para titulares (`/me`), el emisor (`/issuer`) y el revisor (`/review`).
 - **Revisión pagada para agentes (x402):** billeteras y agentes de IA pagan 0,001 USDC de testnet por llamada por una revisión firmada ([abajo](#revisión-pagada-para-agentes-x402)).
-- **Alertas por Telegram (beta):** sigue una dirección y recibe un mensaje cuando la congelan, cuando hace falta una decisión y cuando se cierra el caso ([`apps/alerts`](apps/alerts)).
+- **Alertas por Telegram:** [@habeas_alerts_bot](https://t.me/habeas_alerts_bot) funciona 24/7. Sigue una dirección y recibe un mensaje cuando la congelan, cuando responde, cuando se decide y cuando se cierra el caso. Las páginas de casos, Mis casos y Pruébalo en vivo abren el bot con la dirección ya puesta ([`apps/alerts`](apps/alerts)).
 
 ## Revisión pagada para agentes (x402)
 
@@ -61,6 +61,29 @@ Hacer a Habeas administrador del token no basta por sí solo. La cuenta del emis
 ## Revisor: una persona o un panel
 
 La demo usa una sola llave de revisor. Al contrato no le importa qué tipo de dirección sea el revisor, así que un panel funciona sin cambios: una cuenta multifirma de Stellar o una smart account. La prueba [`two_of_three_members_can_decide`](contracts/habeas/src/test.rs) registra un panel de 2 de 3 como revisor y firma decisiones con llaves ed25519 reales: dos miembros pueden decidir; un miembro solo, alguien de fuera o el mismo miembro dos veces son rechazados.
+
+## Preguntas frecuentes
+
+**¿Quién decide? ¿Siempre gana el titular?** No. Decide un revisor fijado al configurar el contrato, con una razón pública. El emisor no puede ser el revisor ni cambiarlo solo. Cada final, ejecutado en testnet ([/evidence](https://habeas-stellar.vercel.app/evidence)):
+
+| Qué pasó | Resultado |
+| --- | --- |
+| El titular no respondió | Recuperado |
+| El revisor le dio la razón al emisor | Recuperado |
+| El revisor le dio la razón al titular | Liberado |
+| El titular respondió y el revisor no decidió a tiempo | Liberado |
+| El emisor retiró el caso | Liberado |
+| Emergencia firmada por el emisor y el revisor juntos | Recuperado |
+
+En Pruébalo en vivo el sitio hace de revisor y tú eliges la decisión, para que veas ambos resultados.
+
+**¿Cómo sabe Habeas qué evidencia es verdadera?** No lo sabe, y no lo pretende. Como un tribunal, garantiza el proceso, no el veredicto: una razón pública, un plazo para responder, una decisión neutral con su propia razón y un registro que nadie puede cambiar a escondidas. Los archivos quedan con las partes; sus huellas (SHA-256) están en Stellar, así que nadie puede cambiar un archivo después.
+
+**¿Por qué confiar en un solo revisor?** No hace falta. El revisor puede ser un panel de 2 de 3 sin cambiar el contrato, ya probado con firmas reales ([arriba](#revisor-una-persona-o-un-panel)).
+
+**¿Por qué lo usaría un emisor?** Un token cuyos congelamientos y recuperaciones pasan por un proceso público genera más confianza en titulares, exchanges y reguladores. La [revisión de tokens](https://habeas-stellar.vercel.app/check) gratuita muestra la diferencia.
+
+**¿Puede funcionar en mainnet?** El contrato es el mismo código en mainnet y en testnet. Antes de dinero real necesita una auditoría independiente, una organización de revisores real y un emisor que decida entregarle la administración del token. Mientras tanto funciona en testnet y lee mainnet.
 
 ## Córrelo tú
 

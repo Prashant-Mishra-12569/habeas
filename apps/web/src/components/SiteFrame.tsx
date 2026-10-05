@@ -27,11 +27,10 @@ export function Mark({ className = "h-7 w-auto" }: { className?: string }) {
  */
 export function Wordmark({ label }: { label: string }) {
   return (
-    <Link href="/" aria-label={label} className="inline-flex min-h-11 shrink-0 items-center gap-2 text-xl font-extrabold tracking-[-0.03em]">
+    <Link href="/" aria-label={label} className="inline-flex min-h-11 shrink-0 items-center gap-2">
       <Mark />
-      {/* The copies are shadows, so the link reads "Habeas" once. */}
       {/* On the narrowest phones only the mark shows; the link keeps its name. */}
-      <span translate="no" className="[text-shadow:1px_1px_0_var(--canary),2px_2px_0_var(--pink)] max-[359px]:sr-only">Habeas</span>
+      <span translate="no" className="font-brand text-[1.45rem] leading-none font-semibold tracking-[-0.025em] max-[359px]:sr-only">Habeas</span>
     </Link>
   );
 }
@@ -85,7 +84,7 @@ export function SiteFooter({ t }: { t: Dict }) {
       <p className="mt-12 max-w-[16ch] text-[clamp(2.4rem,7.5vw,5.2rem)] leading-[1] font-extrabold tracking-[-0.04em]">{t.footer.motto.replace(/^Habeas\.\s*/, "")}</p>
       <div className="mt-10 flex flex-wrap items-end justify-between gap-6 border-t border-rule pt-6">
         <div>
-          <p className="flex items-center gap-2.5 text-lg font-extrabold tracking-tight">
+          <p className="flex items-center gap-2.5 font-brand text-[1.35rem] font-semibold tracking-[-0.025em]">
             <Mark className="h-6 w-auto" />
             Habeas
           </p>

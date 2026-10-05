@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { IBM_Plex_Mono, Kalam, Public_Sans } from "next/font/google";
+import { Fraunces, IBM_Plex_Mono, Kalam, Public_Sans } from "next/font/google";
 import { SiteFooter, SiteHeader } from "@/components/SiteFrame";
 import { SmoothScroll } from "@/components/SmoothScroll";
 import { LangProvider } from "@/i18n/client";
@@ -16,6 +16,14 @@ const plexMono = IBM_Plex_Mono({
   variable: "--font-plex-mono",
   subsets: ["latin"],
   weight: ["400", "500"],
+});
+
+// Editorial serif, only for the Habeas wordmark.
+const fraunces = Fraunces({
+  variable: "--font-fraunces",
+  subsets: ["latin"],
+  weight: ["600"],
+  style: ["normal"],
 });
 
 // Ballpoint handwriting, only for notes written in the margin of a form.
@@ -59,7 +67,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
     // others) add attributes to <html> and <body> before React loads. This
     // only silences those two elements, one level deep; mismatches inside our
     // own components still surface.
-    <html lang={lang} data-theme={theme} className={`${publicSans.variable} ${plexMono.variable} ${kalam.variable} h-full`} suppressHydrationWarning>
+    <html lang={lang} data-theme={theme} className={`${publicSans.variable} ${plexMono.variable} ${kalam.variable} ${fraunces.variable} h-full`} suppressHydrationWarning>
       <body className="flex min-h-full flex-col" suppressHydrationWarning>
         <LangProvider lang={lang}>
           <SmoothScroll>

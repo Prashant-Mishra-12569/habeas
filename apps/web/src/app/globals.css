@@ -66,6 +66,7 @@
   --font-sans: var(--font-public-sans), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-plex-mono), ui-monospace, monospace;
   --font-hand: var(--font-kalam), "Segoe Print", cursive;
+  --font-brand: var(--font-fraunces), Georgia, serif;
 
   /* 1.25 type scale from a 17px body */
   --text-xs: 0.75rem;
