@@ -125,9 +125,6 @@ The Telegram alerts bot has its own setup (a token from @BotFather): [`apps/aler
 - No real issuer uses it yet. It runs on testnet.
 - Files stay off-chain. Only their fingerprints (SHA-256) are public.
 
-## Related work
-
-[MintGate](https://github.com/SURUJ404/stellarcontracts) also puts a contract in charge of a token's admin powers, with roles, mint limits and a freeze before seizing. It controls the issuer's own staff; it has no holder notice, answer, reviewer or default unfreeze. Habeas is about the holder's side.
 
 ## License
 
