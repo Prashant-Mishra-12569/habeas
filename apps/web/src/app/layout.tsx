@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { IBM_Plex_Mono, Kalam, Public_Sans } from "next/font/google";
 import { SiteFooter, SiteHeader } from "@/components/SiteFrame";
+import { SmoothScroll } from "@/components/SmoothScroll";
 import { LangProvider } from "@/i18n/client";
 import { getDict, getTheme } from "@/i18n/server";
 import { REPO_URL, SITE_URL, pageMeta } from "@/lib/site";
@@ -61,9 +62,11 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
     <html lang={lang} data-theme={theme} className={`${publicSans.variable} ${plexMono.variable} ${kalam.variable} h-full`} suppressHydrationWarning>
       <body className="flex min-h-full flex-col" suppressHydrationWarning>
         <LangProvider lang={lang}>
-          <SiteHeader t={t} theme={theme} />
-          <div className="flex-1">{children}</div>
-          <SiteFooter t={t} />
+          <SmoothScroll>
+            <SiteHeader t={t} theme={theme} />
+            <div className="flex-1">{children}</div>
+            <SiteFooter t={t} />
+          </SmoothScroll>
         </LangProvider>
       </body>
     </html>

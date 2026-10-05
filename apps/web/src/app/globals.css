@@ -141,6 +141,16 @@ a {
   color: var(--ink);
 }
 
+/* Paper: soft desk-lamp light from the top right, tinted like the canary copy. */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+  background: radial-gradient(56rem 34rem at 82% -14%, rgb(241 232 184 / 0.55), transparent 70%);
+}
+
 /* Carbon only: warm lamp light falling across the sheet from the top
    right, like the light on a desk. Fixed, static, behind everything. */
 :root[data-theme="carbon"] body::after {

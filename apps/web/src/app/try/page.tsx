@@ -1,3 +1,4 @@
+import { PageHeader } from "@/components/PageHeader";
 import type { Metadata } from "next";
 import { pageMeta } from "@/lib/site";
 import { TryLive } from "@/components/TryLive";
@@ -11,10 +12,9 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function TryPage() {
   const { t } = await getDict();
   return (
-    <main className="mx-auto w-full max-w-3xl px-4 pt-8 sm:px-8 sm:pt-14">
-      <h1 className="text-[clamp(2.1rem,8vw,3.24rem)]">{t.tryIt.title}</h1>
-      <p className="mt-4 max-w-[60ch] sm:text-lg">{t.tryIt.lead}</p>
-      <div className="mt-8 sm:mt-10">
+    <main className="mx-auto w-full max-w-5xl px-4 pt-10 sm:px-8 sm:pt-16">
+      <PageHeader title={t.tryIt.title} lead={t.tryIt.lead} note={t.notes.try} />
+      <div className="mt-10 sm:mt-14">
         <TryLive />
       </div>
     </main>

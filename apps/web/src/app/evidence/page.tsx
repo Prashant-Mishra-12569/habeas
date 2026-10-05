@@ -1,3 +1,4 @@
+import { PageHeader } from "@/components/PageHeader";
 import type { Metadata } from "next";
 import { pageMeta } from "@/lib/site";
 import deployment from "@/config/testnet.json";
@@ -160,9 +161,8 @@ export default async function EvidencePage() {
   ];
 
   return (
-    <main className="mx-auto w-full max-w-6xl px-4 pt-8 sm:px-8 sm:pt-14">
-      <h1 className="text-[clamp(2.25rem,7vw,3.25rem)]">{e.title}</h1>
-      <p className="mt-3 max-w-[64ch] text-muted">{e.lead}</p>
+    <main className="mx-auto w-full max-w-6xl px-4 pt-10 sm:px-8 sm:pt-16">
+      <PageHeader title={e.title} lead={e.lead} note={t.notes.evidence} />
       <div className="mt-8 sm:mt-10">
         <EvidenceBoard panels={panels} />
       </div>

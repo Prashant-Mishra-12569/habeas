@@ -8,6 +8,10 @@ import { Sources } from "@/components/Sources";
 import { Suspense } from "react";
 import Link from "next/link";
 import { Tally, type TallyData } from "@/components/Tally";
+import { HeroStage } from "@/components/HeroStage";
+import { ScrollWords } from "@/components/ScrollWords";
+import { ThreeCopies } from "@/components/ThreeCopies";
+import { formatDay, formatTokens } from "@/lib/format";
 import { checkAsset } from "@/lib/asset-check";
 import { EXAMPLES, checkHref } from "@/lib/examples";
 import { CASE_ENDINGS, CONTRACT_TESTS } from "@/lib/proof";
@@ -163,7 +167,9 @@ export default async function Home() {
           </div>
         </div>
         <figure>
-          {event.ok ? <EventForm e={event.data} fan /> : <ReadErrorNotice what="the mainnet take back" message={event.message} />}
+          <HeroStage>
+            {event.ok ? <EventForm e={event.data} fan /> : <ReadErrorNotice what="the mainnet take back" message={event.message} />}
+          </HeroStage>
           <figcaption className="mt-1 max-w-[52ch] text-sm text-muted">
             {t.event.caption}
             <Sources t={t} />
@@ -176,6 +182,26 @@ export default async function Home() {
         <Suspense fallback={<p className="text-muted">{t.tally.sheetSub}…</p>}>
           <TallySection />
         </Suspense>
+      </Section>
+
+      {/* The turn from problem to solution, one word at a time. */}
+      <section aria-label={t.copies.title} className="mx-auto w-full max-w-6xl px-4 pt-24 sm:px-8 sm:pt-36">
+        <ScrollWords text={t.copies.statement} className="max-w-[24ch] text-[clamp(2rem,6.4vw,4.25rem)] leading-[1.08] font-extrabold tracking-[-0.03em]" />
+      </section>
+
+      {/* The solution as a picture: one case, three identical copies. */}
+      <Section id="copies" title={t.copies.title} lead={t.copies.lead}>
+        {story.ok ? (
+          <ThreeCopies
+            facts={{
+              caseId: story.data.id,
+              reason: t.words.reason[story.data.reason],
+              amount: `${formatTokens(story.data.amount, lang)} ${asset}`,
+              answerBy: formatDay(story.data.answerBy, lang),
+              status: t.words.status[story.data.status],
+            }}
+          />
+        ) : null}
       </Section>
 
       {/* The same take back, as two copies of one form. */}

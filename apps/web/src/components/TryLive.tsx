@@ -1,6 +1,8 @@
 "use client";
 
 import Link from "next/link";
+import { motion } from "motion/react";
+import { useReduceMotion } from "@/lib/use-reduce-motion";
 import { useEffect, useState } from "react";
 import { WalletError } from "@/lib/freighter";
 import { formatTokens, shortAddress, shortHash, txUrl } from "@/lib/format";
@@ -47,6 +49,7 @@ function TxLink({ hash, label }: { hash: string; label: string }) {
 export function TryLive() {
   const t = useT();
   const L = t.live;
+  const reduce = useReduceMotion();
   const lang = useLang();
   const [signer, setSigner] = useState<Signer | null>(null);
   const [acct, setAcct] = useState<Account | null>(null);
@@ -175,17 +178,40 @@ export function TryLive() {
   if (!signer) {
     return (
       <div>
-        <h2 className="text-xl">{L.choose}</h2>
-        <div className="mt-5 grid gap-4 sm:grid-cols-2">
-          <div className="flex flex-col rounded-[2px] border border-rule bg-sheet p-5">
-            <h3 className="text-lg">{L.noWallet}</h3>
+        {/* What's about to happen: the five steps as one route. */}
+        <ol className="relative grid gap-5 sm:grid-cols-5 sm:gap-3">
+          <span aria-hidden className="perforation absolute top-[1.1rem] right-[10%] left-[10%] hidden sm:block" />
+          <span aria-hidden className="absolute top-2 bottom-2 left-[1.1rem] w-px bg-rule sm:hidden" />
+          {L.steps.map(([title], i) => (
+            <motion.li
+              key={title}
+              className="relative flex items-center gap-4 sm:flex-col sm:items-center sm:gap-3 sm:text-center"
+              initial={reduce ? false : { opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={reduce ? { duration: 0 } : { duration: 0.45, delay: 0.25 + i * 0.09, ease: [0.22, 1, 0.36, 1] }}
+            >
+              <span className="relative z-10 flex h-9 w-9 shrink-0 items-center justify-center rounded-full border-2 border-pen bg-paper font-mono text-sm text-pen">
+                {i + 1}
+              </span>
+              <span className="text-sm leading-snug font-medium sm:max-w-[12ch]">{title}</span>
+            </motion.li>
+          ))}
+        </ol>
+
+        <h2 className="mt-14 text-2xl sm:mt-16">{L.choose}</h2>
+        <div className="mt-6 grid gap-5 sm:grid-cols-2">
+          <div className="relative flex flex-col rounded-[2px] border-2 border-pen bg-sheet p-6 shadow-[0_18px_40px_-24px_rgb(0_0_0/0.35)]">
+            <p aria-hidden className="hand absolute -top-4 right-4 -rotate-3 bg-paper px-2 text-xl">
+              {t.notes.tryPhones}
+            </p>
+            <h3 className="text-xl">{L.noWallet}</h3>
             <p className="mt-1 flex-1 text-sm text-muted">{L.noWalletDesc}</p>
             <Button className="mt-4 self-start" busy={busy !== null} onClick={startWith("temp")}>
               {busy === L.settingUp ? busy : L.noWalletStart}
             </Button>
           </div>
-          <div className="flex flex-col rounded-[2px] border border-rule bg-sheet p-5">
-            <h3 className="text-lg">{L.withFreighter}</h3>
+          <div className="flex flex-col rounded-[2px] border border-rule bg-sheet p-6">
+            <h3 className="text-xl">{L.withFreighter}</h3>
             <p className="mt-1 flex-1 text-sm text-muted">{L.withFreighterDesc}</p>
             <p className="mt-2 hidden rounded-[2px] bg-canary px-3 py-2 text-xs pointer-coarse:block">{t.tryIt.wallet.mobileNote}</p>
             <Button variant="secondary" className="mt-4 self-start" busy={busy !== null} onClick={startWith("freighter")}>

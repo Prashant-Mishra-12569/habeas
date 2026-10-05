@@ -42,7 +42,8 @@ export function SiteHeader({ t, theme }: { t: Dict; theme: Theme }) {
     { href: "/evidence", label: t.nav.evidence },
   ];
   return (
-    <header className="mx-auto w-full max-w-6xl px-4 pt-5 sm:px-8">
+    <div className="sticky top-0 z-40 border-b border-transparent bg-[color-mix(in_oklab,var(--paper)_80%,transparent)] backdrop-blur-md backdrop-saturate-150">
+    <header className="mx-auto w-full max-w-6xl px-4 pt-3 pb-2 sm:px-8 sm:pt-4">
       <div className="flex items-center justify-between gap-3">
         <div className="flex min-w-0 items-center gap-8">
           <Wordmark label={t.nav.home} />
@@ -72,6 +73,7 @@ export function SiteHeader({ t, theme }: { t: Dict; theme: Theme }) {
         </ul>
       </nav>
     </header>
+    </div>
   );
 }
 
@@ -79,11 +81,12 @@ export function SiteFooter({ t }: { t: Dict }) {
   return (
     <footer className="mx-auto mt-24 w-full max-w-6xl px-4 pb-10 sm:px-8">
       <div className="perforation" aria-hidden />
-      <div className="mt-8 flex flex-wrap items-end justify-between gap-6">
+      <p className="mt-12 max-w-[16ch] text-[clamp(2.4rem,7.5vw,5.2rem)] leading-[1] font-extrabold tracking-[-0.04em]">{t.footer.motto.replace(/^Habeas\.\s*/, "")}</p>
+      <div className="mt-10 flex flex-wrap items-end justify-between gap-6 border-t border-rule pt-6">
         <div>
           <p className="flex items-center gap-2.5 text-lg font-extrabold tracking-tight">
             <Mark className="h-6 w-auto" />
-            {t.footer.motto}
+            Habeas
           </p>
           <p className="mt-1 max-w-[60ch] text-sm text-muted">{t.footer.built}</p>
         </div>

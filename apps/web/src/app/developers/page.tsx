@@ -1,3 +1,4 @@
+import { PageHeader } from "@/components/PageHeader";
 import type { Metadata } from "next";
 import { pageMeta } from "@/lib/site";
 import { ReadErrorNotice } from "@/components/ReadErrorNotice";
@@ -43,10 +44,11 @@ export default async function DevelopersPage() {
   );
 
   return (
-    <main className="mx-auto w-full max-w-4xl px-4 pt-8 sm:px-8 sm:pt-14">
-      <h1 className="text-3xl sm:text-4xl">{d.title}</h1>
-      <p className="mt-3 max-w-[64ch]">{d.lead}</p>
+    <main className="mx-auto w-full max-w-6xl px-4 pt-10 sm:px-8 sm:pt-16">
+      <PageHeader title={d.title} lead={d.lead} note={t.notes.developers} />
 
+      <div className="grid gap-x-12 lg:grid-cols-2">
+        <div className="min-w-0">
       <Block title={d.requestTitle}>
         <dl>
           <Row label={d.rows.endpoint}>
@@ -73,6 +75,21 @@ export default async function DevelopersPage() {
       </Block>
       <p className="mt-3 max-w-[64ch] text-sm text-muted">{d.noPayment}</p>
 
+      <Block title={d.tryTitle} lead={d.tryLead}>
+        <Code label={d.tryTitle}>
+          {`git clone ${REPO}
+cd habeas/examples && npm install
+AGENT_SECRET=S... node agent-check.ts USBDCP-GDABKPZMAIULVJVJJQM7L3VIG5A2IS5V4KP2P3YNP6YWRUBJNBGFGG6E`}
+        </Code>
+      </Block>
+      <p className="mt-3 text-sm">
+        <a className="inline-flex min-h-11 items-center text-pen underline" href={`${REPO}/blob/main/examples/agent-check.ts`}>
+          {d.tryScript}
+        </a>
+      </p>
+
+        </div>
+        <div className="min-w-0">
       <Block title={d.answerTitle} lead={d.answerLead}>
         <dl>
           {VERDICTS.map((v) => (
@@ -105,19 +122,6 @@ export default async function DevelopersPage() {
         </dl>
       </Block>
 
-      <Block title={d.tryTitle} lead={d.tryLead}>
-        <Code label={d.tryTitle}>
-          {`git clone ${REPO}
-cd habeas/examples && npm install
-AGENT_SECRET=S... node agent-check.ts USBDCP-GDABKPZMAIULVJVJJQM7L3VIG5A2IS5V4KP2P3YNP6YWRUBJNBGFGG6E`}
-        </Code>
-      </Block>
-      <p className="mt-3 text-sm">
-        <a className="inline-flex min-h-11 items-center text-pen underline" href={`${REPO}/blob/main/examples/agent-check.ts`}>
-          {d.tryScript}
-        </a>
-      </p>
-
       <Block title={d.paidTitle} lead={d.paidLead}>
         {!paid.ok ? (
           <div className="p-4">
@@ -142,6 +146,8 @@ AGENT_SECRET=S... node agent-check.ts USBDCP-GDABKPZMAIULVJVJJQM7L3VIG5A2IS5V4KP
           </ol>
         )}
       </Block>
+        </div>
+      </div>
     </main>
   );
 }
