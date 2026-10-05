@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { IBM_Plex_Mono, Public_Sans } from "next/font/google";
+import { IBM_Plex_Mono, Kalam, Public_Sans } from "next/font/google";
 import { SiteFooter, SiteHeader } from "@/components/SiteFrame";
 import { LangProvider } from "@/i18n/client";
 import { getDict, getTheme } from "@/i18n/server";
@@ -15,6 +15,13 @@ const plexMono = IBM_Plex_Mono({
   variable: "--font-plex-mono",
   subsets: ["latin"],
   weight: ["400", "500"],
+});
+
+// Ballpoint handwriting, only for notes written in the margin of a form.
+const kalam = Kalam({
+  variable: "--font-kalam",
+  subsets: ["latin", "latin-ext"],
+  weight: ["400", "700"],
 });
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -41,7 +48,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export async function generateViewport(): Promise<Viewport> {
   const theme = await getTheme();
-  return { themeColor: theme === "carbon" ? "#0f1120" : "#f7f8f4", colorScheme: theme === "carbon" ? "dark" : "light" };
+  return { themeColor: theme === "carbon" ? "#0b0d1b" : "#f7f8f4", colorScheme: theme === "carbon" ? "dark" : "light" };
 }
 
 export default async function RootLayout({ children }: LayoutProps<"/">) {
@@ -51,7 +58,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
     // others) add attributes to <html> and <body> before React loads. This
     // only silences those two elements, one level deep; mismatches inside our
     // own components still surface.
-    <html lang={lang} data-theme={theme} className={`${publicSans.variable} ${plexMono.variable} h-full`} suppressHydrationWarning>
+    <html lang={lang} data-theme={theme} className={`${publicSans.variable} ${plexMono.variable} ${kalam.variable} h-full`} suppressHydrationWarning>
       <body className="flex min-h-full flex-col" suppressHydrationWarning>
         <LangProvider lang={lang}>
           <SiteHeader t={t} theme={theme} />

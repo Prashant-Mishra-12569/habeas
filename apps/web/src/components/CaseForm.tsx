@@ -2,6 +2,7 @@
 
 import { motion } from "motion/react";
 import { instant, useReduceMotion } from "@/lib/use-reduce-motion";
+import { useNarrow } from "@/lib/use-narrow";
 import type { ReactNode } from "react";
 import type { Status } from "@/lib/types";
 import { useT } from "@/i18n/client";
@@ -31,6 +32,7 @@ export function CaseForm({
   stages,
   statusNote,
   outcomeLine,
+  fan = false,
 }: {
   title: ReactNode;
   subtitle?: ReactNode;
@@ -40,26 +42,42 @@ export function CaseForm({
   /** Replaces the status block, e.g. for the mainnet example. */
   statusNote?: ReactNode;
   outcomeLine?: string | null;
+  /** Fan the copies out like a fresh form set (the hero). */
+  fan?: boolean;
 }) {
   const t = useT();
   const reduce = useReduceMotion();
+  const narrow = useNarrow();
   // The copies slide out from under the form again whenever the status changes.
-  const slide = (offset: number, delay: number) =>
-    reduce
-      ? { initial: false as const, animate: { x: offset, y: offset }, transition: instant }
+  // Fanned (hero): they swing out from the bottom-left corner like a fresh set.
+  const slide = (step: 1 | 2, delay: number) => {
+    const to = fan ? { x: step * (narrow ? 6 : 12), y: step * (narrow ? 5 : 6), rotate: step * (narrow ? 0.9 : 1.8) } : { x: step * 7, y: step * 7, rotate: 0 };
+    return reduce
+      ? { initial: false as const, animate: to, transition: instant }
       : {
-          initial: { x: 0, y: 0 },
-          animate: { x: offset, y: offset },
-          transition: { duration: 0.45, delay, ease: EASE },
+          initial: { x: 0, y: 0, rotate: 0 },
+          animate: to,
+          transition: { duration: fan ? 0.9 : 0.45, delay: fan ? 0.15 + delay * 2 : delay, ease: EASE },
         };
+  };
   const closed = status === "Cleared" || status === "TakenBack";
 
   return (
-    <div className="relative mr-4 mb-4">
-      <motion.div key={`pink-${status}-${reduce}`} aria-hidden className="absolute inset-0 rounded-[2px] bg-pink" {...slide(14, 0.08)} />
-      <motion.div key={`canary-${status}-${reduce}`} aria-hidden className="absolute inset-0 rounded-[2px] bg-canary" {...slide(7, 0)} />
+    <div className={`relative ${fan ? "mr-5 mb-6 sm:mr-8 sm:mb-8" : "mr-4 mb-4"}`}>
+      <motion.div
+        key={`pink-${status}-${reduce}`}
+        aria-hidden
+        className="absolute inset-0 origin-bottom-left rounded-[2px] bg-pink shadow-[0_1px_0_rgb(0_0_0/0.04)]"
+        {...slide(2, 0.08)}
+      />
+      <motion.div
+        key={`canary-${status}-${reduce}`}
+        aria-hidden
+        className="absolute inset-0 origin-bottom-left rounded-[2px] bg-canary shadow-[0_1px_0_rgb(0_0_0/0.04)]"
+        {...slide(1, 0)}
+      />
 
-      <section className="@container relative rounded-[2px] border border-rule bg-sheet">
+      <section className="@container relative rounded-[2px] border border-rule bg-sheet shadow-[0_1px_2px_rgb(31_34_41/0.06),0_12px_32px_-12px_rgb(31_34_41/0.18)] carbon:shadow-[0_16px_40px_-16px_rgb(0_0_0/0.7)]">
         <div className="perforation mx-4 mt-3" aria-hidden />
         <header className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 px-4 pt-3 pb-3 @sm:px-5">
           <h2 className="heading-sm text-lg">{title}</h2>

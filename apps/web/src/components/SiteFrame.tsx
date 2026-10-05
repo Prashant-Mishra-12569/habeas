@@ -29,7 +29,8 @@ export function Wordmark({ label }: { label: string }) {
     <Link href="/" aria-label={label} className="inline-flex min-h-11 shrink-0 items-center gap-2 text-xl font-extrabold tracking-[-0.03em]">
       <Mark />
       {/* The copies are shadows, so the link reads "Habeas" once. */}
-      <span className="[text-shadow:1px_1px_0_var(--canary),2px_2px_0_var(--pink)]">Habeas</span>
+      {/* On the narrowest phones only the mark shows; the link keeps its name. */}
+      <span className="[text-shadow:1px_1px_0_var(--canary),2px_2px_0_var(--pink)] max-[359px]:sr-only">Habeas</span>
     </Link>
   );
 }

@@ -24,23 +24,27 @@
   --cleared: #2f6e4e;
   --taken: #9e2b33;
   --grain-opacity: 0.035;
+  --glow: none;
   color-scheme: light;
 }
 
 :root[data-theme="carbon"] {
-  --paper: #0f1120;
-  --sheet: #181b2e;
-  --ink: #e8eaf4;
-  --muted: #a4a9c0;
-  --rule: #2b2f47;
-  --field: #80869f;
-  --pen: #afbcff;
-  --pen-ink: #0f1120;
-  --canary: #2e2812;
-  --pink: #331f29;
+  /* The carbon sheet itself: deep blue-black wax, transfer text in pale
+     periwinkle. The copies keep their hue so the set still reads as a set. */
+  --paper: #0b0d1b;
+  --sheet: #131731;
+  --ink: #eceef8;
+  --muted: #a3a9c6;
+  --rule: #272c4f;
+  --field: #8088ab;
+  --pen: #b6c2ff;
+  --pen-ink: #0b0d1b;
+  --canary: #6e5716;
+  --pink: #652a41;
   --cleared: #8fd6b0;
   --taken: #f4a3aa;
-  --grain-opacity: 0.06;
+  --grain-opacity: 0.09;
+  --glow: 0 0 14px rgb(182 194 255 / 0.28);
   color-scheme: dark;
 }
 
@@ -60,6 +64,7 @@
 
   --font-sans: var(--font-public-sans), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-plex-mono), ui-monospace, monospace;
+  --font-hand: var(--font-kalam), "Segoe Print", cursive;
 
   /* 1.25 type scale from a 17px body */
   --text-xs: 0.75rem;
@@ -133,6 +138,47 @@ a {
 ::selection {
   background: var(--canary);
   color: var(--ink);
+}
+
+/* Carbon only: the faint waxy sheen of a carbon sheet under a desk lamp,
+   and a diagonal transfer texture. Fixed, static, behind everything. */
+:root[data-theme="carbon"] body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+  background:
+    radial-gradient(70rem 40rem at 18% -10%, rgb(120 136 255 / 0.12), transparent 70%),
+    radial-gradient(50rem 30rem at 100% 110%, rgb(235 207 211 / 0.05), transparent 70%),
+    repeating-linear-gradient(135deg, rgb(255 255 255 / 0.018) 0 1px, transparent 1px 7px);
+}
+
+/* Ink transfers with a soft halo on carbon; nothing on paper. */
+:root[data-theme="carbon"] .text-pen,
+:root[data-theme="carbon"] .hand {
+  text-shadow: var(--glow);
+}
+
+:root[data-theme="carbon"] h1 {
+  text-shadow: 0 0 28px rgb(182 194 255 / 0.14);
+}
+
+/* Handwritten notes in the margin of a form. */
+.hand {
+  font-family: var(--font-hand);
+  color: var(--pen);
+  line-height: 1.1;
+  letter-spacing: 0;
+}
+
+/* A bad carbon copy: the text came through doubled and faint. */
+.smudge {
+  color: color-mix(in oklab, var(--ink) 50%, transparent);
+  text-shadow:
+    1.2px 0.8px 0 color-mix(in oklab, var(--ink) 22%, transparent),
+    -0.6px 0 1.6px color-mix(in oklab, var(--ink) 25%, transparent);
+  filter: blur(0.35px);
 }
 
 /* Perforated tear line, like the edge between two copies of a form. */
