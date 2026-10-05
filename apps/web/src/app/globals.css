@@ -84,6 +84,14 @@
 html {
   background: var(--paper);
   color: var(--ink);
+  /* Anchors and focused fields land below the sticky header. */
+  scroll-padding-top: 6.5rem;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: color-mix(in oklab, var(--pen) 18%, transparent);
+}
+
+[id] {
+  scroll-margin-top: 6.5rem;
 }
 
 body {

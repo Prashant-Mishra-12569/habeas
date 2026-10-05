@@ -26,7 +26,7 @@ const en = {
     checkDescription: (code: string, freeze: boolean, clawback: boolean) =>
       `Can the issuer freeze ${code}? ${freeze ? "Yes" : "No"}. Can it be taken back (clawback)? ${clawback ? "Yes" : "No"}. See its full history and a verdict, read live from Stellar.`,
   },
-  nav: { check: "Check a token", try: "Try it live", evidence: "Evidence", code: "Code", home: "Habeas home" },
+  nav: { check: "Check a token", try: "Try it live", evidence: "Evidence", code: "Code", home: "Habeas home", skip: "Skip to content" },
   prefs: { language: "Language", theme: "Theme", paper: "Paper", carbon: "Carbon", switchTo: (name: string) => `Switch to ${name}` },
   words: {
     reason: {
@@ -555,7 +555,7 @@ const es: Dict = {
     checkDescription: (code: string, freeze: boolean, clawback: boolean) =>
       `¿Puede el emisor congelar ${code}? ${freeze ? "Sí" : "No"}. ¿Se puede recuperar (clawback)? ${clawback ? "Sí" : "No"}. Mira su historial completo y un veredicto, leídos en vivo de Stellar.`,
   },
-  nav: { check: "Revisar un token", try: "Pruébalo en vivo", evidence: "Evidencia", code: "Código", home: "Inicio de Habeas" },
+  nav: { check: "Revisar un token", try: "Pruébalo en vivo", evidence: "Evidencia", code: "Código", home: "Inicio de Habeas", skip: "Saltar al contenido" },
   prefs: { language: "Idioma", theme: "Tema", paper: "Papel", carbon: "Carbón", switchTo: (name: string) => `Cambiar a ${name}` },
   words: {
     reason: {

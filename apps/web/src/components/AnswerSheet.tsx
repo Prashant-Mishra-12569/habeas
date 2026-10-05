@@ -174,24 +174,58 @@ export function AnswerSheet({ r }: { r: AssetCheck }) {
     },
   ];
 
+  // Four facts a visitor wants first, before the full sheet.
+  const facts: { label: string; value: string; tone?: string }[] = [
+    { label: t.check.q.freeze, value: r.flags.revocable ? t.words.yes : t.words.no, tone: r.flags.revocable ? "text-ink" : "text-cleared" },
+    { label: t.check.q.takeBack, value: r.flags.clawbackEnabled ? t.words.yes : t.words.no, tone: r.flags.clawbackEnabled ? "text-ink" : "text-cleared" },
+    { label: t.check.q.hasTaken, value: takeBacks.length ? `${formatCount(takeBacks.length, lang)}${partial ? "+" : ""}` : t.words.no, tone: takeBacks.length ? "text-taken" : "text-ink" },
+    { label: t.check.q.reason, value: h ? t.words.yes : r.reasons.length ? formatCount(r.reasons.length, lang) : t.words.no, tone: h ? "text-cleared" : r.reasons.length ? "text-ink" : "text-taken" },
+  ];
+
   return (
-    <article>
-      <header className="flex flex-wrap items-baseline gap-x-4 gap-y-2">
-        <h1 className="font-mono text-3xl font-medium tracking-tight sm:text-4xl">{r.code}</h1>
-        <p className="text-muted">
+    <article className="grid gap-10 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:gap-14">
+      {/* Summary: sticks beside the sheet on desktop. */}
+      <div className="lg:sticky lg:top-28 lg:self-start">
+        <p className="text-sm text-muted">
           {t.check.issuedBy}{" "}
           <Ext href={accountUrl(r.issuer, ex)}>{r.homeDomain ?? shortAddress(r.issuer, 6)}</Ext>
+          <span className="ml-2 rounded-[2px] border border-rule px-2 py-0.5 text-xs">{r.network === "mainnet" ? t.check.mainnet : t.check.testnet}</span>
         </p>
-        <span className="rounded-[2px] border border-rule px-2 py-0.5 text-xs">{r.network === "mainnet" ? t.check.mainnet : t.check.testnet}</span>
-      </header>
-      {r.holders !== null && <p className="mt-1 text-sm text-muted">{t.check.holders(formatCount(r.holders, lang))}</p>}
+        <h1 translate="no" className="mt-2 font-mono text-[clamp(2.75rem,10vw,4.75rem)] leading-none font-medium tracking-[-0.04em] break-all">
+          {r.code}
+        </h1>
+        {r.holders !== null && <p className="mt-2 text-sm text-muted">{t.check.holders(formatCount(r.holders, lang))}</p>}
 
-      <div className={`mt-6 border-l-[6px] pl-4 sm:mt-8 sm:pl-5 ${VERDICT_BAR[verdictKey]}`}>
-        <p className="text-[1.6rem] font-extrabold leading-tight tracking-tight sm:text-3xl">{t.check.verdict[verdictKey as keyof typeof t.check.verdict]}</p>
-        <p className="mt-2 max-w-[60ch]">{t.check.verdictLine[verdictKey as keyof typeof t.check.verdictLine]}</p>
+        <motion.div
+          key={`verdict-${reduce}`}
+          initial={reduce ? false : { opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={reduce ? instant : { duration: 0.5, delay: 0.15, ease: EASE }}
+          className={`mt-7 border-l-[6px] pl-4 sm:pl-5 ${VERDICT_BAR[verdictKey]}`}
+        >
+          <p className="text-[clamp(1.6rem,4.5vw,2.25rem)] leading-[1.08] font-extrabold tracking-[-0.025em]">
+            {t.check.verdict[verdictKey as keyof typeof t.check.verdict]}
+          </p>
+          <p className="mt-2 max-w-[52ch] text-muted">{t.check.verdictLine[verdictKey as keyof typeof t.check.verdictLine]}</p>
+        </motion.div>
+
+        <dl className="mt-8 grid grid-cols-2 border-t-2 border-ink">
+          {facts.map((f, i) => (
+            <div key={f.label} className={`flex flex-col-reverse justify-end border-b border-rule py-4 pr-3 ${i % 2 ? "border-l pl-4" : ""}`}>
+              <dt className="mt-1 text-xs leading-snug text-muted">{f.label}</dt>
+              <dd className={`text-2xl font-extrabold tracking-tight tabular ${f.tone ?? ""}`}>{f.value}</dd>
+            </div>
+          ))}
+        </dl>
+      <p className="mt-5 max-w-[60ch] text-xs text-muted">
+        {t.check.how(formatCount(r.history.scanned, lang), r.history.complete, r.history.oldestScanned ? formatDay(r.history.oldestScanned, lang) : "")}{" "}
+        {t.check.checkedAt} {new Date(r.checkedAt).toISOString().slice(11, 16)} UTC.
+      </p>
       </div>
 
-      <div className="relative mt-8 mr-4 mb-4 sm:mt-10">
+      {/* The full answer sheet. */}
+      <div className="min-w-0">
+      <div className="relative mr-4 mb-4">
         <div aria-hidden className="absolute inset-0 translate-x-[14px] translate-y-[14px] rounded-[2px] bg-pink" />
         <div aria-hidden className="absolute inset-0 translate-x-[7px] translate-y-[7px] rounded-[2px] bg-canary" />
         <dl className="relative rounded-[2px] border border-rule bg-sheet">
@@ -214,10 +248,7 @@ export function AnswerSheet({ r }: { r: AssetCheck }) {
         </dl>
       </div>
 
-      <p className="mt-6 max-w-[72ch] text-sm text-muted">
-        {t.check.how(formatCount(r.history.scanned, lang), r.history.complete, r.history.oldestScanned ? formatDay(r.history.oldestScanned, lang) : "")}{" "}
-        {t.check.checkedAt} {new Date(r.checkedAt).toISOString().slice(11, 16)} UTC.
-      </p>
+      </div>
     </article>
   );
 }

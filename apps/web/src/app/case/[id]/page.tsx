@@ -59,7 +59,7 @@ export default async function CasePage({ params }: PageProps<"/case/[id]">) {
   const { c, timeline, now, error } = await load(id);
 
   return (
-    <main className="mx-auto w-full max-w-5xl px-4 pt-8 sm:px-8 sm:pt-14">
+    <main className="mx-auto w-full max-w-6xl px-4 pt-10 sm:px-8 sm:pt-16">
       {c ? (
         <div className="grid gap-10 lg:grid-cols-[1.25fr_1fr] lg:gap-14">
           <div>

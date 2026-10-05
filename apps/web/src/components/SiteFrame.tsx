@@ -30,7 +30,7 @@ export function Wordmark({ label }: { label: string }) {
       <Mark />
       {/* The copies are shadows, so the link reads "Habeas" once. */}
       {/* On the narrowest phones only the mark shows; the link keeps its name. */}
-      <span className="[text-shadow:1px_1px_0_var(--canary),2px_2px_0_var(--pink)] max-[359px]:sr-only">Habeas</span>
+      <span translate="no" className="[text-shadow:1px_1px_0_var(--canary),2px_2px_0_var(--pink)] max-[359px]:sr-only">Habeas</span>
     </Link>
   );
 }

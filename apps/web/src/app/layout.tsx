@@ -63,8 +63,16 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
       <body className="flex min-h-full flex-col" suppressHydrationWarning>
         <LangProvider lang={lang}>
           <SmoothScroll>
+            <a
+              href="#main"
+              className="sr-only z-50 rounded-[2px] bg-ink px-4 py-3 font-semibold text-paper focus:not-sr-only focus:fixed focus:top-3 focus:left-3"
+            >
+              {t.nav.skip}
+            </a>
             <SiteHeader t={t} theme={theme} />
-            <div className="flex-1">{children}</div>
+            <div id="main" tabIndex={-1} className="flex-1 outline-none">
+              {children}
+            </div>
             <SiteFooter t={t} />
           </SmoothScroll>
         </LangProvider>

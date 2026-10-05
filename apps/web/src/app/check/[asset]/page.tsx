@@ -46,10 +46,10 @@ export default async function CheckResultPage({ params, searchParams }: PageProp
   }
 
   return (
-    <main className="mx-auto w-full max-w-4xl px-4 pt-8 sm:px-8 sm:pt-14">
+    <main className="mx-auto w-full max-w-6xl px-4 pt-10 sm:px-8 sm:pt-16">
       {result ? <AnswerSheet r={result} /> : <ReadErrorNotice what={raw} message={error} />}
-      <section className="mt-20">
-        <h2 className="text-xl">{t.check.another}</h2>
+      <section className="mt-24 max-w-4xl">
+        <h2 className="text-2xl">{t.check.another}</h2>
         <div className="mt-6">
           <CheckForm initialNetwork={network} />
         </div>
