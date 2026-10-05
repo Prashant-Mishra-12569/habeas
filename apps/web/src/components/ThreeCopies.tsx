@@ -92,7 +92,13 @@ export function ThreeCopies({ facts }: { facts: CopyFacts }) {
 
       {/* Phones and tablets: the three copies in a row you can swipe. */}
       <div className="lg:hidden">
-        <div className="-mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-4 [scrollbar-width:none] sm:-mx-8 sm:px-8">
+        {/* Focusable so keyboard users can scroll it too (axe: scrollable-region-focusable). */}
+        <div
+          role="region"
+          aria-label={c.title}
+          tabIndex={0}
+          className="-mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-4 [scrollbar-width:none] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pen sm:-mx-8 sm:px-8"
+        >
           {parties.map((p, i) => (
             <motion.div
               key={p}
