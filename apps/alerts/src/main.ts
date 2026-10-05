@@ -12,7 +12,7 @@ import { createServer } from "node:http";
 import { fileURLToPath } from "node:url";
 import { parseArgs } from "node:util";
 import { StrKey } from "@stellar/stellar-sdk";
-import { Bot, GrammyError } from "grammy";
+import { Bot, GrammyError, type CommandContext, type Context } from "grammy";
 import deployment from "../../../deployments/testnet.json" with { type: "json" };
 import { messagesFor, type Outgoing, type Roles } from "./dispatch.ts";
 import { cursorLedger, eventsSince, type CaseEvent } from "./events.ts";
@@ -143,12 +143,23 @@ function lang(ctx: { from?: { language_code?: string } }): Lang {
 }
 
 if (bot) {
-  bot.command(["start", "help"], (ctx) => ctx.reply(replies[lang(ctx)].help(ASSET, SITE), { link_preview_options: { is_disabled: true } }));
+  // The website links to t.me/<bot>?start=<address>, which arrives here as
+  // "/start <address>": watch that address straight away.
+  bot.command(["start", "help"], async (ctx) => {
+    const payload = ctx.match.trim().toUpperCase();
+    if (payload && isAddress(payload)) return watchAddress(ctx, payload);
+    return ctx.reply(replies[lang(ctx)].help(ASSET, SITE), { link_preview_options: { is_disabled: true } });
+  });
 
   bot.command("watch", async (ctx) => {
     const t = replies[lang(ctx)];
     const address = ctx.match.trim().toUpperCase();
     if (!address) return ctx.reply(t.watchHow);
+    return watchAddress(ctx, address);
+  });
+
+  async function watchAddress(ctx: CommandContext<Context>, address: string) {
+    const t = replies[lang(ctx)];
     if (!isAddress(address)) return ctx.reply(t.notAddress);
     const result = store.watch(ctx.chat.id, address, lang(ctx));
     if (result === "full") return ctx.reply(t.tooMany(MAX_ADDRESSES));
@@ -165,7 +176,7 @@ if (bot) {
       // The watch is saved either way; the active-case line is extra.
     }
     return ctx.reply(lines.join("\n\n"));
-  });
+  }
 
   bot.command("stop", (ctx) => {
     const t = replies[lang(ctx)];

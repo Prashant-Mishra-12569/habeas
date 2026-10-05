@@ -4,6 +4,7 @@ import { CaseActions } from "@/components/CaseActions";
 import { CaseTimeline } from "@/components/CaseTimeline";
 import { CaseView } from "@/components/CaseView";
 import { ReadErrorNotice } from "@/components/ReadErrorNotice";
+import { TelegramAlerts } from "@/components/TelegramAlerts";
 import { contractUrl, formatTokens } from "@/lib/format";
 import { deployment, getCase, type Case } from "@/lib/habeas";
 import { ReadError } from "@/lib/network";
@@ -74,6 +75,7 @@ export default async function CasePage({ params }: PageProps<"/case/[id]">) {
           <div className="space-y-10">
             <CaseActions c={c} now={now} />
             {timeline && <CaseTimeline c={c} timeline={timeline} />}
+            <TelegramAlerts title={t.telegram.title} body={t.telegram.body} button={t.telegram.button} address={c.holder} />
           </div>
         </div>
       ) : (

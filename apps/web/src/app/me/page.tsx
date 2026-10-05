@@ -2,6 +2,7 @@ import { PageHeader } from "@/components/PageHeader";
 import type { Metadata } from "next";
 import { pageMeta } from "@/lib/site";
 import { MyCases } from "@/components/RolePages";
+import { TelegramAlerts } from "@/components/TelegramAlerts";
 import { getDict } from "@/i18n/server";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -17,6 +18,7 @@ export default async function MePage() {
       <div className="mt-10">
         <MyCases />
       </div>
+      <TelegramAlerts className="mt-12" title={t.telegram.title} body={t.telegram.bodyAny} button={t.telegram.button} />
     </main>
   );
 }

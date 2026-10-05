@@ -5,6 +5,7 @@ import markCarbon from "@/assets/habeas-mark-carbon.png";
 import type { Theme } from "@/i18n/server";
 import type { Dict } from "@/i18n/dict";
 import { Prefs } from "./Prefs";
+import { telegramLink } from "@/lib/telegram";
 
 /**
  * The Habeas mark. Decorative next to the name, so it has no alt text of its
@@ -104,6 +105,11 @@ export function SiteFooter({ t }: { t: Dict }) {
               </Link>
             </li>
           ))}
+          <li>
+            <a className="inline-flex min-h-11 items-center underline" href={telegramLink()} target="_blank" rel="noreferrer">
+              {t.telegram.footer}
+            </a>
+          </li>
           <li>
             <a className="inline-flex min-h-11 items-center underline" href="https://github.com/Prashant-Mishra-12569/habeas">
               {t.nav.code}

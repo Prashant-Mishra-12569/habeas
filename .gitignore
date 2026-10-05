@@ -27,3 +27,6 @@ Thumbs.db
 
 # local tooling
 .claude/launch.json
+
+# promo video sources and renders (large files, not part of the app)
+promo/

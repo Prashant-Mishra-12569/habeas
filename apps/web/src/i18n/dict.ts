@@ -525,6 +525,14 @@ const en = {
     retry: "Try again",
     retrying: "Trying again…",
   },
+  telegram: {
+    title: "Alerts on Telegram",
+    body: "Get a message when a case about this address is opened, answered, decided or closed. The bot reads the contract every 20 seconds.",
+    bodyAny: "Get a message when a case about your address is opened, answered, decided or closed. Open the bot and send /watch with your address.",
+    tryBody: "Open the bot before you start, then watch each step of your test case arrive on your phone.",
+    button: "Get alerts on Telegram",
+    footer: "Alerts on Telegram",
+  },
   footer: {
     links: { me: "My cases", issuer: "Open a case (issuer)", review: "Review queue (reviewer)", styleguide: "Styleguide", developers: "For developers" },
     motto: "Habeas. No freeze without notice.",
@@ -1053,6 +1061,14 @@ const es: Dict = {
     body: "No mostramos nada en su lugar, porque solo mostramos datos leídos de Stellar.",
     retry: "Intentar de nuevo",
     retrying: "Intentando de nuevo…",
+  },
+  telegram: {
+    title: "Avisos en Telegram",
+    body: "Recibe un mensaje cuando un caso sobre esta dirección se abre, se responde, se decide o se cierra. El bot lee el contrato cada 20 segundos.",
+    bodyAny: "Recibe un mensaje cuando un caso sobre tu dirección se abre, se responde, se decide o se cierra. Abre el bot y envía /watch con tu dirección.",
+    tryBody: "Abre el bot antes de empezar y mira cómo llega a tu teléfono cada paso de tu caso de prueba.",
+    button: "Recibir avisos en Telegram",
+    footer: "Avisos en Telegram",
   },
   footer: {
     links: { me: "Mis casos", issuer: "Abrir un caso (emisor)", review: "Casos por revisar (revisor)", styleguide: "Guía de estilo", developers: "Para desarrolladores" },

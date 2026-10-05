@@ -15,6 +15,7 @@ import { post } from "@/lib/post";
 import { Button } from "./Button";
 import { CaseTimeline } from "./CaseTimeline";
 import { TickBox } from "./TickBox";
+import { TelegramAlerts } from "./TelegramAlerts";
 
 type Account = { exists: boolean; hasTrustline: boolean; balance: string | null; frozen: boolean; activeCase: number | null };
 type CaseView = { case: Case; timeline: Timeline | null; now: number };
@@ -340,6 +341,8 @@ export function TryLive() {
           </button>
         </p>
       )}
+
+      <TelegramAlerts className="mt-4" title={t.telegram.title} body={t.telegram.tryBody} button={t.telegram.button} address={signer.address} />
 
       <ol className="mt-8 space-y-6">
         {L.steps.map(([title, body], i) => {
