@@ -1,0 +1,27 @@
+name: MCP
+
+on:
+  push:
+    branches: [main]
+    paths: ["apps/mcp/**", "deployments/testnet.json", "docs/SPEC-cases.md", ".github/workflows/mcp.yml"]
+  pull_request:
+    paths: ["apps/mcp/**", "deployments/testnet.json", "docs/SPEC-cases.md", ".github/workflows/mcp.yml"]
+
+defaults:
+  run:
+    working-directory: apps/mcp
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: apps/mcp/package-lock.json
+      - run: npm ci
+      - run: npm run typecheck
+      # Rules tests, plus real testnet reads and an in-memory MCP session.
+      - run: npm test

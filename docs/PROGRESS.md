@@ -13,6 +13,7 @@ Updated after every milestone. Live site: https://habeas-stellar.vercel.app · R
 | 5. Try it live | Done. With or without a wallet (phones use the no-wallet path), both endings, case file and share link. Playwright runs it on testnet. |
 | 6. x402 agent check | Done. `/api/v1/check/[asset]` paid with x402 (0.001 testnet USDC), signed answers, `examples/agent-check.ts`, `/developers`. Paid on testnet by the example and by Playwright. |
 | 7. Telegram alerts | Done. @habeas_alerts_bot runs 24/7 on Railway (volume at `/data`); case 42 sent a message for every step to Prashant's phone. |
+| 8. MCP server | Done. `apps/mcp` merges soroban-mcp-server with Habeas: `npm install`, `npm run typecheck` clean, `npm test` 20/20, package-lock written, `scripts/smoke.ts` 47 checks on testnet, and `opencode run` driving it. |
 
 ## What's left
 
@@ -30,6 +31,19 @@ Updated after every milestone. Live site: https://habeas-stellar.vercel.app · R
 - The USBDCP issuer has now taken tokens back 37 times (latest Oct 3, 2026), not only on Sep 19. The hero still tells the Sep 19 story, which is accurate; we could add "and 36 more since" once we decide on wording.
 - Optional: turn off the Vercel Toolbar in the Vercel project settings. Its loader reads `document.cookie`, which Chrome lists as a performance "issue" in DevTools. The other one comes from Next.js itself (`next-instant-navigation-testing` check). Neither is our code and neither affects visitors.
 - Optional (from the plan): the Stellar dev skill and Raven MCP for Claude Code. Not installed; we've worked from the SDK sources and Stellar's docs directly.
+
+## MCP server for AI agents (Oct 6)
+
+- `apps/mcp`: a Model Context Protocol server, merged from soroban-mcp-server (MIT) and Habeas. Local stdio for your own machine; hosted HTTP (`/mcp`) with read-only tools only.
+- Habeas tools: config, case, cases for an address, plain-language explanation computed from the lifecycle rules, timeline, error decoding, statement limit, file fingerprints, unsigned transactions through the website's own `/api/tx/build`, and the paid x402 check with the signature verified.
+- Four prompts guide a model (explain a case, draft a holder's answer, brief the reviewer, check a token). The model decides nothing and no key passes through it.
+- Fixed on the way from soroban-mcp-server: logs on stdout, `u64`/`i128` results that could not be serialised, integer-width arguments, an invalid placeholder address, a hardcoded RPC key (rotate it), a wrong network-health field.
+- Run on Oct 7: `npm install` (133 packages, 0 vulnerabilities, package-lock written), `npm run typecheck` clean, `npm test` 20/20 — 12 rule tests plus 8 live tests against testnet. `npm ci` from the lock is clean too, so the three commands in `.github/workflows/mcp.yml` all work.
+- Proven end to end by `node apps/mcp/scripts/smoke.ts`, 47 checks. Last run: 44 passed, 0 failed, 3 skipped — A06–A08 need a case that is still open on testnet, and every case was closed. An earlier run, while case 61 was answered, passed 46 of 46; another was started with `AGENT_SECRET`, `MCP_AUTH_TOKEN`, `RPC_URL` and `HABEAS_URL` set to poison values in the shell, all of them ignored. Stdio through a real MCP client (17 tools, 4 prompts, 3 resources, unsigned XDR for open_case, withdraw and decide, refusals for a wrong source and a closed case, byte counting, fingerprints against `Get-FileHash`, error decoding, no secret in any reply), then the hosted HTTP server (healthz, 12 read-only tools, 401/200 on `MCP_AUTH_TOKEN`, 429 on the rate limit, 405/404/400 handling, empty stdout, `get_contract_state` reading the live contract), then `opencode run`, which called `get_habeas_config` and `explain_case` on case 60.
+- New on Oct 7: **`get_contract_state`**, the one tool left over from soroban-mcp-server. It reads the contract's instance entry with SDK 17's `getLedgerEntries` (no SDK 13 accessors) and returns the wasm hash, when the entry was last written, how many ledgers it is still paid for, its instance storage — `ActiveCount`, `CaseCount`, and `Config` with the issuer, reviewer, windows and token — and its spec: all 23 methods with parameters, return types and the contract's own docs. Hosted and local. Three tests cover it (state, a contract that was never deployed, a bad id) and smoke check B12 calls it over HTTP. A bad argument now answers `INVALID_INPUT` with the field name instead of a JSON dump of the schema, for every tool.
+- Fixed while type-checking: an unsafe `readonly` cast in `invoke_contract`, and a test that assumed the first resource entry was text.
+- Fixed in the smoke script itself: it blanks `AGENT_SECRET`, `MCP_AUTH_TOKEN` and the RPC and site URLs before starting a child, so a run means the same thing whatever is set in the shell; a decided case (`Upheld`/`Rejected`) is no longer counted as active, so `withdraw` is only built for a case that is `Open` or `Answered`; the closed case behind A09 and the cases behind the two fingerprint checks are found from the recent records instead of being hard-coded to case 1; every child is killed if the script is interrupted; a hung PowerShell call or a failed spawn fails its check instead of hanging the run; resources and prompts join tool and HTTP replies in the secret scan.
+- Still not done: the shared package between `apps/web` and `apps/mcp`, AI features inside the website.
 
 ## Phase 9: logo, SEO and final polish (Oct 4)
 
