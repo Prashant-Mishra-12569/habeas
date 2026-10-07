@@ -36,6 +36,7 @@ Running on Stellar **testnet**. Live site: **https://habeas-stellar.vercel.app**
 - **Case pages:** every case's timeline with its transactions, a free settle button, and pages for holders (`/me`), the issuer (`/issuer`) and the reviewer (`/review`).
 - **Paid check for agents (x402):** wallets and AI agents pay 0.001 testnet USDC per call for a signed token check ([below](#paid-check-for-agents-x402)).
 - **Telegram alerts:** [@habeas_alerts_bot](https://t.me/habeas_alerts_bot) runs 24/7. Watch an address and get a message when it's frozen, answered, decided and closed. Case pages, My cases and Try it live open the bot with the address already filled in ([`apps/alerts`](apps/alerts)).
+- **MCP server for AI agents:** read cases, get a plain-language explanation, check a token's issuer powers, read a Soroban contract's live state (its storage, expiry and methods) and build unsigned transactions that a person signs, from Claude or any MCP client. It never signs and never holds a key ([`apps/mcp`](apps/mcp)).
 
 ## Paid check for agents (x402)
 
@@ -110,6 +111,8 @@ The site needs three testnet keys in `apps/web/.env.local` for Try it live and a
 The deploy script creates fresh testnet accounts with Friendbot, issues a demo asset, deploys Habeas, locks the issuer account and checks the lock. The second script runs every kind of case and writes the transaction hashes to `deployments/testnet-run.json`.
 
 The Telegram alerts bot has its own setup (a token from @BotFather): [`apps/alerts/README.md`](apps/alerts/README.md).
+
+The MCP server has its own setup too: [`apps/mcp/README.md`](apps/mcp/README.md).
 
 ## Roadmap
 
